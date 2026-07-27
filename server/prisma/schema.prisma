@@ -1,3 +1,6 @@
+// Schéma + migrations uniquement.
+// Le runtime de l'API utilise `pg` via server/db.js (pas Prisma Client).
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -69,4 +72,33 @@ model UserPreference {
   ageBand      String @default("moyens")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+/// Catalogue d'histoires (source de vérité). Les images restent dans uploads/<id>/.
+model Story {
+  id           String   @id
+  title        String
+  titleAr      String?
+  thumbnail    String?
+  ageCategory  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  scenes Scene[]
+}
+
+model Scene {
+  id              String @id @default(cuid())
+  storyId         String
+  sceneKey        Int?
+  sortIndex       Int
+  image           String?
+  characterName   String?
+  characterAvatar String?
+  text            Json
+
+  story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  @@unique([storyId, sortIndex])
+  @@index([storyId])
 }

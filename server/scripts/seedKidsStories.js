@@ -1,9 +1,13 @@
 /**
  * Étiquette les histoires existantes + crée 4 histoires enfants connues
- * (réutilise les images illustrées déjà présentes).
+ * (réutilise les images illustrées déjà présentes), puis synchronise vers PostgreSQL.
  */
+require('dotenv').config();
+
 const fs = require('fs');
 const path = require('path');
+const { pool } = require('../db');
+const { migrateUploadsToDb } = require('../services/storyStore');
 
 const UPLOADS = path.join(__dirname, '..', 'uploads');
 
@@ -262,8 +266,32 @@ const STORIES = [
   },
 ];
 
-patchExistingAge();
-for (const item of STORIES) {
-  writeStory(item.folder, item.story, item.source);
+async function main() {
+  patchExistingAge();
+  for (const item of STORIES) {
+    writeStory(item.folder, item.story, item.source);
+  }
+
+  console.log('Synchronisation catalogue → BDD…');
+  // Réimporte aussi les dossiers déjà étiquetés (EXISTING + nouveaux).
+  const { imported, errors } = await migrateUploadsToDb(pool, UPLOADS);
+  console.log(`Histoires en BDD: ${imported.length}`);
+  for (const id of imported) {
+    console.log('  ✓', id);
+  }
+  if (errors.length) {
+    for (const row of errors) console.error('  ✗', row.id, row.message);
+    process.exitCode = 1;
+  } else {
+    console.log('Terminé.');
+  }
 }
-console.log('Terminé.');
+
+main()
+  .catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  })
+  .finally(async () => {
+    await pool.end();
+  });
