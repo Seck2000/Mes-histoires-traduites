@@ -10,6 +10,7 @@ const multer = require('multer'); // Outil pour gérer l'upload de fichiers (com
 const path = require('path'); // Outil pour manipuler les chemins de dossiers facilement
 const fs = require('fs'); // "File System", pour lire, créer ou supprimer des fichiers
 const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin');
 const libraryRoutes = require('./routes/library');
 const aiRoutes = require('./routes/ai');
 const speechRoutes = require('./routes/speech');
@@ -77,6 +78,9 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 
 // Authentification (inscription, connexion, profil)
 app.use('/api/auth', authRoutes);
+
+// Administration (liste des utilisateurs, etc.)
+app.use('/api/admin', adminRoutes);
 
 // Données personnelles de lecture (progression, favoris, historique)
 app.use('/api/library', libraryRoutes);

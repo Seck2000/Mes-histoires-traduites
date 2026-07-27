@@ -14,12 +14,13 @@ import {
     Shield,
     Library,
     LayoutDashboard,
+    Users,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { api, getApiErrorMessage } from '../api';
 import { useProtectedAvatar } from '../hooks/useProtectedAvatar';
 import { useI18n } from '../i18n/I18nProvider';
-import { LANGUAGES, LEVELS } from '../constants/languages';
+import { LEVELS, getLanguageNativeName } from '../constants/languages';
 import { AGE_BANDS } from '../constants/ageBands';
 
 function buildProfilePayload(form) {
@@ -27,19 +28,14 @@ function buildProfilePayload(form) {
         firstName: (form.firstName || '').trim(),
         lastName: (form.lastName || '').trim(),
         email: (form.email || '').trim().toLowerCase(),
-        spokenLang: form.spokenLang || 'fr',
-        learningLang: form.learningLang || 'en',
         level: form.level || 'debutant',
         ageBand: form.ageBand || 'moyens',
     };
 }
 
 function normalizeProfileForm(user) {
-    const langCodes = new Set(LANGUAGES.map((lang) => lang.code));
     const levelCodes = new Set(LEVELS.map((level) => level.code));
     const ageCodes = new Set(AGE_BANDS.map((band) => band.id));
-    const spoken = user?.preferences?.spokenLang;
-    const learning = user?.preferences?.learningLang;
     const level = user?.preferences?.level;
     const ageBand = user?.preferences?.ageBand;
 
@@ -47,11 +43,22 @@ function normalizeProfileForm(user) {
         firstName: user?.firstName || '',
         lastName: user?.lastName || '',
         email: user?.email || '',
-        spokenLang: langCodes.has(spoken) ? spoken : 'fr',
-        learningLang: langCodes.has(learning) ? learning : 'en',
         level: levelCodes.has(level) ? level : 'debutant',
         ageBand: ageCodes.has(ageBand) ? ageBand : 'moyens',
     };
+}
+
+function formatAccountDate(value) {
+    if (!value) return '—';
+    try {
+        return new Date(value).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+        });
+    } catch {
+        return '—';
+    }
 }
 
 function sceneProgressLabel(story, progressByStoryId) {
@@ -110,6 +117,9 @@ export default function AdminLibraryPage({
     const [profileSuccess, setProfileSuccess] = useState('');
     const [profileSaving, setProfileSaving] = useState(false);
     const [avatarUploading, setAvatarUploading] = useState(false);
+    const [registeredUsers, setRegisteredUsers] = useState([]);
+    const [usersLoading, setUsersLoading] = useState(false);
+    const [usersError, setUsersError] = useState('');
     const pageTopRef = useRef(null);
     const localFileInputRef = useRef(null);
 
@@ -140,11 +150,37 @@ export default function AdminLibraryPage({
         user?.firstName,
         user?.lastName,
         user?.email,
-        user?.preferences?.spokenLang,
-        user?.preferences?.learningLang,
         user?.preferences?.level,
         user?.preferences?.ageBand,
     ]);
+
+    useEffect(() => {
+        if (activeSection !== 'users') return undefined;
+
+        let cancelled = false;
+        const loadUsers = async () => {
+            setUsersLoading(true);
+            setUsersError('');
+            try {
+                const { data } = await api.get('/api/admin/users');
+                if (!cancelled) {
+                    setRegisteredUsers(Array.isArray(data?.users) ? data.users : []);
+                }
+            } catch (error) {
+                if (!cancelled) {
+                    setRegisteredUsers([]);
+                    setUsersError(getApiErrorMessage(error, t('adminUsersError')));
+                }
+            } finally {
+                if (!cancelled) setUsersLoading(false);
+            }
+        };
+
+        loadUsers();
+        return () => {
+            cancelled = true;
+        };
+    }, [activeSection, t]);
 
     const scrollToSectionTop = useCallback(() => {
         pageTopRef.current?.scrollIntoView({ block: 'start' });
@@ -163,6 +199,7 @@ export default function AdminLibraryPage({
 
     const navigationItems = [
         { id: 'dashboard', label: t('navDashboard'), icon: LayoutDashboard },
+        { id: 'users', label: t('navUsers'), icon: Users },
         { id: 'all', label: t('navAllStories'), icon: Library },
         { id: 'favorites', label: t('navFavorites'), icon: Heart },
         { id: 'recent', label: t('navRecent'), icon: Clock },
@@ -228,10 +265,6 @@ export default function AdminLibraryPage({
 
         if (!payload.firstName || !payload.lastName) {
             setProfileError(t('profileErrorNames'));
-            return;
-        }
-        if (payload.spokenLang === payload.learningLang) {
-            setProfileError(t('profileErrorSameLang'));
             return;
         }
 
@@ -439,6 +472,108 @@ export default function AdminLibraryPage({
         </div>
     );
 
+    const renderUsers = () => (
+        <div className="space-y-4">
+            <div>
+                <h2 className="text-xl font-bold text-gray-900">{t('adminUsersTitle')}</h2>
+                <p className="text-sm text-gray-500 mt-1">{t('adminUsersHint')}</p>
+            </div>
+
+            {usersLoading && (
+                <div className="bg-white border border-[#EBE6DC] rounded-2xl p-8 flex items-center justify-center gap-3 text-gray-600">
+                    <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
+                    {t('adminUsersLoading')}
+                </div>
+            )}
+
+            {!usersLoading && usersError && (
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-sm text-red-700">
+                    {usersError}
+                </div>
+            )}
+
+            {!usersLoading && !usersError && registeredUsers.length === 0 && (
+                <div className="bg-white border border-[#EBE6DC] rounded-2xl p-8 text-center text-gray-500">
+                    {t('adminUsersEmpty')}
+                </div>
+            )}
+
+            {!usersLoading && !usersError && registeredUsers.length > 0 && (
+                <>
+                    <p className="text-sm text-gray-500">
+                        {registeredUsers.length}{' '}
+                        {registeredUsers.length > 1 ? t('adminUsersCountPlural') : t('adminUsersCount')}
+                    </p>
+                    <div className="overflow-x-auto rounded-2xl border border-[#EBE6DC] bg-white shadow-sm">
+                        <table className="min-w-full text-sm">
+                            <thead className="bg-amber-50 text-left text-amber-900">
+                                <tr>
+                                    <th className="px-4 py-3 font-semibold whitespace-nowrap">{t('adminColName')}</th>
+                                    <th className="px-4 py-3 font-semibold whitespace-nowrap">{t('adminColEmail')}</th>
+                                    <th className="px-4 py-3 font-semibold whitespace-nowrap">{t('adminColRole')}</th>
+                                    <th className="px-4 py-3 font-semibold whitespace-nowrap">{t('adminColSpoken')}</th>
+                                    <th className="px-4 py-3 font-semibold whitespace-nowrap">{t('adminColLearning')}</th>
+                                    <th className="px-4 py-3 font-semibold whitespace-nowrap">{t('adminColLevel')}</th>
+                                    <th className="px-4 py-3 font-semibold whitespace-nowrap">{t('adminColAge')}</th>
+                                    <th className="px-4 py-3 font-semibold whitespace-nowrap">{t('adminColCreated')}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {registeredUsers.map((account) => {
+                                    const name =
+                                        account.displayName ||
+                                        [account.firstName, account.lastName].filter(Boolean).join(' ') ||
+                                        '—';
+                                    const prefs = account.preferences || {};
+                                    const isAdminAccount = (account.role || '').toLowerCase() === 'admin';
+                                    return (
+                                        <tr
+                                            key={account.id}
+                                            className="border-t border-[#EBE6DC] hover:bg-[#FAF8F6]"
+                                        >
+                                            <td className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
+                                                {name}
+                                            </td>
+                                            <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                                                {account.email}
+                                            </td>
+                                            <td className="px-4 py-3 whitespace-nowrap">
+                                                <span
+                                                    className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${
+                                                        isAdminAccount
+                                                            ? 'bg-amber-100 text-amber-800'
+                                                            : 'bg-gray-100 text-gray-700'
+                                                    }`}
+                                                >
+                                                    {isAdminAccount ? t('adminRoleAdmin') : t('adminRoleUser')}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                                                {getLanguageNativeName(prefs.spokenLang)}
+                                            </td>
+                                            <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                                                {getLanguageNativeName(prefs.learningLang)}
+                                            </td>
+                                            <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                                                {t(`level_${prefs.level || 'debutant'}`)}
+                                            </td>
+                                            <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                                                {t(`age_${prefs.ageBand || 'moyens'}`)}
+                                            </td>
+                                            <td className="px-4 py-3 text-gray-500 whitespace-nowrap">
+                                                {formatAccountDate(account.createdAt)}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </>
+            )}
+        </div>
+    );
+
     const renderProfile = () => (
         <div className="bg-white border border-[#EBE6DC] rounded-2xl p-6 space-y-6 shadow-sm">
             <div className="flex items-center gap-2 text-amber-700 font-bold">
@@ -502,35 +637,6 @@ export default function AdminLibraryPage({
                             className={inputClass}
                             required
                         />
-                    </div>
-
-                    <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileSpokenLang')}</label>
-                        <select
-                            value={profileForm.spokenLang}
-                            onChange={(e) => handleProfileChange('spokenLang', e.target.value)}
-                            className={inputClass}
-                        >
-                            {LANGUAGES.map((lang) => (
-                                <option key={lang.code} value={lang.code}>
-                                    {lang.nativeName}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileLearningLang')}</label>
-                        <select
-                            value={profileForm.learningLang}
-                            onChange={(e) => handleProfileChange('learningLang', e.target.value)}
-                            className={inputClass}
-                        >
-                            {LANGUAGES.map((lang) => (
-                                <option key={lang.code} value={lang.code}>
-                                    {lang.nativeName}
-                                </option>
-                            ))}
-                        </select>
                     </div>
 
                     <div className="min-w-0 md:col-span-2">
@@ -703,9 +809,13 @@ export default function AdminLibraryPage({
                 <main className="flex-1 min-w-0">
                     {activeSection === 'dashboard' && renderDashboard()}
 
+                    {activeSection === 'users' && renderUsers()}
+
                     {activeSection === 'profile' && renderProfile()}
 
-                    {activeSection !== 'dashboard' && activeSection !== 'profile' && (
+                    {activeSection !== 'dashboard' &&
+                        activeSection !== 'profile' &&
+                        activeSection !== 'users' && (
                         <>
                             {activeSection === 'all' && (
                                 <div className="flex flex-wrap gap-2 mb-4">

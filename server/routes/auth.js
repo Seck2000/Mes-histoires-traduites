@@ -248,8 +248,6 @@ router.patch('/me', authMiddleware, async (req, res) => {
     const email = req.body.email?.trim().toLowerCase();
     const firstName = req.body.firstName?.trim() || null;
     const lastName = req.body.lastName?.trim() || null;
-    const spokenLang = req.body.spokenLang || 'fr';
-    const learningLang = req.body.learningLang || 'en';
     const level = req.body.level || 'debutant';
     const ageBand = req.body.ageBand || 'moyens';
     const isAdmin = req.user.role === 'admin';
@@ -259,14 +257,6 @@ router.patch('/me', authMiddleware, async (req, res) => {
     }
     if (!firstName || !lastName) {
         return res.status(400).json({ error: 'Le prénom et le nom sont obligatoires.' });
-    }
-    if (!ALLOWED_LANGS.includes(spokenLang) || !ALLOWED_LANGS.includes(learningLang)) {
-        return res.status(400).json({ error: 'Langue invalide.' });
-    }
-    if (spokenLang === learningLang) {
-        return res.status(400).json({
-            error: 'La langue cible doit être différente de la langue maternelle.',
-        });
     }
     if (!ALLOWED_LEVELS.includes(level)) {
         return res.status(400).json({ error: 'Niveau invalide.' });
@@ -279,6 +269,33 @@ router.patch('/me', authMiddleware, async (req, res) => {
     let committed = false;
     try {
         await client.query('BEGIN');
+
+        const current = await fetchUserWithPreferences(req.user.id);
+        if (!current) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ error: 'Utilisateur introuvable.' });
+        }
+
+        // Langues : définies à l'inscription ; le profil ne les modifie plus.
+        // Si le client les envoie encore, on les accepte après validation.
+        let spokenLang = current.preferences?.spokenLang || 'fr';
+        let learningLang = current.preferences?.learningLang || 'en';
+        if (req.body.spokenLang != null || req.body.learningLang != null) {
+            const nextSpoken = req.body.spokenLang || spokenLang;
+            const nextLearning = req.body.learningLang || learningLang;
+            if (!ALLOWED_LANGS.includes(nextSpoken) || !ALLOWED_LANGS.includes(nextLearning)) {
+                await client.query('ROLLBACK');
+                return res.status(400).json({ error: 'Langue invalide.' });
+            }
+            if (nextSpoken === nextLearning) {
+                await client.query('ROLLBACK');
+                return res.status(400).json({
+                    error: 'La langue cible doit être différente de la langue maternelle.',
+                });
+            }
+            spokenLang = nextSpoken;
+            learningLang = nextLearning;
+        }
 
         const duplicate = await client.query(
             `SELECT id FROM "User" WHERE email = $1 AND id <> $2`,
