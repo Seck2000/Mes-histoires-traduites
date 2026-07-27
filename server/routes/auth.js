@@ -7,6 +7,7 @@ const path = require('path');
 const fs = require('fs');
 const { pool } = require('../db');
 const { authMiddleware } = require('../middleware/auth');
+const { resolveOwnedAvatarFile } = require('../utils/avatarAccess');
 
 const router = express.Router();
 const BCRYPT_ROUNDS = 10;
@@ -342,6 +343,30 @@ router.patch('/me', authMiddleware, async (req, res) => {
         });
     } finally {
         client.release();
+    }
+});
+
+// GET /api/auth/me/avatar/file — avatar protégé (JWT), plus d'accès public /uploads/avatars
+router.get('/me/avatar/file', authMiddleware, async (req, res) => {
+    try {
+        const result = await pool.query(
+            `SELECT "avatarUrl" FROM "User" WHERE id = $1`,
+            [req.user.id]
+        );
+        const avatarUrl = result.rows[0]?.avatarUrl;
+        if (!avatarUrl) {
+            return res.status(404).json({ error: 'Aucune photo de profil.' });
+        }
+
+        const filePath = resolveOwnedAvatarFile(avatarUrl, req.user.id, AVATAR_DIR);
+        if (!filePath || !fs.existsSync(filePath)) {
+            return res.status(404).json({ error: 'Photo introuvable.' });
+        }
+
+        return res.sendFile(filePath);
+    } catch (error) {
+        console.error('Erreur lecture avatar:', error);
+        return res.status(500).json({ error: 'Impossible de charger la photo.' });
     }
 });
 
