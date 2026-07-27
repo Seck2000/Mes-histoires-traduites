@@ -10,7 +10,7 @@ const inputClass =
 
 const labelClass = 'block text-sm font-medium text-gray-700 mb-1.5';
 
-export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack, onUiLocaleChange }) {
+export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
     const { t } = useI18n();
     const isRegister = mode === 'register';
 
@@ -25,11 +25,6 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack, onUiLo
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-
-    const handleSpokenChange = (code) => {
-        setSpokenLang(code);
-        onUiLocaleChange?.(code);
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -142,7 +137,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack, onUiLo
                                     <select
                                         required
                                         value={spokenLang}
-                                        onChange={(e) => handleSpokenChange(e.target.value)}
+                                        onChange={(e) => setSpokenLang(e.target.value)}
                                         className={inputClass}
                                     >
                                         {LANGUAGES.map((l) => (

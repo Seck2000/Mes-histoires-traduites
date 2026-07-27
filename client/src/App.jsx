@@ -384,7 +384,6 @@ function App() {
               onSuccess={handleAuthSuccess}
               onSwitchMode={(m) => setCurrentView(m)}
               onBack={() => setCurrentView('welcome')}
-              onUiLocaleChange={applySpokenLocale}
             />
           )}
 
