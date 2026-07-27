@@ -20,7 +20,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { api, getApiErrorMessage } from '../api';
 import { useProtectedAvatar } from '../hooks/useProtectedAvatar';
 import { useI18n } from '../i18n/I18nProvider';
-import { LEVELS, getLanguageNativeName } from '../constants/languages';
+import { getLanguageNativeName } from '../constants/languages';
 import { AGE_BANDS } from '../constants/ageBands';
 
 function buildProfilePayload(form) {
@@ -28,23 +28,14 @@ function buildProfilePayload(form) {
         firstName: (form.firstName || '').trim(),
         lastName: (form.lastName || '').trim(),
         email: (form.email || '').trim().toLowerCase(),
-        level: form.level || 'debutant',
-        ageBand: form.ageBand || 'moyens',
     };
 }
 
 function normalizeProfileForm(user) {
-    const levelCodes = new Set(LEVELS.map((level) => level.code));
-    const ageCodes = new Set(AGE_BANDS.map((band) => band.id));
-    const level = user?.preferences?.level;
-    const ageBand = user?.preferences?.ageBand;
-
     return {
         firstName: user?.firstName || '',
         lastName: user?.lastName || '',
         email: user?.email || '',
-        level: levelCodes.has(level) ? level : 'debutant',
-        ageBand: ageCodes.has(ageBand) ? ageBand : 'moyens',
     };
 }
 
@@ -150,8 +141,6 @@ export default function AdminLibraryPage({
         user?.firstName,
         user?.lastName,
         user?.email,
-        user?.preferences?.level,
-        user?.preferences?.ageBand,
     ]);
 
     useEffect(() => {
@@ -637,21 +626,6 @@ export default function AdminLibraryPage({
                             className={inputClass}
                             required
                         />
-                    </div>
-
-                    <div className="min-w-0 md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileLevel')}</label>
-                        <select
-                            value={profileForm.level}
-                            onChange={(e) => handleProfileChange('level', e.target.value)}
-                            className={inputClass}
-                        >
-                            {LEVELS.map((level) => (
-                                <option key={level.code} value={level.code}>
-                                    {t(`level_${level.code}`)}
-                                </option>
-                            ))}
-                        </select>
                     </div>
                 </div>
 

@@ -248,8 +248,6 @@ router.patch('/me', authMiddleware, async (req, res) => {
     const email = req.body.email?.trim().toLowerCase();
     const firstName = req.body.firstName?.trim() || null;
     const lastName = req.body.lastName?.trim() || null;
-    const level = req.body.level || 'debutant';
-    const ageBand = req.body.ageBand || 'moyens';
     const isAdmin = req.user.role === 'admin';
 
     if (!isValidEmail(email)) {
@@ -257,12 +255,6 @@ router.patch('/me', authMiddleware, async (req, res) => {
     }
     if (!firstName || !lastName) {
         return res.status(400).json({ error: 'Le prénom et le nom sont obligatoires.' });
-    }
-    if (!ALLOWED_LEVELS.includes(level)) {
-        return res.status(400).json({ error: 'Niveau invalide.' });
-    }
-    if (!isAdmin && !ALLOWED_AGE_BANDS.includes(ageBand)) {
-        return res.status(400).json({ error: 'Tranche d’âge invalide.' });
     }
 
     const client = await pool.connect();
@@ -297,6 +289,26 @@ router.patch('/me', authMiddleware, async (req, res) => {
             learningLang = nextLearning;
         }
 
+        let level = current.preferences?.level || 'debutant';
+        if (req.body.level != null) {
+            if (!ALLOWED_LEVELS.includes(req.body.level)) {
+                await client.query('ROLLBACK');
+                return res.status(400).json({ error: 'Niveau invalide.' });
+            }
+            level = req.body.level;
+        }
+
+        let ageBand = current.preferences?.ageBand || 'moyens';
+        if (req.body.ageBand != null) {
+            if (!isAdmin && !ALLOWED_AGE_BANDS.includes(req.body.ageBand)) {
+                await client.query('ROLLBACK');
+                return res.status(400).json({ error: 'Tranche d’âge invalide.' });
+            }
+            if (ALLOWED_AGE_BANDS.includes(req.body.ageBand)) {
+                ageBand = req.body.ageBand;
+            }
+        }
+
         const duplicate = await client.query(
             `SELECT id FROM "User" WHERE email = $1 AND id <> $2`,
             [email, req.user.id]
@@ -314,7 +326,6 @@ router.patch('/me', authMiddleware, async (req, res) => {
             [email, firstName, lastName, displayName, req.user.id]
         );
 
-        const resolvedAgeBand = ALLOWED_AGE_BANDS.includes(ageBand) ? ageBand : 'moyens';
         await client.query(
             `INSERT INTO "UserPreference" (id, "userId", "defaultLang", "spokenLang", "learningLang", level, "ageBand")
              VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -331,7 +342,7 @@ router.patch('/me', authMiddleware, async (req, res) => {
                 spokenLang,
                 learningLang,
                 level,
-                resolvedAgeBand,
+                ageBand,
             ]
         );
 
