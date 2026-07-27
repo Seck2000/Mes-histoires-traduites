@@ -16,7 +16,9 @@ import {
     LayoutDashboard,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { api, API_URL, getApiErrorMessage } from '../api';
+import { api, getApiErrorMessage } from '../api';
+import { useProtectedAvatar } from '../hooks/useProtectedAvatar';
+import { useI18n } from '../i18n/I18nProvider';
 import { LANGUAGES, LEVELS } from '../constants/languages';
 import { AGE_BANDS } from '../constants/ageBands';
 
@@ -97,7 +99,9 @@ export default function AdminLibraryPage({
     onCloseResumeModal,
     getImageUrl,
     progressByStoryId = {},
+    onUiLocaleChange,
 }) {
+    const { t } = useI18n();
     const [menuOpen, setMenuOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('dashboard');
     const [ageFilter, setAgeFilter] = useState('all');
@@ -117,12 +121,7 @@ export default function AdminLibraryPage({
         [recentStoryIds]
     );
     const userName = user?.displayName || user?.firstName || 'Admin';
-    const avatarSrc =
-        typeof user?.avatarUrl === 'string' && user.avatarUrl
-            ? user.avatarUrl.startsWith('http')
-                ? user.avatarUrl
-                : `${API_URL}${user.avatarUrl}`
-            : null;
+    const avatarSrc = useProtectedAvatar(user?.avatarUrl);
 
     const storiesByBand = useMemo(() => {
         const groups = Object.fromEntries(AGE_BANDS.map((band) => [band.id, []]));
@@ -164,11 +163,11 @@ export default function AdminLibraryPage({
     }, [actionNotice]);
 
     const navigationItems = [
-        { id: 'dashboard', label: 'Tableau de bord', icon: LayoutDashboard },
-        { id: 'all', label: 'Toutes les histoires', icon: Library },
-        { id: 'favorites', label: 'Favoris', icon: Heart },
-        { id: 'recent', label: 'Récemment lues', icon: Clock },
-        { id: 'profile', label: 'Profil admin', icon: User },
+        { id: 'dashboard', label: t('navDashboard'), icon: LayoutDashboard },
+        { id: 'all', label: t('navAllStories'), icon: Library },
+        { id: 'favorites', label: t('navFavorites'), icon: Heart },
+        { id: 'recent', label: t('navRecent'), icon: Clock },
+        { id: 'profile', label: t('navAdminProfile'), icon: User },
     ];
 
     const filteredByAge = useMemo(() => {
@@ -219,6 +218,9 @@ export default function AdminLibraryPage({
         setProfileError('');
         setProfileSuccess('');
         setActionNotice('');
+        if (field === 'spokenLang') {
+            onUiLocaleChange?.(value);
+        }
     };
 
     const handleProfileSubmit = async (e) => {
@@ -229,11 +231,11 @@ export default function AdminLibraryPage({
         const payload = buildProfilePayload(profileForm);
 
         if (!payload.firstName || !payload.lastName) {
-            setProfileError('Le prénom et le nom sont obligatoires.');
+            setProfileError(t('profileErrorNames'));
             return;
         }
         if (payload.spokenLang === payload.learningLang) {
-            setProfileError('La langue cible doit être différente de la langue maternelle.');
+            setProfileError(t('profileErrorSameLang'));
             return;
         }
 
@@ -241,14 +243,14 @@ export default function AdminLibraryPage({
         try {
             const { data } = await api.patch('/api/auth/me', payload);
             if (!data?.user) {
-                setProfileError('Réponse serveur incomplète.');
+                setProfileError(t('profileErrorIncomplete'));
                 return;
             }
-            setProfileSuccess('Profil admin mis à jour.');
-            setActionNotice('Profil admin enregistré.');
+            setProfileSuccess(t('profileSuccess'));
+            setActionNotice(t('profileSavedNotice'));
             window.setTimeout(() => onUserUpdate?.(data.user), 0);
         } catch (error) {
-            setProfileError(getApiErrorMessage(error, 'Impossible de modifier le profil.'));
+            setProfileError(getApiErrorMessage(error, t('profileErrorSave')));
         } finally {
             setProfileSaving(false);
         }
@@ -268,14 +270,14 @@ export default function AdminLibraryPage({
         try {
             const { data } = await api.post('/api/auth/me/avatar', formData);
             if (!data?.user) {
-                setProfileError('Réponse serveur incomplète après envoi de la photo.');
+                setProfileError(t('profileErrorPhotoIncomplete'));
                 return;
             }
             window.setTimeout(() => onUserUpdate?.(data.user), 0);
-            setProfileSuccess('Photo mise à jour.');
-            setActionNotice('Photo admin mise à jour.');
+            setProfileSuccess(t('profilePhotoSuccess'));
+            setActionNotice(t('profilePhotoSuccess'));
         } catch (error) {
-            setProfileError(getApiErrorMessage(error, "Impossible d'envoyer la photo."));
+            setProfileError(getApiErrorMessage(error, t('profileErrorPhoto')));
         } finally {
             setAvatarUploading(false);
             event.target.value = '';
@@ -285,7 +287,7 @@ export default function AdminLibraryPage({
     const handleFavoriteClick = async (storyId, isFavorite) => {
         const ok = await onToggleFavorite?.(storyId, isFavorite);
         if (ok !== false) {
-            setActionNotice(isFavorite ? 'Retiré des favoris.' : 'Ajouté aux favoris.');
+            setActionNotice(isFavorite ? t('favoriteRemove') : t('favoriteAdd'));
         }
     };
 
@@ -507,7 +509,7 @@ export default function AdminLibraryPage({
                     </div>
 
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Langue maternelle</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileSpokenLang')}</label>
                         <select
                             value={profileForm.spokenLang}
                             onChange={(e) => handleProfileChange('spokenLang', e.target.value)}
@@ -515,13 +517,13 @@ export default function AdminLibraryPage({
                         >
                             {LANGUAGES.map((lang) => (
                                 <option key={lang.code} value={lang.code}>
-                                    {lang.label}
+                                    {lang.nativeName}
                                 </option>
                             ))}
                         </select>
                     </div>
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Langue cible</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileLearningLang')}</label>
                         <select
                             value={profileForm.learningLang}
                             onChange={(e) => handleProfileChange('learningLang', e.target.value)}
@@ -529,14 +531,14 @@ export default function AdminLibraryPage({
                         >
                             {LANGUAGES.map((lang) => (
                                 <option key={lang.code} value={lang.code}>
-                                    {lang.label}
+                                    {lang.nativeName}
                                 </option>
                             ))}
                         </select>
                     </div>
 
                     <div className="min-w-0 md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Niveau</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileLevel')}</label>
                         <select
                             value={profileForm.level}
                             onChange={(e) => handleProfileChange('level', e.target.value)}
@@ -544,7 +546,7 @@ export default function AdminLibraryPage({
                         >
                             {LEVELS.map((level) => (
                                 <option key={level.code} value={level.code}>
-                                    {level.label}
+                                    {t(`level_${level.code}`)}
                                 </option>
                             ))}
                         </select>
@@ -573,7 +575,7 @@ export default function AdminLibraryPage({
                             <Save className="w-4 h-4" />
                         )}
                     </span>
-                    <span>{profileSaving ? 'Enregistrement…' : 'Enregistrer'}</span>
+                    <span>{profileSaving ? t('profileSaving') : t('profileSave')}</span>
                 </button>
             </form>
         </div>
@@ -622,7 +624,7 @@ export default function AdminLibraryPage({
                             type="button"
                             onClick={onLogout}
                             className="p-2 rounded-full hover:bg-amber-50 text-gray-500"
-                            title="Déconnexion"
+                            title={t('logout')}
                         >
                             <LogOut className="w-4 h-4" />
                         </button>
@@ -680,7 +682,7 @@ export default function AdminLibraryPage({
                         onClick={handleLogoutClick}
                         className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-[#FAF8F6] text-gray-700"
                     >
-                        <span>Déconnexion</span>
+                        <span>{t('logout')}</span>
                         <LogOut className="w-5 h-5" />
                     </button>
                 </div>

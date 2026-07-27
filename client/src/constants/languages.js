@@ -1,15 +1,27 @@
+/** Noms natifs (endonymes) — toujours affichés ainsi dans les listes. */
 export const LANGUAGES = [
-    { code: 'fr', label: 'Français' },
-    { code: 'en', label: 'Anglais' },
-    { code: 'ar', label: 'Arabe' },
-    { code: 'es', label: 'Espagnol' },
-    { code: 'de', label: 'Allemand' },
-    { code: 'it', label: 'Italien' },
-    { code: 'pt', label: 'Portugais' },
+    { code: 'fr', nativeName: 'Français', label: 'Français' },
+    { code: 'en', nativeName: 'English', label: 'English' },
+    { code: 'ar', nativeName: 'العربية', label: 'العربية' },
+    { code: 'es', nativeName: 'Español', label: 'Español' },
+    { code: 'de', nativeName: 'Deutsch', label: 'Deutsch' },
+    { code: 'it', nativeName: 'Italiano', label: 'Italiano' },
+    { code: 'pt', nativeName: 'Português', label: 'Português' },
 ];
 
+/** Codes de niveau — libellés via i18n (`level_debutant`, …). */
 export const LEVELS = [
-    { code: 'debutant', label: 'Débutant' },
-    { code: 'intermediaire', label: 'Intermédiaire' },
-    { code: 'avance', label: 'Avancé' },
+    { code: 'debutant' },
+    { code: 'intermediaire' },
+    { code: 'avance' },
 ];
+
+export const LANGUAGE_CODES = LANGUAGES.map((lang) => lang.code);
+
+export function getLanguageNativeName(code) {
+    return LANGUAGES.find((lang) => lang.code === code)?.nativeName || code;
+}
+
+export function isSupportedLocale(code) {
+    return LANGUAGE_CODES.includes(code);
+}

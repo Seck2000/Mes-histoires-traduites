@@ -3,7 +3,8 @@ import { ArrowLeft, Keyboard, Loader2, Mic, MicOff, Send, Sparkles, Star, Volume
 import { api, transcribeSpeech } from '../api';
 import { buildScenesPayload } from '../utils/storyText';
 import { containsDigits, DIGIT_ERROR_MESSAGE } from '../utils/chatValidation';
-import { LANGUAGES } from '../constants/languages';
+import { getLanguageNativeName } from '../constants/languages';
+import { useI18n } from '../i18n/I18nProvider';
 import { createAudioRecorder, isMicrophoneSupported } from '../utils/audioRecorder';
 import {
     isSpeechSynthesisSupported,
@@ -21,11 +22,8 @@ const LANG_EMOJI = {
     pt: '🇵🇹',
 };
 
-function getLangLabel(code) {
-    return LANGUAGES.find((lang) => lang.code === code)?.label || code;
-}
-
 export default function StoryChat({ story, targetLang, level, onBack }) {
+    const { t } = useI18n();
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(true);
@@ -44,7 +42,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
     const isMountedRef = useRef(true);
     const chatModeRef = useRef(chatMode);
 
-    const langLabel = useMemo(() => getLangLabel(targetLang), [targetLang]);
+    const langLabel = useMemo(() => getLanguageNativeName(targetLang), [targetLang]);
     const langEmoji = LANG_EMOJI[targetLang] || '🌍';
     const voiceSupported = isMicrophoneSupported() && isSpeechSynthesisSupported();
 
@@ -89,7 +87,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
         try {
             const blob = await audioRecorderRef.current.stop();
             if (!blob?.size) {
-                setError('Enregistrement vide. Parle plus fort et réessaie.');
+                setError(t('chatEmptyRec'));
                 return;
             }
 
@@ -257,11 +255,11 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
     };
 
     const voiceStatus = (() => {
-        if (isSpeaking) return { label: 'L\'IA parle...', color: 'text-[#8C5EB9]' };
-        if (isTranscribing) return { label: 'Je transcris ta voix...', color: 'text-amber-600' };
-        if (isRecording) return { label: 'Je t\'écoute... (appuie pour envoyer)', color: 'text-red-600' };
-        if (sending) return { label: 'Je réfléchis...', color: 'text-[#8C5EB9]' };
-        return { label: 'Appuie sur le micro pour parler', color: 'text-gray-500' };
+        if (isSpeaking) return { label: t('chatSpeaking'), color: 'text-[#8C5EB9]' };
+        if (isTranscribing) return { label: t('chatTranscribing'), color: 'text-amber-600' };
+        if (isRecording) return { label: t('chatListening'), color: 'text-red-600' };
+        if (sending) return { label: t('chatThinking'), color: 'text-[#8C5EB9]' };
+        return { label: t('chatMicHint'), color: 'text-gray-500' };
     })();
 
     return (
@@ -273,24 +271,23 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                     className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-white hover:bg-[#F2E9FB] text-gray-700 border border-[#EBE6DC] transition text-sm font-semibold"
                 >
                     <ArrowLeft className="w-4 h-4" />
-                    Retour
+                    {t('chatBack')}
                 </button>
                 <div className="flex items-center gap-2 text-[#8C5EB9] font-bold text-lg">
                     <Sparkles className="w-5 h-5" />
-                    Quiz de l&apos;histoire
+                    {t('chatQuizTitle')}
                 </div>
                 <div className="w-20" />
             </header>
 
             <div className="px-4 py-3 bg-white border-b border-[#EBE6DC] space-y-3">
                 <p className="text-sm text-gray-700 text-center md:text-left">
-                    <span className="font-bold">{story?.title || 'Sans titre'}</span>
+                    <span className="font-bold">{story?.title || '—'}</span>
                     {' — '}
-                    Réponds en {langEmoji} <strong>{langLabel}</strong>
+                    {t('chatLearning')}: {langEmoji} <strong>{langLabel}</strong>
                 </p>
 
                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-                    <span className="text-xs text-gray-400 mr-1">Mode :</span>
                     <button
                         type="button"
                         onClick={() => handleModeChange('text')}
@@ -302,13 +299,13 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                         }`}
                     >
                         <Keyboard className="w-4 h-4" />
-                        Écrire
+                        {t('chatWriteMode')}
                     </button>
                     <button
                         type="button"
                         onClick={() => handleModeChange('voice')}
                         disabled={loading || sending || isRecording || isTranscribing || !voiceSupported}
-                        title={voiceSupported ? 'Discussion vocale' : 'Non disponible sur ce navigateur'}
+                        title={t('chatVoiceMode')}
                         className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-semibold transition ${
                             chatMode === 'voice'
                                 ? 'bg-[#8C5EB9] text-white'
@@ -316,7 +313,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                         }`}
                     >
                         <Mic className="w-4 h-4" />
-                        Parler
+                        {t('chatVoiceMode')}
                     </button>
                 </div>
 

@@ -12,7 +12,9 @@ import {
     Save,
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { api, API_URL, getApiErrorMessage } from '../api';
+import { api, getApiErrorMessage } from '../api';
+import { useProtectedAvatar } from '../hooks/useProtectedAvatar';
+import { useI18n } from '../i18n/I18nProvider';
 import { LANGUAGES, LEVELS } from '../constants/languages';
 import {
     AGE_BANDS,
@@ -95,7 +97,9 @@ export default function LibraryPage({
     onCloseResumeModal,
     getImageUrl,
     progressByStoryId = {},
+    onUiLocaleChange,
 }) {
+    const { t } = useI18n();
     const [menuOpen, setMenuOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('all');
     const [actionNotice, setActionNotice] = useState('');
@@ -116,11 +120,7 @@ export default function LibraryPage({
         () => getAgeBandById(user?.preferences?.ageBand),
         [user?.preferences?.ageBand]
     );
-    const avatarSrc = typeof user?.avatarUrl === 'string' && user.avatarUrl
-        ? user.avatarUrl.startsWith('http')
-            ? user.avatarUrl
-            : `${API_URL}${user.avatarUrl}`
-        : null;
+    const avatarSrc = useProtectedAvatar(user?.avatarUrl);
 
     useEffect(() => {
         setProfileForm(normalizeProfileForm(user));
@@ -152,10 +152,10 @@ export default function LibraryPage({
     }, [actionNotice]);
 
     const navigationItems = [
-        { id: 'all', label: 'Pour mon âge', icon: BookOpen },
-        { id: 'favorites', label: 'Favoris', icon: Heart },
-        { id: 'recent', label: 'Récemment lues', icon: Clock },
-        { id: 'profile', label: 'Mon profil', icon: User },
+        { id: 'all', label: t('navForAge'), icon: BookOpen },
+        { id: 'favorites', label: t('navFavorites'), icon: Heart },
+        { id: 'recent', label: t('navRecent'), icon: Clock },
+        { id: 'profile', label: t('navProfile'), icon: User },
     ];
 
     const ageFilteredStories = useMemo(() => {
@@ -191,6 +191,9 @@ export default function LibraryPage({
         setProfileError('');
         setProfileSuccess('');
         setActionNotice('');
+        if (field === 'spokenLang') {
+            onUiLocaleChange?.(value);
+        }
     };
 
     const handleProfileSubmit = async (e) => {
@@ -201,11 +204,11 @@ export default function LibraryPage({
         const payload = buildProfilePayload(profileForm);
 
         if (!payload.firstName || !payload.lastName) {
-            setProfileError('Le prénom et le nom sont obligatoires.');
+            setProfileError(t('profileErrorNames'));
             return;
         }
         if (payload.spokenLang === payload.learningLang) {
-            setProfileError('La langue cible doit être différente de la langue maternelle.');
+            setProfileError(t('profileErrorSameLang'));
             return;
         }
 
@@ -213,17 +216,17 @@ export default function LibraryPage({
         try {
             const { data } = await api.patch('/api/auth/me', payload);
             if (!data?.user) {
-                setProfileError("Le profil a été modifié, mais la réponse du serveur est incomplète.");
+                setProfileError(t('profileErrorIncomplete'));
                 return;
             }
-            setProfileSuccess('Profil mis à jour avec succès.');
-            setActionNotice('Profil enregistré avec succès.');
+            setProfileSuccess(t('profileSuccess'));
+            setActionNotice(t('profileSavedNotice'));
             // Différer la mise à jour parent : évite le crash DOM removeChild
             // (souvent lié à la traduction navigateur + re-render immédiat).
             window.setTimeout(() => onUserUpdate?.(data.user), 0);
         } catch (error) {
             setProfileError(
-                getApiErrorMessage(error, 'Impossible de modifier le profil.')
+                getApiErrorMessage(error, t('profileErrorSave'))
             );
         } finally {
             setProfileSaving(false);
@@ -245,14 +248,14 @@ export default function LibraryPage({
             // Ne pas forcer Content-Type : le navigateur ajoute la boundary multipart.
             const { data } = await api.post('/api/auth/me/avatar', formData);
             if (!data?.user) {
-                setProfileError("La photo a été envoyée, mais la réponse du serveur est incomplète.");
+                setProfileError(t('profileErrorPhotoIncomplete'));
                 return;
             }
             window.setTimeout(() => onUserUpdate?.(data.user), 0);
-            setProfileSuccess('Photo de profil mise à jour.');
-            setActionNotice('Photo de profil mise à jour.');
+            setProfileSuccess(t('profilePhotoSuccess'));
+            setActionNotice(t('profilePhotoSuccess'));
         } catch (error) {
-            setProfileError(getApiErrorMessage(error, "Impossible d'envoyer la photo."));
+            setProfileError(getApiErrorMessage(error, t('profileErrorPhoto')));
         } finally {
             setAvatarUploading(false);
             event.target.value = '';
@@ -267,8 +270,8 @@ export default function LibraryPage({
 
         setActionNotice(
             isFavorite
-                ? 'Histoire retirée des favoris.'
-                : 'Histoire ajoutée aux favoris.'
+                ? t('favoriteRemove')
+                : t('favoriteAdd')
         );
         scrollToSectionTop();
     };
@@ -302,15 +305,15 @@ export default function LibraryPage({
             <div className="flex flex-col sm:flex-row sm:items-center gap-5 mb-8">
                 <div className="relative w-24 h-24 rounded-2xl overflow-hidden border border-[#EBE6DC] bg-[#FAF8F6] flex items-center justify-center shrink-0">
                     {avatarSrc ? (
-                        <img src={avatarSrc} alt="Photo de profil" className="w-full h-full object-cover" />
+                        <img src={avatarSrc} alt={t('profilePhotoAlt')} className="w-full h-full object-cover" />
                     ) : (
                         <User className="w-10 h-10 text-gray-400" />
                     )}
                 </div>
                 <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900">Mon profil</h3>
+                    <h3 className="text-xl font-bold text-gray-900">{t('profileTitle')}</h3>
                     <p className="text-gray-400 text-sm mb-4">
-                        Modifiez vos informations personnelles et votre photo de profil.
+                        {t('profileHint')}
                     </p>
                     <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-[#F2E9FB] border border-[#EBE6DC] text-gray-700 text-sm font-medium cursor-pointer transition">
                         {avatarUploading ? (
@@ -318,7 +321,7 @@ export default function LibraryPage({
                         ) : (
                             <Camera className="w-4 h-4" />
                         )}
-                        Changer la photo
+                        {t('profileChangePhoto')}
                         <input
                             type="file"
                             accept="image/*"
@@ -333,7 +336,7 @@ export default function LibraryPage({
             <form onSubmit={handleProfileSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5">
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Prénom</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileFirstName')}</label>
                         <input
                             value={profileForm.firstName}
                             onChange={(e) => handleProfileChange('firstName', e.target.value)}
@@ -342,7 +345,7 @@ export default function LibraryPage({
                         />
                     </div>
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Nom</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileLastName')}</label>
                         <input
                             value={profileForm.lastName}
                             onChange={(e) => handleProfileChange('lastName', e.target.value)}
@@ -352,7 +355,7 @@ export default function LibraryPage({
                     </div>
 
                     <div className="min-w-0 md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Adresse courriel</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileEmail')}</label>
                         <input
                             type="email"
                             value={profileForm.email}
@@ -363,7 +366,7 @@ export default function LibraryPage({
                     </div>
 
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Langue maternelle</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileSpokenLang')}</label>
                         <select
                             value={profileForm.spokenLang}
                             onChange={(e) => handleProfileChange('spokenLang', e.target.value)}
@@ -371,13 +374,13 @@ export default function LibraryPage({
                         >
                             {LANGUAGES.map((lang) => (
                                 <option key={lang.code} value={lang.code}>
-                                    {lang.label}
+                                    {lang.nativeName}
                                 </option>
                             ))}
                         </select>
                     </div>
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Langue cible</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileLearningLang')}</label>
                         <select
                             value={profileForm.learningLang}
                             onChange={(e) => handleProfileChange('learningLang', e.target.value)}
@@ -385,14 +388,14 @@ export default function LibraryPage({
                         >
                             {LANGUAGES.map((lang) => (
                                 <option key={lang.code} value={lang.code}>
-                                    {lang.label}
+                                    {lang.nativeName}
                                 </option>
                             ))}
                         </select>
                     </div>
 
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Niveau</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileLevel')}</label>
                         <select
                             value={profileForm.level}
                             onChange={(e) => handleProfileChange('level', e.target.value)}
@@ -400,13 +403,13 @@ export default function LibraryPage({
                         >
                             {LEVELS.map((level) => (
                                 <option key={level.code} value={level.code}>
-                                    {level.label}
+                                    {t(`level_${level.code}`)}
                                 </option>
                             ))}
                         </select>
                     </div>
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Tranche d’âge</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileAgeBand')}</label>
                         <select
                             value={profileForm.ageBand}
                             onChange={(e) => handleProfileChange('ageBand', e.target.value)}
@@ -415,7 +418,7 @@ export default function LibraryPage({
                         >
                             {AGE_BANDS.map((band) => (
                                 <option key={band.id} value={band.id}>
-                                    {band.label}
+                                    {t(`age_${band.id}`)}
                                 </option>
                             ))}
                         </select>
@@ -451,7 +454,7 @@ export default function LibraryPage({
                             <Save className="w-4 h-4" />
                         )}
                     </span>
-                    <span>{profileSaving ? 'Enregistrement…' : 'Enregistrer'}</span>
+                    <span>{profileSaving ? t('profileSaving') : t('profileSave')}</span>
                 </button>
             </form>
         </div>
@@ -519,7 +522,7 @@ export default function LibraryPage({
                                     onClick={handleLogoutClick}
                                     className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-[#FAF8F6] hover:bg-[#F2E9FB] text-gray-700 transition"
                                 >
-                                    <span>Déconnexion</span>
+                                    <span>{t('logout')}</span>
                                     <LogOut className="w-5 h-5" />
                                 </button>
                             </div>
@@ -537,7 +540,7 @@ export default function LibraryPage({
                         <button
                             onClick={onLogout}
                             className="p-2 rounded-full hover:bg-[#F2E9FB] text-gray-500 hover:text-[#8C5EB9] transition"
-                            title="Déconnexion"
+                            title={t('logout')}
                         >
                             <LogOut className="w-4 h-4" />
                         </button>
@@ -686,7 +689,7 @@ export default function LibraryPage({
             {showResumeModal && (
                 <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
                     <div className="bg-white border-2 border-[#EBE6DC] rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl text-center">
-                        <h3 className="text-2xl font-bold text-[#8C5EB9] mb-2">Reprendre l'histoire ?</h3>
+                        <h3 className="text-2xl font-bold text-[#8C5EB9] mb-2">{t('resumeTitle')}</h3>
                         <p className="text-gray-600 mb-8">
                             Vous étiez en train de lire{' '}
                             <strong className="text-gray-900">"{storyToResume?.title}"</strong> à la scène{' '}
@@ -697,20 +700,20 @@ export default function LibraryPage({
                                 onClick={onRestartStory}
                                 className="px-6 py-3 bg-[#FAF8F6] hover:bg-[#F2E9FB] text-gray-700 border border-[#EBE6DC] rounded-xl font-medium transition"
                             >
-                                Recommencer du début
+                                {t('resumeRestart')}
                             </button>
                             <button
                                 onClick={onResumeStory}
                                 className="px-6 py-3 bg-[#8C5EB9] hover:bg-[#7a4fa8] text-white rounded-xl font-bold transition flex items-center justify-center gap-2"
                             >
-                                <Play className="w-4 h-4" /> Reprendre la lecture
+                                <Play className="w-4 h-4" /> {t('resumeContinue')}
                             </button>
                         </div>
                         <button
                             onClick={onCloseResumeModal}
                             className="mt-6 text-sm text-gray-500 hover:text-gray-700 underline"
                         >
-                            Annuler
+                            {t('resumeClose')}
                         </button>
                     </div>
                 </div>

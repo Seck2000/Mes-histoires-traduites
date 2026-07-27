@@ -3,13 +3,15 @@ import { Loader2 } from 'lucide-react';
 import { api, saveAuth } from '../api';
 import { LANGUAGES, LEVELS } from '../constants/languages';
 import { AGE_BANDS } from '../constants/ageBands';
+import { useI18n } from '../i18n/I18nProvider';
 
 const inputClass =
     'w-full px-4 py-2.5 rounded-lg bg-white border border-[#EBE6DC] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8C5EB9] focus:border-transparent transition';
 
 const labelClass = 'block text-sm font-medium text-gray-700 mb-1.5';
 
-export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
+export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack, onUiLocaleChange }) {
+    const { t } = useI18n();
     const isRegister = mode === 'register';
 
     const [firstName, setFirstName] = useState('');
@@ -24,21 +26,26 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const handleSpokenChange = (code) => {
+        setSpokenLang(code);
+        onUiLocaleChange?.(code);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
         if (isRegister) {
             if (!ageBand) {
-                setError('Choisis une tranche d’âge.');
+                setError(t('authErrorAge'));
                 return;
             }
             if (password !== passwordConfirm) {
-                setError('Les mots de passe ne correspondent pas.');
+                setError(t('authErrorPasswordMatch'));
                 return;
             }
             if (spokenLang === learningLang) {
-                setError('La langue cible doit être différente de la langue maternelle.');
+                setError(t('authErrorSameLang'));
                 return;
             }
         }
@@ -67,7 +74,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
         } catch (err) {
             const msg =
                 err.response?.data?.error ||
-                (isRegister ? "Impossible de créer le compte." : "Impossible de se connecter.");
+                (isRegister ? t('authErrorRegister') : t('authErrorLogin'));
             setError(msg);
         } finally {
             setLoading(false);
@@ -80,12 +87,10 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                 className={`w-full ${isRegister ? 'max-w-2xl' : 'max-w-md'} bg-white border border-[#EBE6DC] rounded-2xl p-6 md:p-8 shadow-xl my-4`}
             >
                 <h1 className="text-2xl md:text-3xl font-bold text-[#8C5EB9] mb-1">
-                    {isRegister ? 'Créer un compte' : 'Connexion'}
+                    {isRegister ? t('authRegisterTitle') : t('authLoginTitle')}
                 </h1>
                 <p className="text-gray-500 text-sm mb-6">
-                    {isRegister
-                        ? 'Ces infos servent à proposer les bonnes histoires selon ton âge.'
-                        : 'Connectez-vous pour retrouver votre progression.'}
+                    {isRegister ? t('authRegisterHint') : t('authLoginHint')}
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -93,7 +98,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                         <>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className={labelClass}>Prénom *</label>
+                                    <label className={labelClass}>{t('authFirstName')}</label>
                                     <input
                                         type="text"
                                         required
@@ -105,7 +110,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                                     />
                                 </div>
                                 <div>
-                                    <label className={labelClass}>Nom *</label>
+                                    <label className={labelClass}>{t('authLastName')}</label>
                                     <input
                                         type="text"
                                         required
@@ -119,7 +124,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                             </div>
 
                             <div>
-                                <label className={labelClass}>Adresse courriel *</label>
+                                <label className={labelClass}>{t('authEmail')}</label>
                                 <input
                                     type="email"
                                     required
@@ -133,22 +138,22 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className={labelClass}>Langue maternelle *</label>
+                                    <label className={labelClass}>{t('authSpokenLang')}</label>
                                     <select
                                         required
                                         value={spokenLang}
-                                        onChange={(e) => setSpokenLang(e.target.value)}
+                                        onChange={(e) => handleSpokenChange(e.target.value)}
                                         className={inputClass}
                                     >
                                         {LANGUAGES.map((l) => (
                                             <option key={l.code} value={l.code}>
-                                                {l.label}
+                                                {l.nativeName}
                                             </option>
                                         ))}
                                     </select>
                                 </div>
                                 <div>
-                                    <label className={labelClass}>Langue cible *</label>
+                                    <label className={labelClass}>{t('authLearningLang')}</label>
                                     <select
                                         required
                                         value={learningLang}
@@ -157,7 +162,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                                     >
                                         {LANGUAGES.map((l) => (
                                             <option key={l.code} value={l.code}>
-                                                {l.label}
+                                                {l.nativeName}
                                             </option>
                                         ))}
                                     </select>
@@ -166,7 +171,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className={labelClass}>Niveau *</label>
+                                    <label className={labelClass}>{t('authLevel')}</label>
                                     <select
                                         required
                                         value={level}
@@ -175,13 +180,13 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                                     >
                                         {LEVELS.map((l) => (
                                             <option key={l.code} value={l.code}>
-                                                {l.label}
+                                                {t(`level_${l.code}`)}
                                             </option>
                                         ))}
                                     </select>
                                 </div>
                                 <div>
-                                    <label className={labelClass}>Tranche d’âge *</label>
+                                    <label className={labelClass}>{t('authAgeBand')}</label>
                                     <select
                                         required
                                         value={ageBand}
@@ -190,7 +195,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                                     >
                                         {AGE_BANDS.map((band) => (
                                             <option key={band.id} value={band.id}>
-                                                {band.label}
+                                                {t(`age_${band.id}`)}
                                             </option>
                                         ))}
                                     </select>
@@ -199,7 +204,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className={labelClass}>Mot de passe *</label>
+                                    <label className={labelClass}>{t('authPassword')}</label>
                                     <input
                                         type="password"
                                         required
@@ -207,12 +212,12 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         className={inputClass}
-                                        placeholder="Au moins 6 caractères"
+                                        placeholder={t('authPasswordPlaceholder')}
                                         autoComplete="new-password"
                                     />
                                 </div>
                                 <div>
-                                    <label className={labelClass}>Confirmation *</label>
+                                    <label className={labelClass}>{t('authPasswordConfirm')}</label>
                                     <input
                                         type="password"
                                         required
@@ -220,7 +225,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                                         value={passwordConfirm}
                                         onChange={(e) => setPasswordConfirm(e.target.value)}
                                         className={inputClass}
-                                        placeholder="Répétez le mot de passe"
+                                        placeholder={t('authPasswordConfirmPlaceholder')}
                                         autoComplete="new-password"
                                     />
                                 </div>
@@ -231,7 +236,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                     {!isRegister && (
                         <>
                             <div>
-                                <label className={labelClass}>Adresse courriel</label>
+                                <label className={labelClass}>{t('authEmailSimple')}</label>
                                 <input
                                     type="email"
                                     required
@@ -243,7 +248,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                                 />
                             </div>
                             <div>
-                                <label className={labelClass}>Mot de passe</label>
+                                <label className={labelClass}>{t('authPasswordSimple')}</label>
                                 <input
                                     type="password"
                                     required
@@ -271,7 +276,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                         <span className="inline-flex w-5 h-5 items-center justify-center" aria-hidden="true">
                             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
                         </span>
-                        <span>{isRegister ? 'Créer mon compte' : 'Se connecter'}</span>
+                        <span>{isRegister ? t('authSubmitRegister') : t('authSubmitLogin')}</span>
                     </button>
                 </form>
 
@@ -281,9 +286,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                         onClick={() => onSwitchMode(isRegister ? 'login' : 'register')}
                         className="text-[#8C5EB9] hover:underline"
                     >
-                        {isRegister
-                            ? 'Déjà un compte ? Se connecter'
-                            : "Pas de compte ? S'inscrire"}
+                        {isRegister ? t('authSwitchToLogin') : t('authSwitchToRegister')}
                     </button>
                     <div>
                         <button
@@ -291,7 +294,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                             onClick={onBack}
                             className="text-gray-400 hover:text-gray-700"
                         >
-                            ← Retour à l&apos;accueil
+                            {t('authBackHome')}
                         </button>
                     </div>
                 </div>
