@@ -97,7 +97,6 @@ export default function LibraryPage({
     onCloseResumeModal,
     getImageUrl,
     progressByStoryId = {},
-    onUiLocaleChange,
 }) {
     const { t } = useI18n();
     const [menuOpen, setMenuOpen] = useState(false);
@@ -191,9 +190,6 @@ export default function LibraryPage({
         setProfileError('');
         setProfileSuccess('');
         setActionNotice('');
-        if (field === 'spokenLang') {
-            onUiLocaleChange?.(value);
-        }
     };
 
     const handleProfileSubmit = async (e) => {

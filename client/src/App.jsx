@@ -420,7 +420,6 @@ function App() {
                 onCloseResumeModal={() => setShowResumeModal(false)}
                 getImageUrl={getImageUrl}
                 progressByStoryId={progressByStoryId}
-                onUiLocaleChange={applySpokenLocale}
               />
             ) : (
               <LibraryPage
@@ -446,7 +445,6 @@ function App() {
                 onCloseResumeModal={() => setShowResumeModal(false)}
                 getImageUrl={getImageUrl}
                 progressByStoryId={progressByStoryId}
-                onUiLocaleChange={applySpokenLocale}
               />
             )
           )}

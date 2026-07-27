@@ -99,7 +99,6 @@ export default function AdminLibraryPage({
     onCloseResumeModal,
     getImageUrl,
     progressByStoryId = {},
-    onUiLocaleChange,
 }) {
     const { t } = useI18n();
     const [menuOpen, setMenuOpen] = useState(false);
@@ -218,9 +217,6 @@ export default function AdminLibraryPage({
         setProfileError('');
         setProfileSuccess('');
         setActionNotice('');
-        if (field === 'spokenLang') {
-            onUiLocaleChange?.(value);
-        }
     };
 
     const handleProfileSubmit = async (e) => {
