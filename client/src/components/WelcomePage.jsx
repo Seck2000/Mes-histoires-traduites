@@ -155,55 +155,48 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                 id="welcome-footer"
                 className="relative z-20 border-t border-white/10 bg-[#03050C] text-white"
             >
-                <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-5 py-12 md:flex-row md:items-end md:justify-between md:px-10 md:py-16">
-                    <div className="max-w-xl">
-                        <p className="font-welcome-display text-4xl leading-tight tracking-tight md:text-5xl">
-                            {t('footerTagline')}
-                        </p>
-                        <p className="mt-4 font-welcome-body text-sm text-white/50">
-                            StoryTranslator — {t('welcomeBadge')}
+                <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-5 py-7 md:flex-row md:items-center md:justify-between md:px-10 md:py-8">
+                    <div className="font-welcome-body">
+                        <p className="text-sm font-semibold text-white/90">StoryTranslator</p>
+                        <p className="mt-1 text-xs text-white/40">
+                            {t('footerCopyright', { year })}
                         </p>
                     </div>
 
                     <nav
                         aria-label="Pied de page"
-                        className="flex flex-col gap-5 font-welcome-body text-sm md:items-end"
+                        className="flex flex-wrap gap-x-5 gap-y-2 font-welcome-body"
                     >
-                        <div className="flex flex-wrap gap-x-6 gap-y-3 md:justify-end">
-                            <button
-                                type="button"
-                                onClick={onLogin}
-                                disabled={loading}
-                                className="welcome-nav-link disabled:opacity-50"
-                            >
-                                {t('welcomeLogin')}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={onRegister}
-                                disabled={loading}
-                                className="welcome-nav-link disabled:opacity-50"
-                            >
-                                {t('welcomeCreateAccount')}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setLegalPanel('privacy')}
-                                className="welcome-nav-link"
-                            >
-                                {t('footerPrivacy')}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setLegalPanel('terms')}
-                                className="welcome-nav-link"
-                            >
-                                {t('footerTerms')}
-                            </button>
-                        </div>
-                        <p className="text-xs tracking-wide text-white/35">
-                            {t('footerCopyright', { year })}
-                        </p>
+                        <button
+                            type="button"
+                            onClick={onLogin}
+                            disabled={loading}
+                            className="welcome-nav-link disabled:opacity-50"
+                        >
+                            {t('welcomeLogin')}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={onRegister}
+                            disabled={loading}
+                            className="welcome-nav-link disabled:opacity-50"
+                        >
+                            {t('welcomeCreateAccount')}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setLegalPanel('privacy')}
+                            className="welcome-nav-link"
+                        >
+                            {t('footerPrivacy')}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setLegalPanel('terms')}
+                            className="welcome-nav-link"
+                        >
+                            {t('footerTerms')}
+                        </button>
                     </nav>
                 </div>
             </footer>
