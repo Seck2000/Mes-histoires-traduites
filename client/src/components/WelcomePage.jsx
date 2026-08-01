@@ -216,27 +216,18 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                                 </button>
                             </li>
                             <li>
-                                <button type="button" onClick={onRegister} disabled={loading} className={footerLinkClass}>
-                                    {t('footerServices')}
-                                </button>
-                            </li>
-                            <li>
                                 <button type="button" onClick={scrollToContact} className={footerLinkClass}>
                                     {t('footerContactLink')}
                                 </button>
                             </li>
                             <li>
-                                <button
-                                    type="button"
-                                    onClick={() => setLegalPanel('sitemap')}
-                                    className={footerLinkClass}
-                                >
-                                    {t('footerSitemap')}
+                                <button type="button" onClick={onLogin} disabled={loading} className={footerLinkClass}>
+                                    {t('welcomeLogin')}
                                 </button>
                             </li>
                             <li>
-                                <button type="button" onClick={onLogin} disabled={loading} className={footerLinkClass}>
-                                    {t('welcomeLogin')}
+                                <button type="button" onClick={onRegister} disabled={loading} className={footerLinkClass}>
+                                    {t('welcomeCreateAccount')}
                                 </button>
                             </li>
                         </ul>
