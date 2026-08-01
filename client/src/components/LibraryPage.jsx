@@ -54,7 +54,7 @@ function normalizeProfileForm(user) {
     };
 }
 
-function sceneProgressLabel(story, progressByStoryId) {
+function sceneProgressLabel(story, progressByStoryId, t) {
     const totalScenes = Array.isArray(story?.scenes) ? story.scenes.length : 0;
     if (totalScenes === 0) return null;
 
@@ -65,13 +65,13 @@ function sceneProgressLabel(story, progressByStoryId) {
     const storyId = story?.id;
     const hasProgress =
         storyId != null && Object.prototype.hasOwnProperty.call(map, storyId);
-    if (!hasProgress) return `Pas commencé · ${totalScenes} scènes`;
+    if (!hasProgress) return t('progressNotStarted', { total: totalScenes });
 
     const sceneIndex = Number(map[storyId]) || 0;
     if (sceneIndex >= totalScenes - 1) {
-        return `Terminé · Scène ${totalScenes}/${totalScenes}`;
+        return t('progressDone', { total: totalScenes });
     }
-    return `Scène ${sceneIndex + 1} / ${totalScenes}`;
+    return t('progressScene', { current: sceneIndex + 1, total: totalScenes });
 }
 
 export default function LibraryPage({
@@ -423,7 +423,7 @@ export default function LibraryPage({
 
                 {ageBand && (
                     <p className="text-xs text-white/55 -mt-2">
-                        Histoires affichées : {ageBand.label}
+                        {t('storiesShownForAge', { age: t(`age_${ageBand.id}`) })}
                     </p>
                 )}
 
@@ -469,21 +469,19 @@ export default function LibraryPage({
             )}
 
             <div className="mb-6 rounded-2xl border border-[rgba(255,255,255,0.12)] bg-[#0A1228] px-5 py-4">
-                <p className="text-[#1A3FFF] font-extrabold text-lg">Espace enfant</p>
+                <p className="text-[#1A3FFF] font-extrabold text-lg">{t('childSpace')}</p>
                 <p className="text-white/45 text-sm mt-0.5">
-                    Bonjour {userName}
+                    {t('helloUser', { name: userName })}
                     {ageBand
-                        ? ` — histoires pour ${ageBand.label}`
-                        : ' — choisis ta tranche d’âge dans Mon profil'}
+                        ? t('storiesForAge', { age: t(`age_${ageBand.id}`) })
+                        : t('chooseAgeInProfile')}
                 </p>
             </div>
 
             <div className="flex justify-between items-start md:items-center mb-8 gap-4 relative">
                 <div>
-                    <div className="text-2xl font-bold text-[#1A3FFF]">Mes histoires</div>
-                    <p className="text-white/45 text-sm mt-1">
-                        Seules les histoires de ton âge s&apos;affichent ici
-                    </p>
+                    <div className="text-2xl font-bold text-[#1A3FFF]">{t('myStories')}</div>
+                    <p className="text-white/45 text-sm mt-1">{t('storiesAgeOnlyHint')}</p>
                 </div>
 
                 {/* Menu mobile */}
@@ -492,7 +490,7 @@ export default function LibraryPage({
                         type="button"
                         onClick={() => setMenuOpen((open) => !open)}
                         className="w-11 h-11 rounded-xl bg-[#0A1228] border border-[rgba(255,255,255,0.12)] flex items-center justify-center text-white/80 hover:bg-[#12204a] transition"
-                        aria-label={menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+                        aria-label={menuOpen ? t('closeMenu') : t('openMenu')}
                     >
                         {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                     </button>
@@ -557,8 +555,9 @@ export default function LibraryPage({
                             <h2 className="text-xl font-bold text-white">{sectionTitle}</h2>
                             {activeSection !== 'profile' && (
                                 <p className="text-sm text-white/45">
-                                    {visibleStories.length} histoire{visibleStories.length > 1 ? 's' : ''} affichée
-                                    {visibleStories.length > 1 ? 's' : ''}
+                                    {visibleStories.length > 1
+                                        ? t('storiesShownMany', { count: visibleStories.length })
+                                        : t('storiesShownOne', { count: visibleStories.length })}
                                 </p>
                             )}
                         </div>
@@ -569,10 +568,10 @@ export default function LibraryPage({
                     ) : visibleStories.length === 0 ? (
                         <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-8 text-center text-white/55">
                             {activeSection === 'favorites'
-                                ? "Aucun favori pour le moment."
+                                ? t('emptyFavorites')
                                 : activeSection === 'recent'
-                                  ? "Aucune histoire récemment lue."
-                                  : "Aucune histoire disponible pour ton âge pour le moment. Demande à un adulte d'en ajouter."}
+                                  ? t('emptyRecent')
+                                  : t('emptyForAge')}
                         </div>
                     ) : (
                         <div
@@ -582,10 +581,8 @@ export default function LibraryPage({
                             {visibleStories.map((story, index) => {
                                 const isFavorite = safeFavoriteIds.includes(story.id);
                                 const isRecent = safeRecentStoryIds.includes(story.id);
-                                const storyBand = AGE_BANDS.find(
-                                    (band) => band.id === (story.ageCategory || story.ageBand)
-                                );
-                                const sceneLabel = sceneProgressLabel(story, progressByStoryId);
+                                const storyBandId = story.ageCategory || story.ageBand;
+                                const sceneLabel = sceneProgressLabel(story, progressByStoryId, t);
 
                                 return (
                                     <div
@@ -605,19 +602,19 @@ export default function LibraryPage({
                                         >
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
                                             <div className="absolute top-3 left-3 flex gap-2 flex-wrap">
-                                                {storyBand && (
+                                                {storyBandId && (
                                                     <span className="bg-[#12204a] text-[#1A3FFF] text-[10px] font-bold px-2 py-1 rounded-full shadow">
-                                                        {storyBand.label}
+                                                        {t(`age_${storyBandId}`)}
                                                     </span>
                                                 )}
                                                 {isRecent && (
                                                     <span className="bg-[#12204a] text-[#1A3FFF] text-[10px] font-bold px-2 py-1 rounded-full shadow">
-                                                        Récent
+                                                        {t('badgeRecent')}
                                                     </span>
                                                 )}
                                                 {isFavorite && (
                                                     <span className="bg-red-600/90 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow">
-                                                        Favori
+                                                        {t('badgeFavorite')}
                                                     </span>
                                                 )}
                                             </div>
@@ -635,7 +632,7 @@ export default function LibraryPage({
 
                                         <div className="p-4">
                                             <h3 className="font-bold text-white mb-3 line-clamp-2">
-                                                {story.title || 'Histoire sans titre'}
+                                                {story.title || t('storyUntitled')}
                                             </h3>
                                             <div className="flex gap-2">
                                                 <button
@@ -643,7 +640,7 @@ export default function LibraryPage({
                                                     onClick={() => onStartStory(story)}
                                                     className="flex-1 px-4 py-2 rounded-xl bg-[#1A3FFF] hover:bg-[#1533cc] text-white text-sm font-semibold transition"
                                                 >
-                                                    Lire
+                                                    {t('play')}
                                                 </button>
                                                 <button
                                                     type="button"
@@ -653,7 +650,11 @@ export default function LibraryPage({
                                                             ? 'bg-red-500 border-red-400 text-white'
                                                             : 'bg-[#0A1228] border-[rgba(255,255,255,0.12)] text-white/55 hover:text-[#1A3FFF] hover:bg-[#12204a]'
                                                     }`}
-                                                    title={isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                                                    title={
+                                                        isFavorite
+                                                            ? t('favoriteTitleRemove')
+                                                            : t('favoriteTitleAdd')
+                                                    }
                                                 >
                                                     <Heart
                                                         className="w-5 h-5"
@@ -675,7 +676,7 @@ export default function LibraryPage({
                 <button
                     onClick={onPlayRandom}
                     className="bg-red-500/90 hover:bg-red-600 text-white p-4 rounded-full shadow-lg backdrop-blur-sm transition-transform hover:scale-110 active:scale-95 group"
-                    title="Lire une histoire au hasard"
+                    title={t('randomStory')}
                 >
                     <Play className="w-8 h-8 group-hover:animate-pulse" fill="white" />
                 </button>
@@ -687,9 +688,10 @@ export default function LibraryPage({
                     <div className="bg-[#0A1228] border-2 border-[rgba(255,255,255,0.12)] rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl text-center">
                         <h3 className="text-2xl font-bold text-[#1A3FFF] mb-2">{t('resumeTitle')}</h3>
                         <p className="text-white/70 mb-8">
-                            Vous étiez en train de lire{' '}
-                            <strong className="text-white">"{storyToResume?.title}"</strong> à la scène{' '}
-                            {savedSceneIndex + 1}. Que souhaitez-vous faire ?
+                            {t('resumeBody', {
+                                title: storyToResume?.title || t('storyUntitled'),
+                                scene: savedSceneIndex + 1,
+                            })}
                         </p>
                         <div className="flex flex-col gap-3 md:flex-row md:justify-center">
                             <button

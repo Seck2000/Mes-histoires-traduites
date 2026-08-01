@@ -52,7 +52,7 @@ function formatAccountDate(value) {
     }
 }
 
-function sceneProgressLabel(story, progressByStoryId) {
+function sceneProgressLabel(story, progressByStoryId, t) {
     const totalScenes = Array.isArray(story?.scenes) ? story.scenes.length : 0;
     if (totalScenes === 0) return null;
 
@@ -63,13 +63,13 @@ function sceneProgressLabel(story, progressByStoryId) {
     const storyId = story?.id;
     const hasProgress =
         storyId != null && Object.prototype.hasOwnProperty.call(map, storyId);
-    if (!hasProgress) return `Pas commencé · ${totalScenes} scènes`;
+    if (!hasProgress) return t('progressNotStarted', { total: totalScenes });
 
     const sceneIndex = Number(map[storyId]) || 0;
     if (sceneIndex >= totalScenes - 1) {
-        return `Terminé · Scène ${totalScenes}/${totalScenes}`;
+        return t('progressDone', { total: totalScenes });
     }
-    return `Scène ${sceneIndex + 1} / ${totalScenes}`;
+    return t('progressScene', { current: sceneIndex + 1, total: totalScenes });
 }
 
 const inputClass =
@@ -336,7 +336,7 @@ export default function AdminLibraryPage({
     const renderStoryCard = (story, index) => {
         const isFavorite = safeFavoriteIds.includes(story.id);
         const storyBand = AGE_BANDS.find((band) => band.id === (story.ageCategory || story.ageBand));
-        const sceneLabel = sceneProgressLabel(story, progressByStoryId);
+        const sceneLabel = sceneProgressLabel(story, progressByStoryId, t);
 
         return (
             <div
@@ -371,7 +371,7 @@ export default function AdminLibraryPage({
                 </div>
                 <div className="p-4">
                     <h3 className="font-bold text-white mb-3 line-clamp-2">
-                        {story.title || 'Sans titre'}
+                        {story.title || t('storyUntitled')}
                     </h3>
                     <div className="flex gap-2">
                         <button
@@ -379,7 +379,7 @@ export default function AdminLibraryPage({
                             onClick={() => onStartStory(story)}
                             className="flex-1 px-4 py-2 rounded-xl bg-[#1A3FFF] hover:bg-[#12204a]0 text-white text-sm font-semibold"
                         >
-                            Lire
+                            {t('play')}
                         </button>
                         <button
                             type="button"
@@ -401,14 +401,14 @@ export default function AdminLibraryPage({
     const renderDashboard = () => (
         <div className="space-y-8">
             <div>
-                <h2 className="text-xl font-bold text-white mb-1">Tableau de bord</h2>
+                <h2 className="text-xl font-bold text-white mb-1">{t('navDashboard')}</h2>
                 <p className="text-sm text-white/55 mb-5">
                     Toutes les catégories d’histoires — importe un fichier .zip pour en ajouter.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
                     <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-5 shadow-sm">
-                        <p className="text-sm text-white/55">Total histoires</p>
+                        <p className="text-sm text-white/55">{t('adminTotalStories')}</p>
                         <p className="text-3xl font-extrabold text-[#6EA0FF] mt-1">{safeStories.length}</p>
                     </div>
                     {AGE_BANDS.map((band) => (
@@ -418,11 +418,11 @@ export default function AdminLibraryPage({
                             onClick={() => openBandLibrary(band.id)}
                             className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-5 shadow-sm text-left hover:border-[#1A3FFF]/50 transition"
                         >
-                            <p className="text-sm text-white/55">{band.label}</p>
+                            <p className="text-sm text-white/55">{t(`age_${band.id}`)}</p>
                             <p className="text-3xl font-extrabold text-white mt-1">
                                 {storiesByBand[band.id]?.length || 0}
                             </p>
-                            <p className="text-xs text-[#6EA0FF] font-semibold mt-2">Voir la catégorie →</p>
+                            <p className="text-xs text-[#6EA0FF] font-semibold mt-2">{t('adminSeeCategory')}</p>
                         </button>
                     ))}
                 </div>
@@ -435,7 +435,7 @@ export default function AdminLibraryPage({
                         <div className="flex items-center justify-between gap-3 mb-3">
                             <h3 className="text-lg font-bold text-white flex items-center gap-2">
                                 <BookOpen className="w-5 h-5 text-[#1A3FFF]" />
-                                {band.label}
+                                {t(`age_${band.id}`)}
                                 <span className="text-sm font-medium text-white/45">({list.length})</span>
                             </h3>
                             <button
@@ -443,12 +443,12 @@ export default function AdminLibraryPage({
                                 onClick={() => openBandLibrary(band.id)}
                                 className="text-sm font-semibold text-[#6EA0FF] hover:underline"
                             >
-                                Tout voir
+                                {t('adminSeeCategory')}
                             </button>
                         </div>
                         {list.length === 0 ? (
                             <div className="bg-[#0A1228] border border-dashed border-[rgba(255,255,255,0.12)] rounded-2xl p-6 text-center text-white/45 text-sm">
-                                Aucune histoire dans cette catégorie. Clique sur Importer pour en ajouter.
+                                {t('adminEmptyCategory')}
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -567,24 +567,22 @@ export default function AdminLibraryPage({
         <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-6 space-y-6 shadow-sm">
             <div className="flex items-center gap-2 text-[#6EA0FF] font-bold">
                 <Shield className="w-5 h-5" />
-                Profil administrateur
+                {t('adminProfileBanner')}
             </div>
             <div className="flex flex-col sm:flex-row gap-5 items-start">
                 <div className="w-24 h-24 rounded-full bg-[#12204a] border-2 border-white/15 overflow-hidden flex items-center justify-center">
                     {avatarSrc ? (
-                        <img src={avatarSrc} alt="Avatar" className="w-full h-full object-cover" />
+                        <img src={avatarSrc} alt={t('profilePhotoAlt')} className="w-full h-full object-cover" />
                     ) : (
                         <User className="w-10 h-10 text-[#1A3FFF]" />
                     )}
                 </div>
                 <div className="flex-1">
-                    <h3 className="text-xl font-bold text-white">Gestion du compte</h3>
-                    <p className="text-white/55 text-sm mb-4">
-                        Tu gères toute la bibliothèque et les imports d’histoires (.zip).
-                    </p>
+                    <h3 className="text-xl font-bold text-white">{t('adminProfileManage')}</h3>
+                    <p className="text-white/55 text-sm mb-4">{t('adminProfileHint')}</p>
                     <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0A1228] hover:bg-[#12204a] border border-[rgba(255,255,255,0.12)] text-sm font-medium cursor-pointer transition">
                         {avatarUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
-                        Changer la photo
+                        {t('profileChangePhoto')}
                         <input
                             type="file"
                             accept="image/*"
@@ -599,7 +597,7 @@ export default function AdminLibraryPage({
             <form onSubmit={handleProfileSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5">
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-white/80 mb-1.5">Prénom</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">{t('profileFirstName')}</label>
                         <input
                             value={profileForm.firstName}
                             onChange={(e) => handleProfileChange('firstName', e.target.value)}
@@ -608,7 +606,7 @@ export default function AdminLibraryPage({
                         />
                     </div>
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-white/80 mb-1.5">Nom</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">{t('profileLastName')}</label>
                         <input
                             value={profileForm.lastName}
                             onChange={(e) => handleProfileChange('lastName', e.target.value)}
@@ -618,7 +616,7 @@ export default function AdminLibraryPage({
                     </div>
 
                     <div className="min-w-0 md:col-span-2">
-                        <label className="block text-sm font-medium text-white/80 mb-1.5">Adresse courriel</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">{t('profileEmail')}</label>
                         <input
                             type="email"
                             value={profileForm.email}
@@ -683,10 +681,10 @@ export default function AdminLibraryPage({
                     </div>
                     <div>
                         <p className="text-[#9BB8FF] font-extrabold text-lg leading-tight">
-                            Tableau de bord administrateur
+                            {t('adminDashboardTitle')}
                         </p>
                         <p className="text-white/70 text-sm">
-                            {userName} — gestion de toute la bibliothèque
+                            {t('adminDashboardHint', { name: userName })}
                         </p>
                     </div>
                 </div>
@@ -711,10 +709,8 @@ export default function AdminLibraryPage({
             {/* Bouton Importer — bien visible */}
             <div className="mb-6 rounded-2xl border-2 border-dashed border-red-400 bg-red-50 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="text-center sm:text-left">
-                    <p className="text-red-700 font-extrabold text-xl">Importer une histoire (.zip)</p>
-                    <p className="text-white/70 text-sm mt-1">
-                        Comme avant : choisis un fichier ZIP contenant un story.json + images.
-                    </p>
+                    <p className="text-red-700 font-extrabold text-xl">{t('adminImportTitle')}</p>
+                    <p className="text-white/70 text-sm mt-1">{t('adminImportHint')}</p>
                 </div>
                 <button
                     type="button"
@@ -727,7 +723,7 @@ export default function AdminLibraryPage({
                     ) : (
                         <Upload className="w-6 h-6" />
                     )}
-                    {isUploading ? 'Importation…' : 'Importer'}
+                    {isUploading ? t('adminImporting') : t('adminImportAction')}
                 </button>
             </div>
 
@@ -750,7 +746,7 @@ export default function AdminLibraryPage({
                         disabled={isUploading}
                         className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-red-600 text-white font-medium"
                     >
-                        <span>{isUploading ? 'Importation…' : 'Importer une histoire'}</span>
+                        <span>{isUploading ? t('adminImporting') : t('adminImportTitle')}</span>
                         <Upload className="w-5 h-5" />
                     </button>
                     <button
@@ -775,7 +771,7 @@ export default function AdminLibraryPage({
                             className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-red-600 hover:bg-red-500 disabled:bg-red-300 text-white font-bold"
                         >
                             {isUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
-                            Importer
+                            {isUploading ? t('adminImporting') : t('adminImportAction')}
                         </button>
                     </div>
                 </aside>
@@ -802,7 +798,7 @@ export default function AdminLibraryPage({
                                                 : 'bg-[#0A1228] text-white/70 border border-[rgba(255,255,255,0.12)]'
                                         }`}
                                     >
-                                        Tous les âges
+                                        {t('adminAllAges')}
                                     </button>
                                     {AGE_BANDS.map((band) => (
                                         <button
@@ -815,7 +811,7 @@ export default function AdminLibraryPage({
                                                     : 'bg-[#0A1228] text-white/70 border border-[rgba(255,255,255,0.12)]'
                                             }`}
                                         >
-                                            {band.label}
+                                            {t(`age_${band.id}`)}
                                         </button>
                                     ))}
                                 </div>
@@ -824,13 +820,15 @@ export default function AdminLibraryPage({
                             <div className="mb-5">
                                 <h2 className="text-xl font-bold text-white">{sectionTitle}</h2>
                                 <p className="text-sm text-white/55">
-                                    {visibleStories.length} histoire{visibleStories.length > 1 ? 's' : ''}
+                                    {visibleStories.length > 1
+                                        ? t('adminStoriesCountMany', { count: visibleStories.length })
+                                        : t('adminStoriesCountOne', { count: visibleStories.length })}
                                 </p>
                             </div>
 
                             {visibleStories.length === 0 ? (
                                 <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-8 text-center text-white/55">
-                                    Aucune histoire ici. Utilise le bouton rouge <strong>Importer</strong>.
+                                    {t('adminEmptyLibrary')}
                                 </div>
                             ) : (
                                 <div
@@ -851,14 +849,14 @@ export default function AdminLibraryPage({
                 onClick={handleImportClick}
                 disabled={isUploading}
                 className="fixed bottom-6 right-6 z-50 w-16 h-16 md:w-20 md:h-20 rounded-full bg-red-600 hover:bg-red-500 disabled:bg-red-300 text-white shadow-2xl flex flex-col items-center justify-center gap-0.5 font-bold transition hover:scale-110 active:scale-95"
-                title="Importer une histoire (.zip)"
+                title={t('adminImportTitle')}
             >
                 {isUploading ? (
                     <Loader2 className="w-7 h-7 animate-spin" />
                 ) : (
                     <>
                         <Upload className="w-6 h-6" />
-                        <span className="text-[10px]">Import</span>
+                        <span className="text-[10px]">{t('adminImportAction')}</span>
                     </>
                 )}
             </button>
@@ -868,8 +866,8 @@ export default function AdminLibraryPage({
                     <button
                         type="button"
                         onClick={onPlayRandom}
-                        className="bg-[#12204a]0 hover:bg-[#1A3FFF] text-white p-4 rounded-full shadow-lg"
-                        title="Histoire au hasard"
+                        className="bg-red-500/90 hover:bg-red-600 text-white p-4 rounded-full shadow-lg"
+                        title={t('randomStory')}
                     >
                         <Play className="w-7 h-7" fill="white" />
                     </button>
@@ -879,30 +877,32 @@ export default function AdminLibraryPage({
             {showResumeModal && (
                 <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
                     <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-6 md:p-8 max-w-md w-full text-center shadow-xl">
-                        <h3 className="text-2xl font-bold text-[#6EA0FF] mb-2">Reprendre l&apos;histoire ?</h3>
+                        <h3 className="text-2xl font-bold text-[#6EA0FF] mb-2">{t('resumeTitle')}</h3>
                         <p className="text-white/70 mb-8">
-                            Scène {savedSceneIndex + 1} de{' '}
-                            <strong className="text-white">&quot;{storyToResume?.title}&quot;</strong>.
+                            {t('resumeBody', {
+                                title: storyToResume?.title || t('storyUntitled'),
+                                scene: savedSceneIndex + 1,
+                            })}
                         </p>
                         <div className="flex flex-col gap-3 md:flex-row md:justify-center">
                             <button
                                 onClick={onRestartStory}
                                 className="px-6 py-3 bg-[#0A1228] border border-[rgba(255,255,255,0.12)] hover:bg-[#12204a] text-white/90 rounded-xl"
                             >
-                                Recommencer
+                                {t('resumeRestart')}
                             </button>
                             <button
                                 onClick={onResumeStory}
-                                className="px-6 py-3 bg-[#1A3FFF] hover:bg-[#12204a]0 text-white rounded-xl font-bold flex items-center justify-center gap-2"
+                                className="px-6 py-3 bg-[#1A3FFF] hover:bg-[#1533cc] text-white rounded-xl font-bold flex items-center justify-center gap-2"
                             >
-                                <Play className="w-4 h-4" /> Reprendre
+                                <Play className="w-4 h-4" /> {t('resumeContinue')}
                             </button>
                         </div>
                         <button
                             onClick={onCloseResumeModal}
                             className="mt-6 text-sm text-white/45 hover:text-white/80 underline"
                         >
-                            Annuler
+                            {t('resumeClose')}
                         </button>
                     </div>
                 </div>
