@@ -101,6 +101,27 @@ app.get('/api/health/db', async (req, res) => {
     }
 });
 
+// Aperçu public pour la page d'accueil (Découvrir) — métadonnées + image de couverture uniquement
+app.get('/api/stories/preview', async (req, res) => {
+    try {
+        const storyList = await listStoriesFromDb(pool);
+        const preview = storyList.map((story) => {
+            const firstScene = Array.isArray(story.scenes) ? story.scenes[0] : null;
+            return {
+                id: story.id,
+                title: story.title,
+                titleAr: story.titleAr || null,
+                thumbnail: story.thumbnail || firstScene?.image || null,
+                ageCategory: story.ageCategory || story.ageBand || null,
+            };
+        });
+        return res.json(preview);
+    } catch (error) {
+        console.error('Erreur aperçu histoires:', error);
+        return res.status(500).json({ error: 'Impossible de charger l’aperçu des histoires.' });
+    }
+});
+
 // 1. ROUTE POUR RÉCUPÉRER LA LISTE DES HISTOIRES (GET)
 // Source de vérité = PostgreSQL (tables Story / Scene). Images toujours dans uploads/.
 // Admin = toute la bibliothèque ; enfant = uniquement sa tranche d'âge

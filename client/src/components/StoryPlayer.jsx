@@ -38,16 +38,16 @@ export default function StoryPlayer({
 
     if (!currentScene) {
         return (
-            <div className="flex-1 flex items-center justify-center bg-white rounded-xl border border-[#EBE6DC] p-6 text-center shadow-sm">
+            <div className="flex-1 flex items-center justify-center bg-[#0A1228] rounded-xl border border-[rgba(255,255,255,0.12)] p-6 text-center shadow-sm">
                 <div className="max-w-md">
                     <h2 className="text-2xl font-bold text-red-600 mb-3">{t('playerIncompleteTitle')}</h2>
-                    <p className="text-gray-600 mb-6">
+                    <p className="text-white/70 mb-6">
                         {t('playerIncompleteBody')}
                     </p>
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-5 py-3 rounded-xl bg-[#8C5EB9] hover:bg-[#7a4fa8] text-white font-semibold transition"
+                        className="px-5 py-3 rounded-xl bg-[#1A3FFF] hover:bg-[#1533cc] text-white font-semibold transition"
                     >
                         {t('playerBackLibrary')}
                     </button>
@@ -64,10 +64,10 @@ export default function StoryPlayer({
     const isLastScene = sceneIndex === story.scenes.length - 1;
 
     return (
-        <div className="flex-1 flex flex-col items-center justify-center relative bg-white rounded-xl overflow-hidden shadow-2xl border border-[#EBE6DC]">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-[#EBE6DC] z-30">
+        <div className="flex-1 flex flex-col items-center justify-center relative bg-[#0A1228] rounded-xl overflow-hidden shadow-2xl border border-[rgba(255,255,255,0.12)]">
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-[rgba(255,255,255,0.12)] z-30">
                 <div
-                    className="h-full bg-[#8C5EB9] transition-all duration-300 ease-out"
+                    className="h-full bg-[#1A3FFF] transition-all duration-300 ease-out"
                     style={{
                         width: `${((sceneIndex + 1) / story.scenes.length) * 100}%`,
                     }}
@@ -116,7 +116,7 @@ export default function StoryPlayer({
                         {currentLang.toUpperCase()}
                     </button>
 
-                    <div className="w-16 h-16 md:w-24 md:h-24 bg-white rounded-full md:rounded-xl overflow-hidden border-2 border-gray-300 shadow-lg relative md:-mt-8 z-0">
+                    <div className="w-16 h-16 md:w-24 md:h-24 bg-[#0A1228] rounded-full md:rounded-xl overflow-hidden border-2 border-gray-300 shadow-lg relative md:-mt-8 z-0">
                         <img
                             src={getImageUrl(currentCharacterAvatar, story.id)}
                             alt={t('playerCharAlt')}

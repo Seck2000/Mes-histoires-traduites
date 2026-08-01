@@ -8,6 +8,7 @@ import StoryChat from './components/StoryChat';
 import StoryPlayer from './components/StoryPlayer';
 import { storyMatchesAgeBand } from './constants/ageBands';
 import { LANGUAGE_CODES, isSupportedLocale } from './constants/languages';
+import { consumePendingStoryId } from './constants/pendingStory';
 import { getStoryImageUrl } from './utils/mediaUrl';
 import { stopSpeaking } from './utils/speech';
 import { I18nProvider } from './i18n/I18nProvider';
@@ -91,7 +92,7 @@ function App() {
     }
   };
 
-  const handleAuthSuccess = (loggedInUser) => {
+  const handleAuthSuccess = async (loggedInUser) => {
     setUser(loggedInUser);
     applySpokenLocale(loggedInUser.preferences?.spokenLang);
     const learn = loggedInUser.preferences?.learningLang;
@@ -99,8 +100,16 @@ function App() {
       setCurrentLang(learn);
     }
     setCurrentView('library');
-    fetchStories();
+    const list = await fetchStories();
     fetchLibraryData();
+
+    const pendingId = consumePendingStoryId();
+    if (pendingId) {
+      const pendingStory = list.find((story) => story.id === pendingId);
+      if (pendingStory) {
+        window.setTimeout(() => handleStartStory(pendingStory), 0);
+      }
+    }
   };
 
   const handleLogout = () => {
@@ -372,21 +381,23 @@ function App() {
   const getImageUrl = (path, storyId) => getStoryImageUrl(path, storyId, API_URL);
 
   const showWelcome = !user && currentView !== 'login' && currentView !== 'register';
+  const showAuth = !user && (currentView === 'login' || currentView === 'register');
+  const fullBleed = showWelcome || showAuth;
 
   return (
     <I18nProvider locale={uiLocale} setLocale={setUiLocale}>
       <div
-        className="min-h-screen bg-[#FAF8F6] text-gray-900 font-sans selection:bg-[#8C5EB9] selection:text-white"
+        className="app-shell min-h-screen selection:bg-[#1A3FFF] selection:text-white"
         translate="no"
       >
         <div
           className={
-            showWelcome
+            fullBleed
               ? 'min-h-screen flex flex-col relative'
               : 'container mx-auto p-4 min-h-screen flex flex-col relative'
           }
         >
-          {(currentView === 'login' || currentView === 'register') && (
+          {showAuth && (
             <AuthPage
               mode={currentView}
               onSuccess={handleAuthSuccess}

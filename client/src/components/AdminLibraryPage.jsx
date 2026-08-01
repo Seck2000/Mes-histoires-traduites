@@ -73,7 +73,7 @@ function sceneProgressLabel(story, progressByStoryId) {
 }
 
 const inputClass =
-    'w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-white border border-[#EBE6DC] text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500';
+    'w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-[#0A1228] border border-[rgba(255,255,255,0.12)] text-white focus:outline-none focus:ring-2 focus:ring-[#1A3FFF] [&>option]:bg-[#0A1228]';
 
 export default function AdminLibraryPage({
     user,
@@ -321,8 +321,8 @@ export default function AdminLibraryPage({
                         onClick={() => changeSection(item.id)}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition ${
                             active
-                                ? 'bg-amber-600 text-white shadow-md'
-                                : 'text-gray-700 hover:bg-amber-50'
+                                ? 'bg-[#1A3FFF] text-white shadow-md'
+                                : 'text-white/80 hover:bg-[#12204a]'
                         }`}
                     >
                         <Icon className="w-5 h-5 shrink-0" />
@@ -341,11 +341,11 @@ export default function AdminLibraryPage({
         return (
             <div
                 key={story.id || index}
-                className="bg-white border border-[#EBE6DC] rounded-2xl overflow-hidden hover:border-amber-400 transition group shadow-sm"
+                className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl overflow-hidden hover:border-[#1A3FFF]/50 transition group shadow-sm"
             >
                 <div
                     onClick={() => onStartStory(story)}
-                    className="h-44 cursor-pointer relative bg-cover bg-center bg-amber-100"
+                    className="h-44 cursor-pointer relative bg-cover bg-center bg-[#1a2f66]"
                     style={
                         story.thumbnail
                             ? { backgroundImage: `url(${getImageUrl(story.thumbnail, story.id)})` }
@@ -364,20 +364,20 @@ export default function AdminLibraryPage({
                         </span>
                     )}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                        <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center">
-                            <Play className="w-7 h-7 text-gray-900 ml-1" fill="currentColor" />
+                        <div className="w-14 h-14 rounded-full bg-[#0A1228]/90 flex items-center justify-center">
+                            <Play className="w-7 h-7 text-white ml-1" fill="currentColor" />
                         </div>
                     </div>
                 </div>
                 <div className="p-4">
-                    <h3 className="font-bold text-gray-900 mb-3 line-clamp-2">
+                    <h3 className="font-bold text-white mb-3 line-clamp-2">
                         {story.title || 'Sans titre'}
                     </h3>
                     <div className="flex gap-2">
                         <button
                             type="button"
                             onClick={() => onStartStory(story)}
-                            className="flex-1 px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-sm font-semibold"
+                            className="flex-1 px-4 py-2 rounded-xl bg-[#1A3FFF] hover:bg-[#12204a]0 text-white text-sm font-semibold"
                         >
                             Lire
                         </button>
@@ -387,7 +387,7 @@ export default function AdminLibraryPage({
                             className={`px-3 py-2 rounded-xl border ${
                                 isFavorite
                                     ? 'bg-red-500 border-red-400 text-white'
-                                    : 'bg-[#FAF8F6] border-[#EBE6DC] text-gray-600'
+                                    : 'bg-[#0A1228] border-[rgba(255,255,255,0.12)] text-white/70'
                             }`}
                         >
                             <Heart className="w-5 h-5" fill={isFavorite ? 'currentColor' : 'none'} />
@@ -401,28 +401,28 @@ export default function AdminLibraryPage({
     const renderDashboard = () => (
         <div className="space-y-8">
             <div>
-                <h2 className="text-xl font-bold text-gray-900 mb-1">Tableau de bord</h2>
-                <p className="text-sm text-gray-500 mb-5">
+                <h2 className="text-xl font-bold text-white mb-1">Tableau de bord</h2>
+                <p className="text-sm text-white/55 mb-5">
                     Toutes les catégories d’histoires — importe un fichier .zip pour en ajouter.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-white border border-[#EBE6DC] rounded-2xl p-5 shadow-sm">
-                        <p className="text-sm text-gray-500">Total histoires</p>
-                        <p className="text-3xl font-extrabold text-amber-700 mt-1">{safeStories.length}</p>
+                    <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-5 shadow-sm">
+                        <p className="text-sm text-white/55">Total histoires</p>
+                        <p className="text-3xl font-extrabold text-[#6EA0FF] mt-1">{safeStories.length}</p>
                     </div>
                     {AGE_BANDS.map((band) => (
                         <button
                             key={band.id}
                             type="button"
                             onClick={() => openBandLibrary(band.id)}
-                            className="bg-white border border-[#EBE6DC] rounded-2xl p-5 shadow-sm text-left hover:border-amber-400 transition"
+                            className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-5 shadow-sm text-left hover:border-[#1A3FFF]/50 transition"
                         >
-                            <p className="text-sm text-gray-500">{band.label}</p>
-                            <p className="text-3xl font-extrabold text-gray-900 mt-1">
+                            <p className="text-sm text-white/55">{band.label}</p>
+                            <p className="text-3xl font-extrabold text-white mt-1">
                                 {storiesByBand[band.id]?.length || 0}
                             </p>
-                            <p className="text-xs text-amber-700 font-semibold mt-2">Voir la catégorie →</p>
+                            <p className="text-xs text-[#6EA0FF] font-semibold mt-2">Voir la catégorie →</p>
                         </button>
                     ))}
                 </div>
@@ -433,21 +433,21 @@ export default function AdminLibraryPage({
                 return (
                     <section key={band.id}>
                         <div className="flex items-center justify-between gap-3 mb-3">
-                            <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                                <BookOpen className="w-5 h-5 text-amber-600" />
+                            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                <BookOpen className="w-5 h-5 text-[#1A3FFF]" />
                                 {band.label}
-                                <span className="text-sm font-medium text-gray-400">({list.length})</span>
+                                <span className="text-sm font-medium text-white/45">({list.length})</span>
                             </h3>
                             <button
                                 type="button"
                                 onClick={() => openBandLibrary(band.id)}
-                                className="text-sm font-semibold text-amber-700 hover:underline"
+                                className="text-sm font-semibold text-[#6EA0FF] hover:underline"
                             >
                                 Tout voir
                             </button>
                         </div>
                         {list.length === 0 ? (
-                            <div className="bg-white border border-dashed border-[#EBE6DC] rounded-2xl p-6 text-center text-gray-400 text-sm">
+                            <div className="bg-[#0A1228] border border-dashed border-[rgba(255,255,255,0.12)] rounded-2xl p-6 text-center text-white/45 text-sm">
                                 Aucune histoire dans cette catégorie. Clique sur Importer pour en ajouter.
                             </div>
                         ) : (
@@ -464,13 +464,13 @@ export default function AdminLibraryPage({
     const renderUsers = () => (
         <div className="space-y-4">
             <div>
-                <h2 className="text-xl font-bold text-gray-900">{t('adminUsersTitle')}</h2>
-                <p className="text-sm text-gray-500 mt-1">{t('adminUsersHint')}</p>
+                <h2 className="text-xl font-bold text-white">{t('adminUsersTitle')}</h2>
+                <p className="text-sm text-white/55 mt-1">{t('adminUsersHint')}</p>
             </div>
 
             {usersLoading && (
-                <div className="bg-white border border-[#EBE6DC] rounded-2xl p-8 flex items-center justify-center gap-3 text-gray-600">
-                    <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
+                <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-8 flex items-center justify-center gap-3 text-white/70">
+                    <Loader2 className="w-5 h-5 animate-spin text-[#1A3FFF]" />
                     {t('adminUsersLoading')}
                 </div>
             )}
@@ -482,20 +482,20 @@ export default function AdminLibraryPage({
             )}
 
             {!usersLoading && !usersError && registeredUsers.length === 0 && (
-                <div className="bg-white border border-[#EBE6DC] rounded-2xl p-8 text-center text-gray-500">
+                <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-8 text-center text-white/55">
                     {t('adminUsersEmpty')}
                 </div>
             )}
 
             {!usersLoading && !usersError && registeredUsers.length > 0 && (
                 <>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-white/55">
                         {registeredUsers.length}{' '}
                         {registeredUsers.length > 1 ? t('adminUsersCountPlural') : t('adminUsersCount')}
                     </p>
-                    <div className="overflow-x-auto rounded-2xl border border-[#EBE6DC] bg-white shadow-sm">
+                    <div className="overflow-x-auto rounded-2xl border border-[rgba(255,255,255,0.12)] bg-[#0A1228] shadow-sm">
                         <table className="min-w-full text-sm">
-                            <thead className="bg-amber-50 text-left text-amber-900">
+                            <thead className="bg-[#12204a] text-left text-white">
                                 <tr>
                                     <th className="px-4 py-3 font-semibold whitespace-nowrap">{t('adminColName')}</th>
                                     <th className="px-4 py-3 font-semibold whitespace-nowrap">{t('adminColEmail')}</th>
@@ -518,38 +518,38 @@ export default function AdminLibraryPage({
                                     return (
                                         <tr
                                             key={account.id}
-                                            className="border-t border-[#EBE6DC] hover:bg-[#FAF8F6]"
+                                            className="border-t border-[rgba(255,255,255,0.12)] hover:bg-[#0A1228]"
                                         >
-                                            <td className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
+                                            <td className="px-4 py-3 font-medium text-white whitespace-nowrap">
                                                 {name}
                                             </td>
-                                            <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                                            <td className="px-4 py-3 text-white/80 whitespace-nowrap">
                                                 {account.email}
                                             </td>
                                             <td className="px-4 py-3 whitespace-nowrap">
                                                 <span
                                                     className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${
                                                         isAdminAccount
-                                                            ? 'bg-amber-100 text-amber-800'
-                                                            : 'bg-gray-100 text-gray-700'
+                                                            ? 'bg-[#1a2f66] text-[#9BB8FF]'
+                                                            : 'bg-gray-100 text-white/80'
                                                     }`}
                                                 >
                                                     {isAdminAccount ? t('adminRoleAdmin') : t('adminRoleUser')}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                                            <td className="px-4 py-3 text-white/80 whitespace-nowrap">
                                                 {getLanguageNativeName(prefs.spokenLang)}
                                             </td>
-                                            <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                                            <td className="px-4 py-3 text-white/80 whitespace-nowrap">
                                                 {getLanguageNativeName(prefs.learningLang)}
                                             </td>
-                                            <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                                            <td className="px-4 py-3 text-white/80 whitespace-nowrap">
                                                 {t(`level_${prefs.level || 'debutant'}`)}
                                             </td>
-                                            <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                                            <td className="px-4 py-3 text-white/80 whitespace-nowrap">
                                                 {t(`age_${prefs.ageBand || 'moyens'}`)}
                                             </td>
-                                            <td className="px-4 py-3 text-gray-500 whitespace-nowrap">
+                                            <td className="px-4 py-3 text-white/55 whitespace-nowrap">
                                                 {formatAccountDate(account.createdAt)}
                                             </td>
                                         </tr>
@@ -564,25 +564,25 @@ export default function AdminLibraryPage({
     );
 
     const renderProfile = () => (
-        <div className="bg-white border border-[#EBE6DC] rounded-2xl p-6 space-y-6 shadow-sm">
-            <div className="flex items-center gap-2 text-amber-700 font-bold">
+        <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-6 space-y-6 shadow-sm">
+            <div className="flex items-center gap-2 text-[#6EA0FF] font-bold">
                 <Shield className="w-5 h-5" />
                 Profil administrateur
             </div>
             <div className="flex flex-col sm:flex-row gap-5 items-start">
-                <div className="w-24 h-24 rounded-full bg-amber-50 border-2 border-amber-200 overflow-hidden flex items-center justify-center">
+                <div className="w-24 h-24 rounded-full bg-[#12204a] border-2 border-white/15 overflow-hidden flex items-center justify-center">
                     {avatarSrc ? (
                         <img src={avatarSrc} alt="Avatar" className="w-full h-full object-cover" />
                     ) : (
-                        <User className="w-10 h-10 text-amber-600" />
+                        <User className="w-10 h-10 text-[#1A3FFF]" />
                     )}
                 </div>
                 <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900">Gestion du compte</h3>
-                    <p className="text-gray-500 text-sm mb-4">
+                    <h3 className="text-xl font-bold text-white">Gestion du compte</h3>
+                    <p className="text-white/55 text-sm mb-4">
                         Tu gères toute la bibliothèque et les imports d’histoires (.zip).
                     </p>
-                    <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FAF8F6] hover:bg-amber-50 border border-[#EBE6DC] text-sm font-medium cursor-pointer transition">
+                    <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0A1228] hover:bg-[#12204a] border border-[rgba(255,255,255,0.12)] text-sm font-medium cursor-pointer transition">
                         {avatarUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
                         Changer la photo
                         <input
@@ -599,7 +599,7 @@ export default function AdminLibraryPage({
             <form onSubmit={handleProfileSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5">
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Prénom</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">Prénom</label>
                         <input
                             value={profileForm.firstName}
                             onChange={(e) => handleProfileChange('firstName', e.target.value)}
@@ -608,7 +608,7 @@ export default function AdminLibraryPage({
                         />
                     </div>
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Nom</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">Nom</label>
                         <input
                             value={profileForm.lastName}
                             onChange={(e) => handleProfileChange('lastName', e.target.value)}
@@ -618,7 +618,7 @@ export default function AdminLibraryPage({
                     </div>
 
                     <div className="min-w-0 md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Adresse courriel</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">Adresse courriel</label>
                         <input
                             type="email"
                             value={profileForm.email}
@@ -635,14 +635,14 @@ export default function AdminLibraryPage({
                     </p>
                 )}
                 {profileSuccess && (
-                    <p className="text-amber-800 text-sm bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                    <p className="text-[#9BB8FF] text-sm bg-[#12204a] border border-white/15 rounded-lg px-3 py-2">
                         {profileSuccess}
                     </p>
                 )}
                 <button
                     type="submit"
                     disabled={profileSaving}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white font-semibold"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#1A3FFF] hover:bg-[#12204a]0 disabled:opacity-50 text-white font-semibold"
                 >
                     <span className="inline-flex w-4 h-4 items-center justify-center" aria-hidden="true">
                         {profileSaving ? (
@@ -660,7 +660,7 @@ export default function AdminLibraryPage({
     return (
         <div ref={pageTopRef} className="flex-1 flex flex-col relative pb-28">
             {actionNotice && (
-                <div className="fixed right-4 bottom-4 z-[60] max-w-sm rounded-2xl border border-amber-200 bg-white px-4 py-3 text-sm font-medium text-gray-900 shadow-xl">
+                <div className="fixed right-4 bottom-4 z-[60] max-w-sm rounded-2xl border border-white/15 bg-[#0A1228] px-4 py-3 text-sm font-medium text-white shadow-xl">
                     {actionNotice}
                 </div>
             )}
@@ -676,30 +676,30 @@ export default function AdminLibraryPage({
                 className="hidden"
             />
 
-            <div className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 flex flex-wrap items-center justify-between gap-3">
+            <div className="mb-5 rounded-2xl border border-white/15 bg-[#12204a] px-5 py-4 flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-xl bg-white border border-amber-300 flex items-center justify-center">
-                        <Shield className="w-6 h-6 text-amber-600" />
+                    <div className="w-11 h-11 rounded-xl bg-[#0A1228] border border-white/25 flex items-center justify-center">
+                        <Shield className="w-6 h-6 text-[#1A3FFF]" />
                     </div>
                     <div>
-                        <p className="text-amber-800 font-extrabold text-lg leading-tight">
+                        <p className="text-[#9BB8FF] font-extrabold text-lg leading-tight">
                             Tableau de bord administrateur
                         </p>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-white/70 text-sm">
                             {userName} — gestion de toute la bibliothèque
                         </p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 bg-white border border-[#EBE6DC] rounded-full pl-3 pr-2 py-1">
-                        <User className="w-4 h-4 text-amber-600 shrink-0" />
-                        <span className="text-sm text-gray-700 max-w-[200px] truncate font-medium">
+                    <div className="flex items-center gap-2 bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-full pl-3 pr-2 py-1">
+                        <User className="w-4 h-4 text-[#1A3FFF] shrink-0" />
+                        <span className="text-sm text-white/80 max-w-[200px] truncate font-medium">
                             {userName}
                         </span>
                         <button
                             type="button"
                             onClick={onLogout}
-                            className="p-2 rounded-full hover:bg-amber-50 text-gray-500"
+                            className="p-2 rounded-full hover:bg-[#12204a] text-white/55"
                             title={t('logout')}
                         >
                             <LogOut className="w-4 h-4" />
@@ -712,7 +712,7 @@ export default function AdminLibraryPage({
             <div className="mb-6 rounded-2xl border-2 border-dashed border-red-400 bg-red-50 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="text-center sm:text-left">
                     <p className="text-red-700 font-extrabold text-xl">Importer une histoire (.zip)</p>
-                    <p className="text-gray-600 text-sm mt-1">
+                    <p className="text-white/70 text-sm mt-1">
                         Comme avant : choisis un fichier ZIP contenant un story.json + images.
                     </p>
                 </div>
@@ -735,14 +735,14 @@ export default function AdminLibraryPage({
                 <button
                     type="button"
                     onClick={() => setMenuOpen((open) => !open)}
-                    className="w-11 h-11 rounded-xl bg-white border border-[#EBE6DC] flex items-center justify-center text-gray-700"
+                    className="w-11 h-11 rounded-xl bg-[#0A1228] border border-[rgba(255,255,255,0.12)] flex items-center justify-center text-white/80"
                 >
                     {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                 </button>
             </div>
 
             {menuOpen && (
-                <div className="md:hidden mb-4 bg-white border border-[#EBE6DC] rounded-2xl p-3 shadow-xl space-y-2">
+                <div className="md:hidden mb-4 bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-3 shadow-xl space-y-2">
                     {renderNavigation(true)}
                     <button
                         type="button"
@@ -756,7 +756,7 @@ export default function AdminLibraryPage({
                     <button
                         type="button"
                         onClick={handleLogoutClick}
-                        className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-[#FAF8F6] text-gray-700"
+                        className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-[#0A1228] text-white/80"
                     >
                         <span>{t('logout')}</span>
                         <LogOut className="w-5 h-5" />
@@ -766,7 +766,7 @@ export default function AdminLibraryPage({
 
             <div className="flex flex-1 gap-6 min-h-0">
                 <aside className="hidden md:block w-64 shrink-0">
-                    <div className="bg-white border border-[#EBE6DC] rounded-2xl p-3 sticky top-4 shadow-sm">
+                    <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-3 sticky top-4 shadow-sm">
                         {renderNavigation()}
                         <button
                             type="button"
@@ -798,8 +798,8 @@ export default function AdminLibraryPage({
                                         onClick={() => setAgeFilter('all')}
                                         className={`px-3 py-1.5 rounded-xl text-sm font-semibold ${
                                             ageFilter === 'all'
-                                                ? 'bg-amber-600 text-white'
-                                                : 'bg-white text-gray-600 border border-[#EBE6DC]'
+                                                ? 'bg-[#1A3FFF] text-white'
+                                                : 'bg-[#0A1228] text-white/70 border border-[rgba(255,255,255,0.12)]'
                                         }`}
                                     >
                                         Tous les âges
@@ -811,8 +811,8 @@ export default function AdminLibraryPage({
                                             onClick={() => setAgeFilter(band.id)}
                                             className={`px-3 py-1.5 rounded-xl text-sm font-semibold ${
                                                 ageFilter === band.id
-                                                    ? 'bg-amber-600 text-white'
-                                                    : 'bg-white text-gray-600 border border-[#EBE6DC]'
+                                                    ? 'bg-[#1A3FFF] text-white'
+                                                    : 'bg-[#0A1228] text-white/70 border border-[rgba(255,255,255,0.12)]'
                                             }`}
                                         >
                                             {band.label}
@@ -822,14 +822,14 @@ export default function AdminLibraryPage({
                             )}
 
                             <div className="mb-5">
-                                <h2 className="text-xl font-bold text-gray-900">{sectionTitle}</h2>
-                                <p className="text-sm text-gray-500">
+                                <h2 className="text-xl font-bold text-white">{sectionTitle}</h2>
+                                <p className="text-sm text-white/55">
                                     {visibleStories.length} histoire{visibleStories.length > 1 ? 's' : ''}
                                 </p>
                             </div>
 
                             {visibleStories.length === 0 ? (
-                                <div className="bg-white border border-[#EBE6DC] rounded-2xl p-8 text-center text-gray-500">
+                                <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-8 text-center text-white/55">
                                     Aucune histoire ici. Utilise le bouton rouge <strong>Importer</strong>.
                                 </div>
                             ) : (
@@ -868,7 +868,7 @@ export default function AdminLibraryPage({
                     <button
                         type="button"
                         onClick={onPlayRandom}
-                        className="bg-amber-500 hover:bg-amber-600 text-white p-4 rounded-full shadow-lg"
+                        className="bg-[#12204a]0 hover:bg-[#1A3FFF] text-white p-4 rounded-full shadow-lg"
                         title="Histoire au hasard"
                     >
                         <Play className="w-7 h-7" fill="white" />
@@ -878,29 +878,29 @@ export default function AdminLibraryPage({
 
             {showResumeModal && (
                 <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div className="bg-white border border-[#EBE6DC] rounded-2xl p-6 md:p-8 max-w-md w-full text-center shadow-xl">
-                        <h3 className="text-2xl font-bold text-amber-700 mb-2">Reprendre l&apos;histoire ?</h3>
-                        <p className="text-gray-600 mb-8">
+                    <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-6 md:p-8 max-w-md w-full text-center shadow-xl">
+                        <h3 className="text-2xl font-bold text-[#6EA0FF] mb-2">Reprendre l&apos;histoire ?</h3>
+                        <p className="text-white/70 mb-8">
                             Scène {savedSceneIndex + 1} de{' '}
-                            <strong className="text-gray-900">&quot;{storyToResume?.title}&quot;</strong>.
+                            <strong className="text-white">&quot;{storyToResume?.title}&quot;</strong>.
                         </p>
                         <div className="flex flex-col gap-3 md:flex-row md:justify-center">
                             <button
                                 onClick={onRestartStory}
-                                className="px-6 py-3 bg-[#FAF8F6] border border-[#EBE6DC] hover:bg-amber-50 text-gray-800 rounded-xl"
+                                className="px-6 py-3 bg-[#0A1228] border border-[rgba(255,255,255,0.12)] hover:bg-[#12204a] text-white/90 rounded-xl"
                             >
                                 Recommencer
                             </button>
                             <button
                                 onClick={onResumeStory}
-                                className="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white rounded-xl font-bold flex items-center justify-center gap-2"
+                                className="px-6 py-3 bg-[#1A3FFF] hover:bg-[#12204a]0 text-white rounded-xl font-bold flex items-center justify-center gap-2"
                             >
                                 <Play className="w-4 h-4" /> Reprendre
                             </button>
                         </div>
                         <button
                             onClick={onCloseResumeModal}
-                            className="mt-6 text-sm text-gray-400 hover:text-gray-700 underline"
+                            className="mt-6 text-sm text-white/45 hover:text-white/80 underline"
                         >
                             Annuler
                         </button>

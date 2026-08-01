@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
     Facebook,
     Instagram,
@@ -9,9 +9,12 @@ import {
     Youtube,
     X,
 } from 'lucide-react';
+import { api, API_URL } from '../api';
 import { useI18n } from '../i18n/I18nProvider';
 import { BRAND_NAME } from '../constants/brand';
+import { setPendingStoryId } from '../constants/pendingStory';
 import { SITE_CONTACT } from '../constants/siteContact';
+import { getStoryImageUrl } from '../utils/mediaUrl';
 
 const LEGAL_KEYS = {
     privacy: { title: 'footerPrivacyTitle', body: 'footerPrivacyBody' },
@@ -36,23 +39,60 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
     const [newsletterEmail, setNewsletterEmail] = useState('');
     const [newsletterMessage, setNewsletterMessage] = useState('');
     const [newsletterError, setNewsletterError] = useState('');
+    const [discoverOpen, setDiscoverOpen] = useState(false);
+    const [discoverReady, setDiscoverReady] = useState(false);
+    const [previewStories, setPreviewStories] = useState([]);
+    const [discoverLoading, setDiscoverLoading] = useState(false);
+    const [discoverError, setDiscoverError] = useState('');
+    const [authPromptStory, setAuthPromptStory] = useState(null);
     const year = new Date().getFullYear();
 
     const legalMeta = legalPanel ? LEGAL_KEYS[legalPanel] : null;
+
+    const loadPreviewStories = useCallback(async () => {
+        setDiscoverLoading(true);
+        setDiscoverError('');
+        try {
+            const { data } = await api.get('/api/stories/preview');
+            setPreviewStories(Array.isArray(data) ? data : []);
+        } catch {
+            setPreviewStories([]);
+            setDiscoverError(t('discoverError'));
+        } finally {
+            setDiscoverLoading(false);
+        }
+    }, [t]);
+
+    const openDiscover = useCallback(async () => {
+        setMenuOpen(false);
+        setDiscoverOpen(true);
+        setDiscoverReady(false);
+        await loadPreviewStories();
+        requestAnimationFrame(() => {
+            document.getElementById('welcome-discover')?.scrollIntoView({ behavior: 'smooth' });
+            window.setTimeout(() => setDiscoverReady(true), 80);
+        });
+    }, [loadPreviewStories]);
+
+    useEffect(() => {
+        if (!discoverOpen || discoverLoading) return undefined;
+        const timer = window.setTimeout(() => setDiscoverReady(true), 60);
+        return () => window.clearTimeout(timer);
+    }, [discoverOpen, discoverLoading, previewStories.length]);
 
     const scrollToTop = () => {
         setMenuOpen(false);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const scrollToFooter = () => {
-        setMenuOpen(false);
-        document.getElementById('welcome-footer')?.scrollIntoView({ behavior: 'smooth' });
-    };
-
     const scrollToContact = () => {
         setMenuOpen(false);
         document.getElementById('footer-contact')?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const handleStoryClick = (story) => {
+        setPendingStoryId(story.id);
+        setAuthPromptStory(story);
     };
 
     const handleNewsletterSubmit = (event) => {
@@ -88,7 +128,7 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                         className="hidden items-center gap-8 md:flex"
                         aria-label="Navigation principale"
                     >
-                        <button type="button" className="welcome-nav-link font-welcome-body" onClick={scrollToFooter}>
+                        <button type="button" className="welcome-nav-link font-welcome-body" onClick={openDiscover}>
                             {t('welcomeNavDiscover')}
                         </button>
                         <button
@@ -182,7 +222,7 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                             <div className="welcome-fade welcome-fade-4 relative mt-12 flex flex-col gap-4 sm:mt-16 sm:flex-row sm:items-end sm:gap-6">
                                 <button
                                     type="button"
-                                    onClick={onRegister}
+                                    onClick={openDiscover}
                                     className="welcome-cta-motion inline-flex min-h-12 items-center justify-center bg-[#1A3FFF] px-7 py-3.5 font-welcome-body text-[11px] font-extrabold uppercase tracking-[0.2em] text-white transition hover:brightness-110"
                                 >
                                     {t('welcomeCtaDiscover')}
@@ -200,6 +240,83 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                     </div>
                 </div>
             </section>
+
+            {discoverOpen && (
+                <section
+                    id="welcome-discover"
+                    className="discover-section px-5 py-14 md:px-10 md:py-16"
+                >
+                    <div className="mx-auto w-full max-w-6xl">
+                        <h2 className="font-welcome-display text-4xl tracking-tight text-white md:text-5xl">
+                            {t('discoverTitle')}
+                        </h2>
+                        <p className="mt-4 max-w-2xl font-welcome-body text-sm leading-relaxed text-white/65 md:text-base">
+                            {t('discoverHint')}
+                        </p>
+
+                        {discoverLoading && (
+                            <div className="mt-12 flex items-center gap-3 text-white/70">
+                                <Loader2 className="h-5 w-5 animate-spin text-[#6EA0FF]" />
+                                <span className="font-welcome-body text-sm">{t('discoverLoading')}</span>
+                            </div>
+                        )}
+
+                        {!discoverLoading && discoverError && (
+                            <p className="mt-10 font-welcome-body text-sm text-red-300">{discoverError}</p>
+                        )}
+
+                        {!discoverLoading && !discoverError && previewStories.length === 0 && (
+                            <p className="mt-10 font-welcome-body text-sm text-white/55">{t('discoverEmpty')}</p>
+                        )}
+
+                        {!discoverLoading && previewStories.length > 0 && (
+                            <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                                {previewStories.map((story, index) => {
+                                    const cover = getStoryImageUrl(
+                                        story.thumbnail,
+                                        story.id,
+                                        API_URL
+                                    );
+                                    const fromLeft = index % 2 === 0;
+                                    return (
+                                        <button
+                                            key={story.id}
+                                            type="button"
+                                            onClick={() => handleStoryClick(story)}
+                                            className={`discover-card group overflow-hidden rounded-xl border border-white/10 bg-[#0A1228] text-left ${
+                                                discoverReady ? 'is-in' : ''
+                                            }`}
+                                            style={{
+                                                '--discover-from': fromLeft ? '-64px' : '64px',
+                                                '--discover-delay': `${Math.min(index, 10) * 70}ms`,
+                                            }}
+                                        >
+                                            <div className="aspect-[4/3] overflow-hidden bg-white/5">
+                                                {cover ? (
+                                                    <img
+                                                        src={cover}
+                                                        alt=""
+                                                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                                    />
+                                                ) : (
+                                                    <div className="flex h-full items-center justify-center font-welcome-body text-xs text-white/35">
+                                                        {BRAND_NAME}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="p-3">
+                                                <p className="font-welcome-body text-sm font-semibold text-white line-clamp-2">
+                                                    {story.title || story.id}
+                                                </p>
+                                            </div>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+                </section>
+            )}
 
             <footer
                 id="welcome-footer"
@@ -377,6 +494,69 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                     </div>
                 </div>
             </footer>
+
+            {authPromptStory && (
+                <div
+                    className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center"
+                    role="presentation"
+                    onClick={() => setAuthPromptStory(null)}
+                >
+                    <div
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="discover-auth-title"
+                        className="w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-[#0A1228] p-6 text-white shadow-2xl"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <div className="mb-4 flex items-start justify-between gap-4">
+                            <h2
+                                id="discover-auth-title"
+                                className="font-welcome-display text-3xl tracking-tight"
+                            >
+                                {t('discoverAuthTitle')}
+                            </h2>
+                            <button
+                                type="button"
+                                onClick={() => setAuthPromptStory(null)}
+                                className="rounded-lg p-2 text-white/70 transition hover:bg-white/10 hover:text-white"
+                                aria-label={t('footerClose')}
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+                        <p className="font-welcome-body text-sm font-semibold text-white/90">
+                            {authPromptStory.title || authPromptStory.id}
+                        </p>
+                        <p className="mt-2 font-welcome-body text-sm leading-relaxed text-white/65">
+                            {t('discoverAuthBody')}
+                        </p>
+                        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setPendingStoryId(authPromptStory.id);
+                                    setAuthPromptStory(null);
+                                    onRegister();
+                                }}
+                                className="inline-flex min-h-11 flex-1 items-center justify-center bg-[#1A3FFF] px-4 py-2.5 font-welcome-body text-[11px] font-extrabold uppercase tracking-[0.16em] text-white transition hover:brightness-110"
+                            >
+                                {t('discoverAuthRegister')}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setPendingStoryId(authPromptStory.id);
+                                    setAuthPromptStory(null);
+                                    onLogin();
+                                }}
+                                className="inline-flex min-h-11 flex-1 items-center justify-center border border-white/20 bg-white/5 px-4 py-2.5 font-welcome-body text-[11px] font-extrabold uppercase tracking-[0.16em] text-white transition hover:bg-white/10"
+                            >
+                                {t('discoverAuthLogin')}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {legalMeta && (
                 <div

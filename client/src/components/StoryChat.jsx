@@ -255,33 +255,33 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
     };
 
     const voiceStatus = (() => {
-        if (isSpeaking) return { label: t('chatSpeaking'), color: 'text-[#8C5EB9]' };
+        if (isSpeaking) return { label: t('chatSpeaking'), color: 'text-[#1A3FFF]' };
         if (isTranscribing) return { label: t('chatTranscribing'), color: 'text-amber-600' };
         if (isRecording) return { label: t('chatListening'), color: 'text-red-600' };
-        if (sending) return { label: t('chatThinking'), color: 'text-[#8C5EB9]' };
-        return { label: t('chatMicHint'), color: 'text-gray-500' };
+        if (sending) return { label: t('chatThinking'), color: 'text-[#1A3FFF]' };
+        return { label: t('chatMicHint'), color: 'text-white/55' };
     })();
 
     return (
-        <div className="flex-1 flex flex-col min-h-0 bg-white rounded-2xl border border-[#EBE6DC] overflow-hidden shadow-sm">
-            <header className="flex items-center justify-between gap-3 px-4 py-4 border-b border-[#EBE6DC] bg-[#FAF8F6]">
+        <div className="flex-1 flex flex-col min-h-0 bg-[#0A1228] rounded-2xl border border-[rgba(255,255,255,0.12)] overflow-hidden shadow-sm">
+            <header className="flex items-center justify-between gap-3 px-4 py-4 border-b border-[rgba(255,255,255,0.12)] bg-[#0A1228]">
                 <button
                     type="button"
                     onClick={onBack}
-                    className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-white hover:bg-[#F2E9FB] text-gray-700 border border-[#EBE6DC] transition text-sm font-semibold"
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-[#0A1228] hover:bg-[#12204a] text-white/80 border border-[rgba(255,255,255,0.12)] transition text-sm font-semibold"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     {t('chatBack')}
                 </button>
-                <div className="flex items-center gap-2 text-[#8C5EB9] font-bold text-lg">
+                <div className="flex items-center gap-2 text-[#1A3FFF] font-bold text-lg">
                     <Sparkles className="w-5 h-5" />
                     {t('chatQuizTitle')}
                 </div>
                 <div className="w-20" />
             </header>
 
-            <div className="px-4 py-3 bg-white border-b border-[#EBE6DC] space-y-3">
-                <p className="text-sm text-gray-700 text-center md:text-left">
+            <div className="px-4 py-3 bg-[#0A1228] border-b border-[rgba(255,255,255,0.12)] space-y-3">
+                <p className="text-sm text-white/80 text-center md:text-left">
                     <span className="font-bold">{story?.title || '—'}</span>
                     {' — '}
                     {t('chatLearning')}: {langEmoji} <strong>{langLabel}</strong>
@@ -294,8 +294,8 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                         disabled={loading || sending || isRecording || isTranscribing}
                         className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-semibold transition ${
                             chatMode === 'text'
-                                ? 'bg-[#8C5EB9] text-white'
-                                : 'bg-[#FAF8F6] text-gray-600 hover:bg-[#F2E9FB] border border-[#EBE6DC]'
+                                ? 'bg-[#1A3FFF] text-white'
+                                : 'bg-[#0A1228] text-white/70 hover:bg-[#12204a] border border-[rgba(255,255,255,0.12)]'
                         }`}
                     >
                         <Keyboard className="w-4 h-4" />
@@ -308,8 +308,8 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                         title={t('chatVoiceMode')}
                         className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-semibold transition ${
                             chatMode === 'voice'
-                                ? 'bg-[#8C5EB9] text-white'
-                                : 'bg-[#FAF8F6] text-gray-600 hover:bg-[#F2E9FB] border border-[#EBE6DC] disabled:opacity-40'
+                                ? 'bg-[#1A3FFF] text-white'
+                                : 'bg-[#0A1228] text-white/70 hover:bg-[#12204a] border border-[rgba(255,255,255,0.12)] disabled:opacity-40'
                         }`}
                     >
                         <Mic className="w-4 h-4" />
@@ -326,7 +326,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
                 {loading && (
-                    <div className="flex items-center justify-center gap-2 text-[#8C5EB9] py-12">
+                    <div className="flex items-center justify-center gap-2 text-[#1A3FFF] py-12">
                         <Loader2 className="w-6 h-6 animate-spin" />
                         <span className="text-base font-medium">On prépare ta première question...</span>
                     </div>
@@ -341,8 +341,8 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                             <div
                                 className={`max-w-[90%] md:max-w-[75%] px-4 py-3 rounded-3xl text-base leading-relaxed ${
                                     message.role === 'user'
-                                        ? 'bg-[#8C5EB9] text-white rounded-br-lg shadow-sm'
-                                        : 'bg-[#FAF8F6] text-gray-900 border border-[#EBE6DC] rounded-bl-lg'
+                                        ? 'bg-[#1A3FFF] text-white rounded-br-lg shadow-sm'
+                                        : 'bg-[#0A1228] text-white border border-[rgba(255,255,255,0.12)] rounded-bl-lg'
                                 }`}
                             >
                                 {message.content}
@@ -352,7 +352,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
 
                 {sending && chatMode === 'text' && (
                     <div className="flex justify-start">
-                        <div className="bg-[#FAF8F6] border border-[#EBE6DC] px-4 py-3 rounded-3xl rounded-bl-lg text-[#8C5EB9] text-base flex items-center gap-2">
+                        <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] px-4 py-3 rounded-3xl rounded-bl-lg text-[#1A3FFF] text-base flex items-center gap-2">
                             <Loader2 className="w-5 h-5 animate-spin" />
                             Je réfléchis...
                         </div>
@@ -369,24 +369,24 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
             )}
 
             {finished ? (
-                <div className="p-5 border-t border-[#EBE6DC] bg-[#F2E9FB] text-center">
+                <div className="p-5 border-t border-[rgba(255,255,255,0.12)] bg-[#12204a] text-center">
                     <div className="flex justify-center gap-1 mb-3">
                         <Star className="w-8 h-8 text-yellow-400 fill-yellow-400 animate-pulse" />
                         <Star className="w-10 h-10 text-yellow-300 fill-yellow-300 animate-pulse" />
                         <Star className="w-8 h-8 text-yellow-400 fill-yellow-400 animate-pulse" />
                     </div>
-                    <p className="text-[#8C5EB9] mb-1 font-extrabold text-xl">Bravo champion ! 🎉</p>
-                    <p className="text-gray-600 text-sm mb-4">Tu as super bien résumé l&apos;histoire !</p>
+                    <p className="text-[#1A3FFF] mb-1 font-extrabold text-xl">Bravo champion ! 🎉</p>
+                    <p className="text-white/70 text-sm mb-4">Tu as super bien résumé l&apos;histoire !</p>
                     <button
                         type="button"
                         onClick={onBack}
-                        className="px-6 py-3 rounded-2xl bg-[#8C5EB9] hover:bg-[#7a4fa8] text-white font-bold text-lg transition transform hover:scale-105 active:scale-95"
+                        className="px-6 py-3 rounded-2xl bg-[#1A3FFF] hover:bg-[#1533cc] text-white font-bold text-lg transition transform hover:scale-105 active:scale-95"
                     >
                         Retour à l&apos;accueil
                     </button>
                 </div>
             ) : chatMode === 'voice' ? (
-                <div className="p-5 border-t border-[#EBE6DC] bg-[#FAF8F6] flex flex-col items-center gap-4">
+                <div className="p-5 border-t border-[rgba(255,255,255,0.12)] bg-[#0A1228] flex flex-col items-center gap-4">
                     <div className={`flex items-center gap-2 text-sm font-medium ${voiceStatus.color}`}>
                         {isSpeaking ? (
                             <Volume2 className="w-5 h-5 animate-pulse" />
@@ -409,7 +409,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                         className={`w-20 h-20 rounded-full flex items-center justify-center transition transform shadow-xl ${
                             isRecording
                                 ? 'bg-red-600 hover:bg-red-500 scale-110 animate-pulse'
-                                : 'bg-[#8C5EB9] hover:bg-[#7a4fa8] hover:scale-105 active:scale-95'
+                                : 'bg-[#1A3FFF] hover:bg-[#1533cc] hover:scale-105 active:scale-95'
                         } disabled:bg-gray-300 disabled:scale-100 disabled:animate-none`}
                         title={isRecording ? 'Envoyer' : 'Parler'}
                     >
@@ -420,24 +420,24 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                         )}
                     </button>
 
-                    <p className="text-xs text-gray-500 text-center max-w-xs">
+                    <p className="text-xs text-white/55 text-center max-w-xs">
                         Parle, puis appuie à nouveau sur le micro pour envoyer. Autorise l&apos;accès au micro si demandé.
                     </p>
                 </div>
             ) : (
-                <form onSubmit={handleSend} className="p-4 border-t border-[#EBE6DC] bg-[#FAF8F6] flex gap-2">
+                <form onSubmit={handleSend} className="p-4 border-t border-[rgba(255,255,255,0.12)] bg-[#0A1228] flex gap-2">
                     <input
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder={`Ta réponse en ${langLabel}...`}
                         disabled={loading || sending}
-                        className="flex-1 px-4 py-3.5 rounded-2xl bg-white border border-[#EBE6DC] text-gray-900 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8C5EB9] focus:border-transparent disabled:opacity-50"
+                        className="flex-1 px-4 py-3.5 rounded-2xl bg-[#0A1228] border border-[rgba(255,255,255,0.12)] text-white text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1A3FFF] focus:border-transparent disabled:opacity-50"
                     />
                     <button
                         type="submit"
                         disabled={loading || sending || !input.trim()}
-                        className="px-5 py-3.5 rounded-2xl bg-[#8C5EB9] hover:bg-[#7a4fa8] disabled:opacity-50 text-white transition flex items-center justify-center shadow-sm"
+                        className="px-5 py-3.5 rounded-2xl bg-[#1A3FFF] hover:bg-[#1533cc] disabled:opacity-50 text-white transition flex items-center justify-center shadow-sm"
                         title="Envoyer"
                     >
                         {sending ? <Loader2 className="w-6 h-6 animate-spin" /> : <Send className="w-6 h-6" />}

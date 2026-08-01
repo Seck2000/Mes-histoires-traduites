@@ -271,8 +271,8 @@ export default function LibraryPage({
                         onClick={() => changeSection(item.id)}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition ${
                             active
-                                ? 'bg-[#8C5EB9] text-white shadow-sm'
-                                : 'bg-transparent text-gray-600 hover:bg-[#F2E9FB] hover:text-[#8C5EB9]'
+                                ? 'bg-[#1A3FFF] text-white shadow-sm'
+                                : 'bg-transparent text-white/70 hover:bg-[#12204a] hover:text-[#1A3FFF]'
                         }`}
                     >
                         <Icon className="w-5 h-5" />
@@ -284,21 +284,21 @@ export default function LibraryPage({
     );
 
     const renderProfile = () => (
-        <div className="bg-white border border-[#EBE6DC] rounded-2xl p-5 md:p-7 max-w-3xl">
+        <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-5 md:p-7 max-w-3xl">
             <div className="flex flex-col sm:flex-row sm:items-center gap-5 mb-8">
-                <div className="relative w-24 h-24 rounded-2xl overflow-hidden border border-[#EBE6DC] bg-[#FAF8F6] flex items-center justify-center shrink-0">
+                <div className="relative w-24 h-24 rounded-2xl overflow-hidden border border-[rgba(255,255,255,0.12)] bg-[#0A1228] flex items-center justify-center shrink-0">
                     {avatarSrc ? (
                         <img src={avatarSrc} alt={t('profilePhotoAlt')} className="w-full h-full object-cover" />
                     ) : (
-                        <User className="w-10 h-10 text-gray-400" />
+                        <User className="w-10 h-10 text-white/45" />
                     )}
                 </div>
                 <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900">{t('profileTitle')}</h3>
-                    <p className="text-gray-400 text-sm mb-4">
+                    <h3 className="text-xl font-bold text-white">{t('profileTitle')}</h3>
+                    <p className="text-white/45 text-sm mb-4">
                         {t('profileHint')}
                     </p>
-                    <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-[#F2E9FB] border border-[#EBE6DC] text-gray-700 text-sm font-medium cursor-pointer transition">
+                    <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0A1228] hover:bg-[#12204a] border border-[rgba(255,255,255,0.12)] text-white/80 text-sm font-medium cursor-pointer transition">
                         {avatarUploading ? (
                             <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
@@ -319,41 +319,41 @@ export default function LibraryPage({
             <form onSubmit={handleProfileSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5">
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileFirstName')}</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">{t('profileFirstName')}</label>
                         <input
                             value={profileForm.firstName}
                             onChange={(e) => handleProfileChange('firstName', e.target.value)}
-                            className="w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-white border border-[#EBE6DC] text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#8C5EB9]"
+                            className="w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-[#0A1228] border border-[rgba(255,255,255,0.12)] text-white focus:outline-none focus:ring-2 focus:ring-[#1A3FFF]"
                             required
                         />
                     </div>
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileLastName')}</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">{t('profileLastName')}</label>
                         <input
                             value={profileForm.lastName}
                             onChange={(e) => handleProfileChange('lastName', e.target.value)}
-                            className="w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-white border border-[#EBE6DC] text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#8C5EB9]"
+                            className="w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-[#0A1228] border border-[rgba(255,255,255,0.12)] text-white focus:outline-none focus:ring-2 focus:ring-[#1A3FFF]"
                             required
                         />
                     </div>
 
                     <div className="min-w-0 md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileEmail')}</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">{t('profileEmail')}</label>
                         <input
                             type="email"
                             value={profileForm.email}
                             onChange={(e) => handleProfileChange('email', e.target.value)}
-                            className="w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-white border border-[#EBE6DC] text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#8C5EB9]"
+                            className="w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-[#0A1228] border border-[rgba(255,255,255,0.12)] text-white focus:outline-none focus:ring-2 focus:ring-[#1A3FFF]"
                             required
                         />
                     </div>
 
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileLevel')}</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">{t('profileLevel')}</label>
                         <select
                             value={profileForm.level}
                             onChange={(e) => handleProfileChange('level', e.target.value)}
-                            className="w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-white border border-[#EBE6DC] text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#8C5EB9]"
+                            className="w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-[#0A1228] border border-[rgba(255,255,255,0.12)] text-white focus:outline-none focus:ring-2 focus:ring-[#1A3FFF]"
                         >
                             {LEVELS.map((level) => (
                                 <option key={level.code} value={level.code}>
@@ -363,11 +363,11 @@ export default function LibraryPage({
                         </select>
                     </div>
                     <div className="min-w-0">
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('profileAgeBand')}</label>
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">{t('profileAgeBand')}</label>
                         <select
                             value={profileForm.ageBand}
                             onChange={(e) => handleProfileChange('ageBand', e.target.value)}
-                            className="w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-white border border-[#EBE6DC] text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#8C5EB9]"
+                            className="w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-[#0A1228] border border-[rgba(255,255,255,0.12)] text-white focus:outline-none focus:ring-2 focus:ring-[#1A3FFF]"
                             required
                         >
                             {AGE_BANDS.map((band) => (
@@ -380,7 +380,7 @@ export default function LibraryPage({
                 </div>
 
                 {ageBand && (
-                    <p className="text-xs text-gray-500 -mt-2">
+                    <p className="text-xs text-white/55 -mt-2">
                         Histoires affichées : {ageBand.label}
                     </p>
                 )}
@@ -391,7 +391,7 @@ export default function LibraryPage({
                     </p>
                 )}
                 {profileSuccess && (
-                    <p className="text-[#8C5EB9] text-sm bg-[#F2E9FB] border border-[#EBE6DC] rounded-lg px-3 py-2">
+                    <p className="text-[#1A3FFF] text-sm bg-[#12204a] border border-[rgba(255,255,255,0.12)] rounded-lg px-3 py-2">
                         {profileSuccess}
                     </p>
                 )}
@@ -399,7 +399,7 @@ export default function LibraryPage({
                 <button
                     type="submit"
                     disabled={profileSaving}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#8C5EB9] hover:bg-[#7a4fa8] disabled:opacity-50 text-white font-semibold transition"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#1A3FFF] hover:bg-[#1533cc] disabled:opacity-50 text-white font-semibold transition"
                 >
                     <span className="inline-flex w-4 h-4 items-center justify-center" aria-hidden="true">
                         {profileSaving ? (
@@ -420,15 +420,15 @@ export default function LibraryPage({
                 <div
                     role="status"
                     aria-live="polite"
-                    className="fixed right-4 bottom-4 z-[60] max-w-sm rounded-2xl border border-[#EBE6DC] bg-white px-4 py-3 text-sm font-medium text-gray-900 shadow-xl"
+                    className="fixed right-4 bottom-4 z-[60] max-w-sm rounded-2xl border border-[rgba(255,255,255,0.12)] bg-[#0A1228] px-4 py-3 text-sm font-medium text-white shadow-xl"
                 >
                     {actionNotice}
                 </div>
             )}
 
-            <div className="mb-6 rounded-2xl border border-[#EBE6DC] bg-white px-5 py-4">
-                <p className="text-[#8C5EB9] font-extrabold text-lg">Espace enfant</p>
-                <p className="text-gray-400 text-sm mt-0.5">
+            <div className="mb-6 rounded-2xl border border-[rgba(255,255,255,0.12)] bg-[#0A1228] px-5 py-4">
+                <p className="text-[#1A3FFF] font-extrabold text-lg">Espace enfant</p>
+                <p className="text-white/45 text-sm mt-0.5">
                     Bonjour {userName}
                     {ageBand
                         ? ` — histoires pour ${ageBand.label}`
@@ -438,8 +438,8 @@ export default function LibraryPage({
 
             <div className="flex justify-between items-start md:items-center mb-8 gap-4 relative">
                 <div>
-                    <div className="text-2xl font-bold text-[#8C5EB9]">Mes histoires</div>
-                    <p className="text-gray-400 text-sm mt-1">
+                    <div className="text-2xl font-bold text-[#1A3FFF]">Mes histoires</div>
+                    <p className="text-white/45 text-sm mt-1">
                         Seules les histoires de ton âge s&apos;affichent ici
                     </p>
                 </div>
@@ -449,22 +449,22 @@ export default function LibraryPage({
                     <button
                         type="button"
                         onClick={() => setMenuOpen((open) => !open)}
-                        className="w-11 h-11 rounded-xl bg-white border border-[#EBE6DC] flex items-center justify-center text-gray-700 hover:bg-[#F2E9FB] transition"
+                        className="w-11 h-11 rounded-xl bg-[#0A1228] border border-[rgba(255,255,255,0.12)] flex items-center justify-center text-white/80 hover:bg-[#12204a] transition"
                         aria-label={menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
                     >
                         {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                     </button>
 
                     {menuOpen && (
-                        <div className="absolute right-0 mt-3 w-72 bg-white border border-[#EBE6DC] rounded-2xl shadow-xl z-40 overflow-hidden">
-                            <div className="px-4 py-4 border-b border-[#EBE6DC] bg-[#FAF8F6]">
+                        <div className="absolute right-0 mt-3 w-72 bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl shadow-xl z-40 overflow-hidden">
+                            <div className="px-4 py-4 border-b border-[rgba(255,255,255,0.12)] bg-[#0A1228]">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-[#F2E9FB] border border-[#EBE6DC] flex items-center justify-center">
-                                        <User className="w-5 h-5 text-[#8C5EB9]" />
+                                    <div className="w-10 h-10 rounded-full bg-[#12204a] border border-[rgba(255,255,255,0.12)] flex items-center justify-center">
+                                        <User className="w-5 h-5 text-[#1A3FFF]" />
                                     </div>
                                     <div className="min-w-0">
-                                        <p className="font-semibold text-gray-900 truncate">{userName}</p>
-                                        <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+                                        <p className="font-semibold text-white truncate">{userName}</p>
+                                        <p className="text-xs text-white/45 truncate">{user?.email}</p>
                                     </div>
                                 </div>
                             </div>
@@ -474,7 +474,7 @@ export default function LibraryPage({
                                 <button
                                     type="button"
                                     onClick={handleLogoutClick}
-                                    className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-[#FAF8F6] hover:bg-[#F2E9FB] text-gray-700 transition"
+                                    className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-[#0A1228] hover:bg-[#12204a] text-white/80 transition"
                                 >
                                     <span>{t('logout')}</span>
                                     <LogOut className="w-5 h-5" />
@@ -486,14 +486,14 @@ export default function LibraryPage({
 
                 {/* Actions desktop */}
                 <div className="hidden md:flex flex-wrap items-center gap-3">
-                    <div className="flex items-center gap-3 bg-white border border-[#EBE6DC] rounded-full pl-3 pr-2 py-1">
-                        <User className="w-4 h-4 text-[#8C5EB9] shrink-0" />
-                        <span className="text-sm text-gray-700 max-w-[200px] truncate font-medium">
+                    <div className="flex items-center gap-3 bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-full pl-3 pr-2 py-1">
+                        <User className="w-4 h-4 text-[#1A3FFF] shrink-0" />
+                        <span className="text-sm text-white/80 max-w-[200px] truncate font-medium">
                             {user?.displayName || user?.firstName || user?.email}
                         </span>
                         <button
                             onClick={onLogout}
-                            className="p-2 rounded-full hover:bg-[#F2E9FB] text-gray-500 hover:text-[#8C5EB9] transition"
+                            className="p-2 rounded-full hover:bg-[#12204a] text-white/55 hover:text-[#1A3FFF] transition"
                             title={t('logout')}
                         >
                             <LogOut className="w-4 h-4" />
@@ -504,7 +504,7 @@ export default function LibraryPage({
 
             <div className="flex flex-1 gap-6 min-h-0">
                 <aside className="hidden md:block w-64 shrink-0">
-                    <div className="bg-white border border-[#EBE6DC] rounded-2xl p-3 sticky top-4">
+                    <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-3 sticky top-4">
                         {renderNavigation()}
                     </div>
                 </aside>
@@ -512,9 +512,9 @@ export default function LibraryPage({
                 <main className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-3 mb-5">
                         <div>
-                            <h2 className="text-xl font-bold text-gray-900">{sectionTitle}</h2>
+                            <h2 className="text-xl font-bold text-white">{sectionTitle}</h2>
                             {activeSection !== 'profile' && (
-                                <p className="text-sm text-gray-400">
+                                <p className="text-sm text-white/45">
                                     {visibleStories.length} histoire{visibleStories.length > 1 ? 's' : ''} affichée
                                     {visibleStories.length > 1 ? 's' : ''}
                                 </p>
@@ -525,7 +525,7 @@ export default function LibraryPage({
                     {activeSection === 'profile' ? (
                         renderProfile()
                     ) : visibleStories.length === 0 ? (
-                        <div className="bg-white border border-[#EBE6DC] rounded-2xl p-8 text-center text-gray-500">
+                        <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl p-8 text-center text-white/55">
                             {activeSection === 'favorites'
                                 ? "Aucun favori pour le moment."
                                 : activeSection === 'recent'
@@ -548,7 +548,7 @@ export default function LibraryPage({
                                 return (
                                     <div
                                         key={story.id || index}
-                                        className="bg-white border border-[#EBE6DC] rounded-2xl overflow-hidden shadow-sm hover:border-[#8C5EB9]/50 transition group"
+                                        className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] rounded-2xl overflow-hidden shadow-sm hover:border-[#1A3FFF]/50 transition group"
                                     >
                                         <div
                                             onClick={() => onStartStory(story)}
@@ -564,12 +564,12 @@ export default function LibraryPage({
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
                                             <div className="absolute top-3 left-3 flex gap-2 flex-wrap">
                                                 {storyBand && (
-                                                    <span className="bg-[#F2E9FB] text-[#8C5EB9] text-[10px] font-bold px-2 py-1 rounded-full shadow">
+                                                    <span className="bg-[#12204a] text-[#1A3FFF] text-[10px] font-bold px-2 py-1 rounded-full shadow">
                                                         {storyBand.label}
                                                     </span>
                                                 )}
                                                 {isRecent && (
-                                                    <span className="bg-[#F2E9FB] text-[#8C5EB9] text-[10px] font-bold px-2 py-1 rounded-full shadow">
+                                                    <span className="bg-[#12204a] text-[#1A3FFF] text-[10px] font-bold px-2 py-1 rounded-full shadow">
                                                         Récent
                                                     </span>
                                                 )}
@@ -585,21 +585,21 @@ export default function LibraryPage({
                                                 </span>
                                             )}
                                             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                                                <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center">
-                                                    <Play className="w-7 h-7 text-gray-900 ml-1" fill="currentColor" />
+                                                <div className="w-14 h-14 rounded-full bg-[#0A1228]/90 flex items-center justify-center">
+                                                    <Play className="w-7 h-7 text-white ml-1" fill="currentColor" />
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div className="p-4">
-                                            <h3 className="font-bold text-gray-900 mb-3 line-clamp-2">
+                                            <h3 className="font-bold text-white mb-3 line-clamp-2">
                                                 {story.title || 'Histoire sans titre'}
                                             </h3>
                                             <div className="flex gap-2">
                                                 <button
                                                     type="button"
                                                     onClick={() => onStartStory(story)}
-                                                    className="flex-1 px-4 py-2 rounded-xl bg-[#8C5EB9] hover:bg-[#7a4fa8] text-white text-sm font-semibold transition"
+                                                    className="flex-1 px-4 py-2 rounded-xl bg-[#1A3FFF] hover:bg-[#1533cc] text-white text-sm font-semibold transition"
                                                 >
                                                     Lire
                                                 </button>
@@ -609,7 +609,7 @@ export default function LibraryPage({
                                                     className={`px-3 py-2 rounded-xl border transition ${
                                                         isFavorite
                                                             ? 'bg-red-500 border-red-400 text-white'
-                                                            : 'bg-white border-[#EBE6DC] text-gray-500 hover:text-[#8C5EB9] hover:bg-[#F2E9FB]'
+                                                            : 'bg-[#0A1228] border-[rgba(255,255,255,0.12)] text-white/55 hover:text-[#1A3FFF] hover:bg-[#12204a]'
                                                     }`}
                                                     title={isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
                                                 >
@@ -642,30 +642,30 @@ export default function LibraryPage({
 
             {showResumeModal && (
                 <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div className="bg-white border-2 border-[#EBE6DC] rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl text-center">
-                        <h3 className="text-2xl font-bold text-[#8C5EB9] mb-2">{t('resumeTitle')}</h3>
-                        <p className="text-gray-600 mb-8">
+                    <div className="bg-[#0A1228] border-2 border-[rgba(255,255,255,0.12)] rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl text-center">
+                        <h3 className="text-2xl font-bold text-[#1A3FFF] mb-2">{t('resumeTitle')}</h3>
+                        <p className="text-white/70 mb-8">
                             Vous étiez en train de lire{' '}
-                            <strong className="text-gray-900">"{storyToResume?.title}"</strong> à la scène{' '}
+                            <strong className="text-white">"{storyToResume?.title}"</strong> à la scène{' '}
                             {savedSceneIndex + 1}. Que souhaitez-vous faire ?
                         </p>
                         <div className="flex flex-col gap-3 md:flex-row md:justify-center">
                             <button
                                 onClick={onRestartStory}
-                                className="px-6 py-3 bg-[#FAF8F6] hover:bg-[#F2E9FB] text-gray-700 border border-[#EBE6DC] rounded-xl font-medium transition"
+                                className="px-6 py-3 bg-[#0A1228] hover:bg-[#12204a] text-white/80 border border-[rgba(255,255,255,0.12)] rounded-xl font-medium transition"
                             >
                                 {t('resumeRestart')}
                             </button>
                             <button
                                 onClick={onResumeStory}
-                                className="px-6 py-3 bg-[#8C5EB9] hover:bg-[#7a4fa8] text-white rounded-xl font-bold transition flex items-center justify-center gap-2"
+                                className="px-6 py-3 bg-[#1A3FFF] hover:bg-[#1533cc] text-white rounded-xl font-bold transition flex items-center justify-center gap-2"
                             >
                                 <Play className="w-4 h-4" /> {t('resumeContinue')}
                             </button>
                         </div>
                         <button
                             onClick={onCloseResumeModal}
-                            className="mt-6 text-sm text-gray-500 hover:text-gray-700 underline"
+                            className="mt-6 text-sm text-white/55 hover:text-white/80 underline"
                         >
                             {t('resumeClose')}
                         </button>

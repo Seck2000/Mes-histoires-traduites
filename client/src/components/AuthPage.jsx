@@ -6,9 +6,9 @@ import { AGE_BANDS } from '../constants/ageBands';
 import { useI18n } from '../i18n/I18nProvider';
 
 const inputClass =
-    'w-full px-4 py-2.5 rounded-lg bg-white border border-[#EBE6DC] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8C5EB9] focus:border-transparent transition';
+    'app-input font-welcome-body placeholder:text-white/35 [&>option]:bg-[#0A1228] [&>option]:text-white';
 
-const labelClass = 'block text-sm font-medium text-gray-700 mb-1.5';
+const labelClass = 'block text-sm font-medium text-white/70 mb-1.5 font-welcome-body';
 
 export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
     const { t } = useI18n();
@@ -77,14 +77,18 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
     };
 
     return (
-        <div className="flex-1 flex items-center justify-center py-6 overflow-y-auto">
+        <div className="welcome-page relative isolate flex flex-1 items-center justify-center overflow-y-auto px-4 py-8">
+            <div className="welcome-canvas pointer-events-none absolute inset-0" aria-hidden="true">
+                <div className="welcome-silk" />
+                <div className="welcome-grain" />
+            </div>
             <div
-                className={`w-full ${isRegister ? 'max-w-2xl' : 'max-w-md'} bg-white border border-[#EBE6DC] rounded-2xl p-6 md:p-8 shadow-xl my-4`}
+                className={`app-panel relative z-10 w-full ${isRegister ? 'max-w-2xl' : 'max-w-md'} rounded-2xl p-6 md:p-8 my-4`}
             >
-                <h1 className="text-2xl md:text-3xl font-bold text-[#8C5EB9] mb-1">
+                <h1 className="font-welcome-display text-3xl md:text-4xl tracking-tight text-white mb-2">
                     {isRegister ? t('authRegisterTitle') : t('authLoginTitle')}
                 </h1>
-                <p className="text-gray-500 text-sm mb-6">
+                <p className="text-white/60 text-sm mb-6 font-welcome-body">
                     {isRegister ? t('authRegisterHint') : t('authLoginHint')}
                 </p>
 
@@ -258,7 +262,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                     )}
 
                     {error && (
-                        <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                        <p className="text-red-300 text-sm bg-red-500/10 border border-red-400/30 rounded-lg px-3 py-2 font-welcome-body">
                             {error}
                         </p>
                     )}
@@ -266,7 +270,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3 rounded-lg bg-[#8C5EB9] hover:bg-[#7a4fa8] disabled:bg-purple-300 text-white font-semibold flex items-center justify-center gap-2 transition shadow-lg shadow-purple-200/50"
+                        className="app-btn-primary w-full py-3 rounded-lg disabled:opacity-50 text-white font-welcome-body font-semibold flex items-center justify-center gap-2"
                     >
                         <span className="inline-flex w-5 h-5 items-center justify-center" aria-hidden="true">
                             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
@@ -275,11 +279,11 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                     </button>
                 </form>
 
-                <div className="mt-6 text-center text-sm text-gray-500 space-y-2">
+                <div className="mt-6 text-center text-sm text-white/55 space-y-2 font-welcome-body">
                     <button
                         type="button"
                         onClick={() => onSwitchMode(isRegister ? 'login' : 'register')}
-                        className="text-[#8C5EB9] hover:underline"
+                        className="text-[#6EA0FF] hover:underline"
                     >
                         {isRegister ? t('authSwitchToLogin') : t('authSwitchToRegister')}
                     </button>
@@ -287,7 +291,7 @@ export default function AuthPage({ mode, onSuccess, onSwitchMode, onBack }) {
                         <button
                             type="button"
                             onClick={onBack}
-                            className="text-gray-400 hover:text-gray-700"
+                            className="text-white/40 hover:text-white/80"
                         >
                             {t('authBackHome')}
                         </button>
