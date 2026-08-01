@@ -8,6 +8,171 @@ body,
 
 body {
   margin: 0;
-  background: #FAF8F6;
+  background: #f3efe8;
   color: #1f2937;
+}
+
+.font-welcome-display {
+  font-family: "Fredoka", "Trebuchet MS", sans-serif;
+  font-weight: 600;
+}
+
+.font-welcome-body {
+  font-family: "Nunito", "Segoe UI", sans-serif;
+}
+
+.welcome-page {
+  --welcome-ink: #2a2140;
+  --welcome-accent: #8c5eb9;
+  --welcome-sky-top: #dfe8f4;
+  --welcome-sky-mid: #e9dff5;
+  --welcome-sky-bottom: #f3efe8;
+}
+
+.welcome-sky {
+  background:
+    radial-gradient(ellipse 80% 50% at 15% 20%, rgba(140, 94, 185, 0.22), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 85% 25%, rgba(59, 169, 156, 0.18), transparent 50%),
+    linear-gradient(180deg, var(--welcome-sky-top) 0%, var(--welcome-sky-mid) 45%, var(--welcome-sky-bottom) 100%);
+}
+
+.welcome-glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(48px);
+  opacity: 0.55;
+}
+
+.welcome-glow-a {
+  top: 8%;
+  left: 10%;
+  width: 18rem;
+  height: 18rem;
+  background: rgba(140, 94, 185, 0.28);
+  animation: welcomeDrift 12s ease-in-out infinite;
+}
+
+.welcome-glow-b {
+  top: 18%;
+  right: 8%;
+  width: 22rem;
+  height: 22rem;
+  background: rgba(240, 180, 41, 0.16);
+  animation: welcomeDrift 15s ease-in-out infinite reverse;
+}
+
+.welcome-stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.9) 0 1px, transparent 2px),
+    radial-gradient(circle at 28% 32%, rgba(255, 255, 255, 0.7) 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 22%, rgba(255, 255, 255, 0.85) 0 1.5px, transparent 3px),
+    radial-gradient(circle at 86% 38%, rgba(255, 255, 255, 0.65) 0 1px, transparent 2px),
+    radial-gradient(circle at 48% 14%, rgba(255, 255, 255, 0.55) 0 1px, transparent 2px);
+  opacity: 0.55;
+  animation: welcomeTwinkle 4.5s ease-in-out infinite;
+}
+
+.welcome-book {
+  animation: welcomeBookFloat 8s ease-in-out infinite;
+  filter: drop-shadow(0 -12px 40px rgba(42, 33, 64, 0.18));
+}
+
+.welcome-orb {
+  transform-origin: center;
+}
+
+.welcome-orb-1 {
+  animation: welcomeOrb 5s ease-in-out infinite;
+}
+
+.welcome-orb-2 {
+  animation: welcomeOrb 6.5s ease-in-out infinite 0.4s;
+}
+
+.welcome-orb-3 {
+  animation: welcomeOrb 7s ease-in-out infinite 0.8s;
+}
+
+.welcome-fade {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: welcomeRise 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.welcome-fade-1 {
+  animation-delay: 0.05s;
+}
+
+.welcome-fade-2 {
+  animation-delay: 0.2s;
+}
+
+.welcome-fade-3 {
+  animation-delay: 0.35s;
+}
+
+@keyframes welcomeRise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes welcomeDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(18px, 12px, 0);
+  }
+}
+
+@keyframes welcomeTwinkle {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+@keyframes welcomeBookFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes welcomeOrb {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-glow,
+  .welcome-stars,
+  .welcome-book,
+  .welcome-orb,
+  .welcome-fade {
+    animation: none !important;
+  }
+
+  .welcome-fade {
+    opacity: 1;
+    transform: none;
+  }
 }

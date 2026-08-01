@@ -371,13 +371,21 @@ function App() {
   const userLevel = user?.preferences?.level || 'debutant';
   const getImageUrl = (path, storyId) => getStoryImageUrl(path, storyId, API_URL);
 
+  const showWelcome = !user && currentView !== 'login' && currentView !== 'register';
+
   return (
     <I18nProvider locale={uiLocale} setLocale={setUiLocale}>
       <div
         className="min-h-screen bg-[#FAF8F6] text-gray-900 font-sans selection:bg-[#8C5EB9] selection:text-white"
         translate="no"
       >
-        <div className="container mx-auto p-4 min-h-screen flex flex-col relative">
+        <div
+          className={
+            showWelcome
+              ? 'min-h-screen flex flex-col relative'
+              : 'container mx-auto p-4 min-h-screen flex flex-col relative'
+          }
+        >
           {(currentView === 'login' || currentView === 'register') && (
             <AuthPage
               mode={currentView}
@@ -387,7 +395,7 @@ function App() {
             />
           )}
 
-          {!user && currentView !== 'login' && currentView !== 'register' && (
+          {showWelcome && (
             <WelcomePage
               loading={authChecking}
               onLogin={() => setCurrentView('login')}
