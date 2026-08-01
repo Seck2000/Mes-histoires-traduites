@@ -114,13 +114,14 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                             {t('welcomeHeadline')}
                         </h1>
 
-                        <p className="welcome-fade welcome-fade-3 mt-6 max-w-xs font-welcome-body text-[10px] font-bold uppercase leading-relaxed tracking-[0.22em] text-white/55 md:absolute md:right-0 md:top-2 md:mt-0 md:max-w-[220px] md:text-right">
-                            {t('welcomeEyebrow')}
-                        </p>
-
-                        <p className="welcome-fade welcome-fade-3 mt-5 max-w-md font-welcome-body text-sm leading-relaxed text-white/70 md:mt-8 md:text-base">
-                            {t('welcomeSubtitle')}
-                        </p>
+                        <div className="welcome-fade welcome-fade-3 mt-10 flex flex-col gap-8 md:mt-16 md:flex-row md:items-start md:justify-between md:gap-16">
+                            <p className="max-w-md font-welcome-body text-sm leading-relaxed text-white/70 md:text-base">
+                                {t('welcomeSubtitle')}
+                            </p>
+                            <p className="max-w-[15rem] font-welcome-body text-[10px] font-bold uppercase leading-relaxed tracking-[0.22em] text-white/45 md:max-w-[13rem] md:pt-1 md:text-right">
+                                {t('welcomeEyebrow')}
+                            </p>
+                        </div>
 
                         {loading ? (
                             <div className="welcome-fade welcome-fade-4 mt-12 flex items-center gap-3 text-white/70">
