@@ -13,12 +13,12 @@ body {
 }
 
 .font-welcome-display {
-  font-family: "Instrument Serif", "Times New Roman", serif;
-  font-weight: 400;
+  font-family: "Playfair Display", "Georgia", serif;
+  font-weight: 600;
 }
 
 .font-welcome-body {
-  font-family: "Manrope", "Segoe UI", sans-serif;
+  font-family: "Space Grotesk", "Segoe UI", sans-serif;
 }
 
 .welcome-page {
