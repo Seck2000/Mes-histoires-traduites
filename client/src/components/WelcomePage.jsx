@@ -1,22 +1,74 @@
 import { useState } from 'react';
-import { Loader2, X } from 'lucide-react';
+import {
+    Facebook,
+    Instagram,
+    Loader2,
+    Mail,
+    MapPin,
+    Phone,
+    Youtube,
+    X,
+} from 'lucide-react';
 import { useI18n } from '../i18n/I18nProvider';
+import { SITE_CONTACT } from '../constants/siteContact';
+
+const LEGAL_KEYS = {
+    privacy: { title: 'footerPrivacyTitle', body: 'footerPrivacyBody' },
+    terms: { title: 'footerTermsTitle', body: 'footerTermsBody' },
+    cookies: { title: 'footerCookiesTitle', body: 'footerCookiesBody' },
+    mentions: { title: 'footerMentionsTitle', body: 'footerMentionsBody' },
+    sitemap: { title: 'footerSitemapTitle', body: 'footerSitemapBody' },
+};
+
+function XSocialIcon({ className }) {
+    return (
+        <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.73-8.835L1.254 2.25H8.08l4.25 5.718 5.914-5.718Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+    );
+}
 
 export default function WelcomePage({ onLogin, onRegister, loading = false }) {
     const { t } = useI18n();
     const [legalPanel, setLegalPanel] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [newsletterEmail, setNewsletterEmail] = useState('');
+    const [newsletterMessage, setNewsletterMessage] = useState('');
+    const [newsletterError, setNewsletterError] = useState('');
     const year = new Date().getFullYear();
 
-    const legalTitle =
-        legalPanel === 'privacy' ? t('footerPrivacyTitle') : t('footerTermsTitle');
-    const legalBody =
-        legalPanel === 'privacy' ? t('footerPrivacyBody') : t('footerTermsBody');
+    const legalMeta = legalPanel ? LEGAL_KEYS[legalPanel] : null;
+
+    const scrollToTop = () => {
+        setMenuOpen(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     const scrollToFooter = () => {
         setMenuOpen(false);
         document.getElementById('welcome-footer')?.scrollIntoView({ behavior: 'smooth' });
     };
+
+    const scrollToContact = () => {
+        setMenuOpen(false);
+        document.getElementById('footer-contact')?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const handleNewsletterSubmit = (event) => {
+        event.preventDefault();
+        setNewsletterMessage('');
+        setNewsletterError('');
+        const email = newsletterEmail.trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setNewsletterError(t('footerNewsletterError'));
+            return;
+        }
+        setNewsletterMessage(t('footerNewsletterSuccess'));
+        setNewsletterEmail('');
+    };
+
+    const footerLinkClass =
+        'block text-left text-sm text-white/65 transition hover:text-white disabled:opacity-50';
 
     return (
         <div className="welcome-page relative isolate flex min-h-[100dvh] flex-1 flex-col bg-[#05070F] text-[#F4F6FB]">
@@ -49,7 +101,7 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                         <button
                             type="button"
                             className="welcome-nav-link font-welcome-body"
-                            onClick={() => setLegalPanel('privacy')}
+                            onClick={scrollToContact}
                         >
                             {t('welcomeNavContact')}
                         </button>
@@ -69,9 +121,9 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                         <button
                             type="button"
                             className="block w-full rounded-lg px-3 py-2.5 text-left font-welcome-body text-sm text-white/90 hover:bg-white/10"
-                            onClick={scrollToFooter}
+                            onClick={scrollToTop}
                         >
-                            {t('welcomeNavDiscover')}
+                            {t('footerHome')}
                         </button>
                         <button
                             type="button"
@@ -98,12 +150,9 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                         <button
                             type="button"
                             className="block w-full rounded-lg px-3 py-2.5 text-left font-welcome-body text-sm text-white/90 hover:bg-white/10"
-                            onClick={() => {
-                                setMenuOpen(false);
-                                setLegalPanel('privacy');
-                            }}
+                            onClick={scrollToContact}
                         >
-                            {t('footerPrivacy')}
+                            {t('footerContactLink')}
                         </button>
                     </div>
                 )}
@@ -155,53 +204,189 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                 id="welcome-footer"
                 className="relative z-20 border-t border-white/10 bg-[#03050C] text-white"
             >
-                <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-5 py-7 md:flex-row md:items-center md:justify-between md:px-10 md:py-8">
+                <div className="mx-auto grid w-full max-w-6xl gap-10 px-5 py-12 md:grid-cols-2 md:px-10 lg:grid-cols-4 lg:gap-8 lg:py-14">
                     <div className="font-welcome-body">
-                        <p className="text-sm font-semibold text-white/90">StoryTranslator</p>
-                        <p className="mt-1 text-xs text-white/40">
-                            {t('footerCopyright', { year })}
+                        <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/40">
+                            {t('footerNavTitle')}
                         </p>
+                        <ul className="mt-4 space-y-2.5">
+                            <li>
+                                <button type="button" onClick={scrollToTop} className={footerLinkClass}>
+                                    {t('footerHome')}
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" onClick={onRegister} disabled={loading} className={footerLinkClass}>
+                                    {t('footerServices')}
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" onClick={scrollToContact} className={footerLinkClass}>
+                                    {t('footerContactLink')}
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    type="button"
+                                    onClick={() => setLegalPanel('sitemap')}
+                                    className={footerLinkClass}
+                                >
+                                    {t('footerSitemap')}
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" onClick={onLogin} disabled={loading} className={footerLinkClass}>
+                                    {t('welcomeLogin')}
+                                </button>
+                            </li>
+                        </ul>
                     </div>
 
-                    <nav
-                        aria-label="Pied de page"
-                        className="flex flex-wrap gap-x-5 gap-y-2 font-welcome-body"
-                    >
-                        <button
-                            type="button"
-                            onClick={onLogin}
-                            disabled={loading}
-                            className="welcome-nav-link disabled:opacity-50"
-                        >
-                            {t('welcomeLogin')}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={onRegister}
-                            disabled={loading}
-                            className="welcome-nav-link disabled:opacity-50"
-                        >
-                            {t('welcomeCreateAccount')}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setLegalPanel('privacy')}
-                            className="welcome-nav-link"
-                        >
-                            {t('footerPrivacy')}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setLegalPanel('terms')}
-                            className="welcome-nav-link"
-                        >
-                            {t('footerTerms')}
-                        </button>
-                    </nav>
+                    <div className="font-welcome-body">
+                        <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/40">
+                            {t('footerLegalTitle')}
+                        </p>
+                        <ul className="mt-4 space-y-2.5">
+                            <li>
+                                <button type="button" onClick={() => setLegalPanel('mentions')} className={footerLinkClass}>
+                                    {t('footerMentions')}
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" onClick={() => setLegalPanel('privacy')} className={footerLinkClass}>
+                                    {t('footerPrivacy')}
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" onClick={() => setLegalPanel('terms')} className={footerLinkClass}>
+                                    {t('footerTerms')}
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" onClick={() => setLegalPanel('cookies')} className={footerLinkClass}>
+                                    {t('footerCookies')}
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div id="footer-contact" className="font-welcome-body scroll-mt-8">
+                        <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/40">
+                            {t('footerContactTitle')}
+                        </p>
+                        <ul className="mt-4 space-y-3 text-sm text-white/70">
+                            <li className="flex items-start gap-2.5">
+                                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-white/45" />
+                                <span>{SITE_CONTACT.address}</span>
+                            </li>
+                            <li>
+                                <a
+                                    href={SITE_CONTACT.phoneHref}
+                                    className="inline-flex items-center gap-2.5 text-white/70 transition hover:text-white"
+                                >
+                                    <Phone className="h-4 w-4 shrink-0 text-white/45" />
+                                    {SITE_CONTACT.phone}
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href={`mailto:${SITE_CONTACT.email}`}
+                                    className="inline-flex items-center gap-2.5 text-white/70 transition hover:text-white"
+                                >
+                                    <Mail className="h-4 w-4 shrink-0 text-white/45" />
+                                    {SITE_CONTACT.email}
+                                </a>
+                            </li>
+                        </ul>
+
+                        <p className="mt-6 text-sm font-bold uppercase tracking-[0.14em] text-white/40">
+                            {t('footerSocialLabel')}
+                        </p>
+                        <div className="mt-3 flex items-center gap-3">
+                            <a
+                                href={SITE_CONTACT.social.facebook}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Facebook"
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/15 text-white/70 transition hover:border-white/35 hover:text-white"
+                            >
+                                <Facebook className="h-4 w-4" />
+                            </a>
+                            <a
+                                href={SITE_CONTACT.social.instagram}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Instagram"
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/15 text-white/70 transition hover:border-white/35 hover:text-white"
+                            >
+                                <Instagram className="h-4 w-4" />
+                            </a>
+                            <a
+                                href={SITE_CONTACT.social.youtube}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="YouTube"
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/15 text-white/70 transition hover:border-white/35 hover:text-white"
+                            >
+                                <Youtube className="h-4 w-4" />
+                            </a>
+                            <a
+                                href={SITE_CONTACT.social.x}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="X"
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/15 text-white/70 transition hover:border-white/35 hover:text-white"
+                            >
+                                <XSocialIcon className="h-3.5 w-3.5" />
+                            </a>
+                        </div>
+                    </div>
+
+                    <div className="font-welcome-body">
+                        <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/40">
+                            {t('footerNewsletterTitle')}
+                        </p>
+                        <p className="mt-4 text-sm leading-relaxed text-white/60">
+                            {t('footerNewsletterHint')}
+                        </p>
+                        <form onSubmit={handleNewsletterSubmit} className="mt-4 space-y-3">
+                            <label className="sr-only" htmlFor="footer-newsletter-email">
+                                {t('footerNewsletterPlaceholder')}
+                            </label>
+                            <input
+                                id="footer-newsletter-email"
+                                type="email"
+                                value={newsletterEmail}
+                                onChange={(event) => setNewsletterEmail(event.target.value)}
+                                placeholder={t('footerNewsletterPlaceholder')}
+                                className="w-full rounded-md border border-white/15 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-white/35 outline-none transition focus:border-white/40"
+                                autoComplete="email"
+                            />
+                            <button
+                                type="submit"
+                                className="inline-flex min-h-10 w-full items-center justify-center bg-white px-4 py-2.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#05070F] transition hover:bg-[#E8EEFF]"
+                            >
+                                {t('footerNewsletterSubmit')}
+                            </button>
+                        </form>
+                        {newsletterError && (
+                            <p className="mt-2 text-xs text-red-300">{newsletterError}</p>
+                        )}
+                        {newsletterMessage && (
+                            <p className="mt-2 text-xs text-emerald-300">{newsletterMessage}</p>
+                        )}
+                    </div>
+                </div>
+
+                <div className="border-t border-white/10">
+                    <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-5 py-5 font-welcome-body text-xs text-white/40 md:flex-row md:items-center md:justify-between md:px-10">
+                        <p>{t('footerCopyright', { year })}</p>
+                        <p>{SITE_CONTACT.companyName}</p>
+                    </div>
                 </div>
             </footer>
 
-            {legalPanel && (
+            {legalMeta && (
                 <div
                     className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center"
                     role="presentation"
@@ -219,7 +404,7 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                                 id="welcome-legal-title"
                                 className="font-welcome-display text-3xl tracking-tight"
                             >
-                                {legalTitle}
+                                {t(legalMeta.title)}
                             </h2>
                             <button
                                 type="button"
@@ -231,7 +416,7 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                             </button>
                         </div>
                         <p className="font-welcome-body text-sm leading-relaxed text-white/70">
-                            {legalBody}
+                            {t(legalMeta.body)}
                         </p>
                         <button
                             type="button"
