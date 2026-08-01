@@ -15,7 +15,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { api, getApiErrorMessage } from '../api';
 import { useProtectedAvatar } from '../hooks/useProtectedAvatar';
 import { useI18n } from '../i18n/I18nProvider';
-import { LEVELS } from '../constants/languages';
+import { LANGUAGES, LEVELS } from '../constants/languages';
 import {
     AGE_BANDS,
     getAgeBandById,
@@ -27,14 +27,19 @@ function buildProfilePayload(form) {
         firstName: (form.firstName || '').trim(),
         lastName: (form.lastName || '').trim(),
         email: (form.email || '').trim().toLowerCase(),
+        spokenLang: form.spokenLang || 'fr',
+        learningLang: form.learningLang || 'en',
         level: form.level || 'debutant',
         ageBand: form.ageBand || 'moyens',
     };
 }
 
 function normalizeProfileForm(user) {
+    const langCodes = new Set(LANGUAGES.map((lang) => lang.code));
     const levelCodes = new Set(LEVELS.map((level) => level.code));
     const ageCodes = new Set(AGE_BANDS.map((band) => band.id));
+    const spoken = user?.preferences?.spokenLang;
+    const learning = user?.preferences?.learningLang;
     const level = user?.preferences?.level;
     const ageBand = user?.preferences?.ageBand;
 
@@ -42,6 +47,8 @@ function normalizeProfileForm(user) {
         firstName: user?.firstName || '',
         lastName: user?.lastName || '',
         email: user?.email || '',
+        spokenLang: langCodes.has(spoken) ? spoken : 'fr',
+        learningLang: langCodes.has(learning) ? learning : 'en',
         level: levelCodes.has(level) ? level : 'debutant',
         ageBand: ageCodes.has(ageBand) ? ageBand : 'moyens',
     };
@@ -121,6 +128,8 @@ export default function LibraryPage({
         user?.firstName,
         user?.lastName,
         user?.email,
+        user?.preferences?.spokenLang,
+        user?.preferences?.learningLang,
         user?.preferences?.level,
         user?.preferences?.ageBand,
     ]);
@@ -192,6 +201,10 @@ export default function LibraryPage({
 
         if (!payload.firstName || !payload.lastName) {
             setProfileError(t('profileErrorNames'));
+            return;
+        }
+        if (payload.spokenLang === payload.learningLang) {
+            setProfileError(t('profileErrorSameLang'));
             return;
         }
 
@@ -346,6 +359,35 @@ export default function LibraryPage({
                             className="w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-[#0A1228] border border-[rgba(255,255,255,0.12)] text-white focus:outline-none focus:ring-2 focus:ring-[#1A3FFF]"
                             required
                         />
+                    </div>
+
+                    <div className="min-w-0">
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">{t('profileSpokenLang')}</label>
+                        <select
+                            value={profileForm.spokenLang}
+                            onChange={(e) => handleProfileChange('spokenLang', e.target.value)}
+                            className="w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-[#0A1228] border border-[rgba(255,255,255,0.12)] text-white focus:outline-none focus:ring-2 focus:ring-[#1A3FFF] [&>option]:bg-[#0A1228]"
+                        >
+                            {LANGUAGES.map((lang) => (
+                                <option key={lang.code} value={lang.code}>
+                                    {lang.nativeName}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="min-w-0">
+                        <label className="block text-sm font-medium text-white/80 mb-1.5">{t('profileLearningLang')}</label>
+                        <select
+                            value={profileForm.learningLang}
+                            onChange={(e) => handleProfileChange('learningLang', e.target.value)}
+                            className="w-full min-w-0 box-border px-4 py-2.5 rounded-lg bg-[#0A1228] border border-[rgba(255,255,255,0.12)] text-white focus:outline-none focus:ring-2 focus:ring-[#1A3FFF] [&>option]:bg-[#0A1228]"
+                        >
+                            {LANGUAGES.map((lang) => (
+                                <option key={lang.code} value={lang.code}>
+                                    {lang.nativeName}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     <div className="min-w-0">
