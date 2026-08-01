@@ -19,6 +19,19 @@ const fr = {
     welcomeLogin: 'Se connecter',
     welcomeNoAccountHint: 'Pas encore de compte ? Cliquez sur',
 
+    // Welcome footer
+    footerTagline: 'Histoires illustrées pour apprendre les langues.',
+    footerCopyright: '© {year} StoryTranslator. Tous droits réservés.',
+    footerPrivacy: 'Confidentialité',
+    footerTerms: 'Conditions d’utilisation',
+    footerClose: 'Fermer',
+    footerPrivacyTitle: 'Confidentialité',
+    footerPrivacyBody:
+        'StoryTranslator conserve les informations de compte (nom, courriel, préférences) pour personnaliser les histoires et sauvegarder la progression. Ces données ne sont pas vendues. Les comptes destinés aux enfants doivent être créés avec l’accompagnement d’un parent ou d’un enseignant.',
+    footerTermsTitle: 'Conditions d’utilisation',
+    footerTermsBody:
+        'StoryTranslator est un outil éducatif. Utilisez la plateforme de façon respectueuse. Les contenus importés par l’administrateur restent sous leur responsabilité. Un usage inapproprié peut entraîner la suspension du compte.',
+
     // Auth
     authRegisterTitle: 'Créer un compte',
     authLoginTitle: 'Connexion',
@@ -187,6 +200,18 @@ const en = extend(fr, {
     welcomeCreateAccount: 'Create an account',
     welcomeLogin: 'Log in',
     welcomeNoAccountHint: "Don't have an account yet? Click",
+
+    footerTagline: 'Illustrated stories for learning languages.',
+    footerCopyright: '© {year} StoryTranslator. All rights reserved.',
+    footerPrivacy: 'Privacy',
+    footerTerms: 'Terms of use',
+    footerClose: 'Close',
+    footerPrivacyTitle: 'Privacy',
+    footerPrivacyBody:
+        'StoryTranslator stores account information (name, email, preferences) to personalize stories and save progress. This data is not sold. Accounts for children should be created with a parent or teacher.',
+    footerTermsTitle: 'Terms of use',
+    footerTermsBody:
+        'StoryTranslator is an educational tool. Use the platform respectfully. Content imported by the administrator remains their responsibility. Inappropriate use may lead to account suspension.',
 
     authRegisterTitle: 'Create an account',
     authLoginTitle: 'Log in',
@@ -465,6 +490,18 @@ const ar = extend(en, {
     welcomeCreateAccount: 'إنشاء حساب',
     welcomeLogin: 'تسجيل الدخول',
     welcomeNoAccountHint: 'ليس لديك حساب بعد؟ انقر على',
+
+    footerTagline: 'قصص مصورة لتعلّم اللغات.',
+    footerCopyright: '© {year} StoryTranslator. جميع الحقوق محفوظة.',
+    footerPrivacy: 'الخصوصية',
+    footerTerms: 'شروط الاستخدام',
+    footerClose: 'إغلاق',
+    footerPrivacyTitle: 'الخصوصية',
+    footerPrivacyBody:
+        'يحتفظ StoryTranslator بمعلومات الحساب (الاسم والبريد والتفضيلات) لتخصيص القصص وحفظ التقدّم. لا تُباع هذه البيانات. يُفضّل إنشاء حسابات الأطفال بمساعدة أحد الوالدين أو المعلم.',
+    footerTermsTitle: 'شروط الاستخدام',
+    footerTermsBody:
+        'StoryTranslator أداة تعليمية. استخدم المنصة باحترام. المحتوى الذي يستورده المشرف يبقى تحت مسؤوليته. قد يؤدي الاستخدام غير اللائق إلى إيقاف الحساب.',
 
     authRegisterTitle: 'إنشاء حساب',
     authLoginTitle: 'تسجيل الدخول',
