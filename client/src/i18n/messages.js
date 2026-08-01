@@ -8,8 +8,8 @@ const fr = {
     welcomeBadge: 'Apprentissage des langues pour enfants',
     welcomeSubtitle:
         "Des histoires illustrées, la lecture à voix haute et des langues à découvrir — tout en s'amusant.",
-    welcomeHeadline: 'Éveiller les langues par les histoires.',
-    welcomeEyebrow: 'Une plateforme éducative inventive et humaine',
+    welcomeHeadline: 'Apprendre les langues avec des histoires.',
+    welcomeEyebrow: 'Pour les enfants, les parents et les enseignants',
     welcomeMenu: 'Menu',
     welcomeNavDiscover: 'Découvrir',
     welcomeNavStart: 'Commencer',
@@ -223,8 +223,8 @@ const en = extend(fr, {
     welcomeBadge: 'Language learning for children',
     welcomeSubtitle:
         'Illustrated stories, read-aloud and languages to discover — while having fun.',
-    welcomeHeadline: 'Awaken languages through stories.',
-    welcomeEyebrow: 'An inventive and human learning platform',
+    welcomeHeadline: 'Learn languages with stories.',
+    welcomeEyebrow: 'For children, parents and teachers',
     welcomeMenu: 'Menu',
     welcomeNavDiscover: 'Discover',
     welcomeNavStart: 'Get started',
@@ -546,8 +546,8 @@ const pt = extend(en, {
 const ar = extend(en, {
     welcomeBadge: 'تعلّم اللغات للأطفال',
     welcomeSubtitle: 'قصص مصورة، قراءة بصوت عالٍ ولغات للاكتشاف — مع المرح.',
-    welcomeHeadline: 'إيقاظ اللغات عبر القصص.',
-    welcomeEyebrow: 'منصة تعليمية مبتكرة وإنسانية',
+    welcomeHeadline: 'تعلّم اللغات مع القصص.',
+    welcomeEyebrow: 'للأطفال والآباء والمعلمين',
     welcomeMenu: 'القائمة',
     welcomeNavDiscover: 'اكتشف',
     welcomeNavStart: 'ابدأ',
