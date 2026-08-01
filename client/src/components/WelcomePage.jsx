@@ -10,6 +10,7 @@ import {
     X,
 } from 'lucide-react';
 import { useI18n } from '../i18n/I18nProvider';
+import { BRAND_NAME } from '../constants/brand';
 import { SITE_CONTACT } from '../constants/siteContact';
 
 const LEGAL_KEYS = {
@@ -79,8 +80,8 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                 </div>
 
                 <header className="welcome-fade welcome-fade-1 relative z-20 flex items-center justify-between gap-4 px-5 pt-6 md:px-10 md:pt-8">
-                    <p className="font-welcome-body text-lg font-extrabold tracking-tight md:text-xl">
-                        StoryTranslator
+                    <p className="font-welcome-body text-base font-extrabold tracking-tight md:text-lg">
+                        {BRAND_NAME}
                     </p>
 
                     <nav

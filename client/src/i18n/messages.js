@@ -28,7 +28,7 @@ const fr = {
 
     // Welcome footer
     footerTagline: 'Histoires illustrées pour apprendre les langues.',
-    footerCopyright: '© {year} StoryTranslator. Tous droits réservés.',
+    footerCopyright: '© {year} Mes histoires traduites. Tous droits réservés.',
     footerNavTitle: 'Navigation',
     footerLegalTitle: 'Informations légales',
     footerContactTitle: 'Contact',
@@ -51,16 +51,16 @@ const fr = {
     footerClose: 'Fermer',
     footerPrivacyTitle: 'Politique de confidentialité',
     footerPrivacyBody:
-        'StoryTranslator conserve les informations de compte (nom, courriel, préférences) pour personnaliser les histoires et sauvegarder la progression. Ces données ne sont pas vendues. Les comptes destinés aux enfants doivent être créés avec l’accompagnement d’un parent ou d’un enseignant.',
+        'La plateforme Mes histoires traduites conserve les informations de compte (nom, courriel, préférences) pour personnaliser les histoires et sauvegarder la progression. Ces données ne sont pas vendues. Les comptes destinés aux enfants doivent être créés avec l’accompagnement d’un parent ou d’un enseignant.',
     footerTermsTitle: 'Conditions d’utilisation',
     footerTermsBody:
-        'StoryTranslator est un outil éducatif. Utilisez la plateforme de façon respectueuse. Les contenus importés par l’administrateur restent sous leur responsabilité. Un usage inapproprié peut entraîner la suspension du compte.',
+        'Mes histoires traduites est un outil éducatif. Utilisez la plateforme de façon respectueuse. Les contenus importés par l’administrateur restent sous leur responsabilité. Un usage inapproprié peut entraîner la suspension du compte.',
     footerCookiesTitle: 'Gestion des cookies',
     footerCookiesBody:
-        'StoryTranslator utilise des cookies ou le stockage local nécessaires au fonctionnement du site (session de connexion, préférences d’affichage). Aucun cookie publicitaire n’est déposé. Vous pouvez effacer les données du navigateur à tout moment dans les paramètres de votre appareil.',
+        'La plateforme Mes histoires traduites utilise des cookies ou le stockage local nécessaires au fonctionnement du site (session de connexion, préférences d’affichage). Aucun cookie publicitaire n’est déposé. Vous pouvez effacer les données du navigateur à tout moment dans les paramètres de votre appareil.',
     footerMentionsTitle: 'Mentions légales',
     footerMentionsBody:
-        'Éditeur : StoryTranslator. Plateforme éducative destinée à l’apprentissage des langues par les histoires. Pour toute question relative au service, contactez-nous via les coordonnées indiquées en pied de page.',
+        'Éditeur : Mes histoires traduites. Plateforme éducative destinée à l’apprentissage des langues par les histoires. Pour toute question relative au service, contactez-nous via les coordonnées indiquées en pied de page.',
     footerSitemapTitle: 'Plan du site',
     footerSitemapBody:
         'Pages disponibles : Accueil, Créer un compte, Connexion, Bibliothèque (après connexion), Profil, Confidentialité, Conditions d’utilisation, Mentions légales, Cookies.',
@@ -242,7 +242,7 @@ const en = extend(fr, {
     welcomeNoAccountHint: "Don't have an account yet? Click",
 
     footerTagline: 'Illustrated stories for learning languages.',
-    footerCopyright: '© {year} StoryTranslator. All rights reserved.',
+    footerCopyright: '© {year} Mes histoires traduites. All rights reserved.',
     footerNavTitle: 'Navigation',
     footerLegalTitle: 'Legal information',
     footerContactTitle: 'Contact',
@@ -265,16 +265,16 @@ const en = extend(fr, {
     footerClose: 'Close',
     footerPrivacyTitle: 'Privacy policy',
     footerPrivacyBody:
-        'StoryTranslator stores account information (name, email, preferences) to personalize stories and save progress. This data is not sold. Accounts for children should be created with a parent or teacher.',
+        'Mes histoires traduites stores account information (name, email, preferences) to personalize stories and save progress. This data is not sold. Accounts for children should be created with a parent or teacher.',
     footerTermsTitle: 'Terms of use',
     footerTermsBody:
-        'StoryTranslator is an educational tool. Use the platform respectfully. Content imported by the administrator remains their responsibility. Inappropriate use may lead to account suspension.',
+        'Mes histoires traduites is an educational tool. Use the platform respectfully. Content imported by the administrator remains their responsibility. Inappropriate use may lead to account suspension.',
     footerCookiesTitle: 'Cookie settings',
     footerCookiesBody:
-        'StoryTranslator uses cookies or local storage required for the site to work (login session, display preferences). No advertising cookies are set. You can clear browser data anytime in your device settings.',
+        'Mes histoires traduites uses cookies or local storage required for the site to work (login session, display preferences). No advertising cookies are set. You can clear browser data anytime in your device settings.',
     footerMentionsTitle: 'Legal notice',
     footerMentionsBody:
-        'Publisher: StoryTranslator. Educational platform for language learning through stories. For any service-related question, contact us using the details in the footer.',
+        'Publisher: Mes histoires traduites. Educational platform for language learning through stories. For any service-related question, contact us using the details in the footer.',
     footerSitemapTitle: 'Sitemap',
     footerSitemapBody:
         'Available pages: Home, Create account, Log in, Library (after login), Profile, Privacy, Terms of use, Legal notice, Cookies.',
@@ -565,7 +565,7 @@ const ar = extend(en, {
     welcomeNoAccountHint: 'ليس لديك حساب بعد؟ انقر على',
 
     footerTagline: 'قصص مصورة لتعلّم اللغات.',
-    footerCopyright: '© {year} StoryTranslator. جميع الحقوق محفوظة.',
+    footerCopyright: '© {year} Mes histoires traduites. جميع الحقوق محفوظة.',
     footerNavTitle: 'التنقّل',
     footerLegalTitle: 'معلومات قانونية',
     footerContactTitle: 'اتصل بنا',
@@ -588,16 +588,16 @@ const ar = extend(en, {
     footerClose: 'إغلاق',
     footerPrivacyTitle: 'سياسة الخصوصية',
     footerPrivacyBody:
-        'يحتفظ StoryTranslator بمعلومات الحساب (الاسم والبريد والتفضيلات) لتخصيص القصص وحفظ التقدّم. لا تُباع هذه البيانات. يُفضّل إنشاء حسابات الأطفال بمساعدة أحد الوالدين أو المعلم.',
+        'يحتفظ Mes histoires traduites بمعلومات الحساب (الاسم والبريد والتفضيلات) لتخصيص القصص وحفظ التقدّم. لا تُباع هذه البيانات. يُفضّل إنشاء حسابات الأطفال بمساعدة أحد الوالدين أو المعلم.',
     footerTermsTitle: 'شروط الاستخدام',
     footerTermsBody:
-        'StoryTranslator أداة تعليمية. استخدم المنصة باحترام. المحتوى الذي يستورده المشرف يبقى تحت مسؤوليته. قد يؤدي الاستخدام غير اللائق إلى إيقاف الحساب.',
+        'Mes histoires traduites أداة تعليمية. استخدم المنصة باحترام. المحتوى الذي يستورده المشرف يبقى تحت مسؤوليته. قد يؤدي الاستخدام غير اللائق إلى إيقاف الحساب.',
     footerCookiesTitle: 'إدارة ملفات تعريف الارتباط',
     footerCookiesBody:
-        'يستخدم StoryTranslator ملفات تعريف الارتباط أو التخزين المحلي اللازم لعمل الموقع (جلسة الدخول وتفضيلات العرض). لا تُستخدم ملفات إعلانية. يمكنك مسح بيانات المتصفح في أي وقت من إعدادات جهازك.',
+        'يستخدم Mes histoires traduites ملفات تعريف الارتباط أو التخزين المحلي اللازم لعمل الموقع (جلسة الدخول وتفضيلات العرض). لا تُستخدم ملفات إعلانية. يمكنك مسح بيانات المتصفح في أي وقت من إعدادات جهازك.',
     footerMentionsTitle: 'الإشعارات القانونية',
     footerMentionsBody:
-        'الناشر: StoryTranslator. منصة تعليمية لتعلّم اللغات عبر القصص. لأي سؤال متعلق بالخدمة، تواصل معنا عبر بيانات الاتصال في التذييل.',
+        'الناشر: Mes histoires traduites. منصة تعليمية لتعلّم اللغات عبر القصص. لأي سؤال متعلق بالخدمة، تواصل معنا عبر بيانات الاتصال في التذييل.',
     footerSitemapTitle: 'خريطة الموقع',
     footerSitemapBody:
         'الصفحات المتاحة: الرئيسية، إنشاء حساب، تسجيل الدخول، المكتبة (بعد الدخول)، الملف الشخصي، الخصوصية، الشروط، الإشعارات القانونية، ملفات تعريف الارتباط.',
