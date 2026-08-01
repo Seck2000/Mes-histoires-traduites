@@ -8,97 +8,64 @@ body,
 
 body {
   margin: 0;
-  background: #f3efe8;
+  background: #05070f;
   color: #1f2937;
 }
 
 .font-welcome-display {
-  font-family: "Fredoka", "Trebuchet MS", sans-serif;
-  font-weight: 600;
+  font-family: "Instrument Serif", "Times New Roman", serif;
+  font-weight: 400;
 }
 
 .font-welcome-body {
-  font-family: "Nunito", "Segoe UI", sans-serif;
+  font-family: "Manrope", "Segoe UI", sans-serif;
 }
 
 .welcome-page {
-  --welcome-ink: #2a2140;
-  --welcome-accent: #8c5eb9;
-  --welcome-sky-top: #dfe8f4;
-  --welcome-sky-mid: #e9dff5;
-  --welcome-sky-bottom: #f3efe8;
+  --welcome-bg: #05070f;
+  --welcome-ink: #f4f6fb;
+  --welcome-muted: rgba(244, 246, 251, 0.62);
+  --welcome-blue: #2f6dff;
+  --welcome-blue-soft: #6ea0ff;
 }
 
-.welcome-sky {
+.welcome-hero {
+  background: #05070f;
+}
+
+.welcome-canvas {
   background:
-    radial-gradient(ellipse 80% 50% at 15% 20%, rgba(140, 94, 185, 0.22), transparent 55%),
-    radial-gradient(ellipse 70% 45% at 85% 25%, rgba(59, 169, 156, 0.18), transparent 50%),
-    linear-gradient(180deg, var(--welcome-sky-top) 0%, var(--welcome-sky-mid) 45%, var(--welcome-sky-bottom) 100%);
+    radial-gradient(ellipse 55% 45% at 18% 70%, rgba(47, 109, 255, 0.45), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 78% 35%, rgba(110, 160, 255, 0.28), transparent 65%),
+    radial-gradient(ellipse 40% 35% at 55% 85%, rgba(18, 48, 120, 0.7), transparent 70%),
+    linear-gradient(160deg, #04060c 0%, #0a1228 42%, #05070f 100%);
 }
 
-.welcome-glow {
+.welcome-silk {
   position: absolute;
-  border-radius: 9999px;
-  filter: blur(48px);
-  opacity: 0.55;
+  inset: -10% -5%;
+  background:
+    radial-gradient(ellipse 35% 55% at 30% 60%, rgba(80, 130, 255, 0.35), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 70% 40%, rgba(180, 210, 255, 0.18), transparent 65%);
+  filter: blur(28px);
+  opacity: 0.9;
+  animation: welcomeSilk 14s ease-in-out infinite;
 }
 
-.welcome-glow-a {
-  top: 8%;
-  left: 10%;
-  width: 18rem;
-  height: 18rem;
-  background: rgba(140, 94, 185, 0.28);
-  animation: welcomeDrift 12s ease-in-out infinite;
-}
-
-.welcome-glow-b {
-  top: 18%;
-  right: 8%;
-  width: 22rem;
-  height: 22rem;
-  background: rgba(240, 180, 41, 0.16);
-  animation: welcomeDrift 15s ease-in-out infinite reverse;
-}
-
-.welcome-stars {
+.welcome-grain {
   position: absolute;
   inset: 0;
-  background-image:
-    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.9) 0 1px, transparent 2px),
-    radial-gradient(circle at 28% 32%, rgba(255, 255, 255, 0.7) 0 1px, transparent 2px),
-    radial-gradient(circle at 70% 22%, rgba(255, 255, 255, 0.85) 0 1.5px, transparent 3px),
-    radial-gradient(circle at 86% 38%, rgba(255, 255, 255, 0.65) 0 1px, transparent 2px),
-    radial-gradient(circle at 48% 14%, rgba(255, 255, 255, 0.55) 0 1px, transparent 2px);
-  opacity: 0.55;
-  animation: welcomeTwinkle 4.5s ease-in-out infinite;
-}
-
-.welcome-book {
-  animation: welcomeBookFloat 8s ease-in-out infinite;
-  filter: drop-shadow(0 -12px 40px rgba(42, 33, 64, 0.18));
-}
-
-.welcome-orb {
-  transform-origin: center;
-}
-
-.welcome-orb-1 {
-  animation: welcomeOrb 5s ease-in-out infinite;
-}
-
-.welcome-orb-2 {
-  animation: welcomeOrb 6.5s ease-in-out infinite 0.4s;
-}
-
-.welcome-orb-3 {
-  animation: welcomeOrb 7s ease-in-out infinite 0.8s;
+  opacity: 0.22;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  pointer-events: none;
 }
 
 .welcome-fade {
   opacity: 0;
-  transform: translateY(18px);
-  animation: welcomeRise 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform: translateY(22px);
+  animation: welcomeRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .welcome-fade-1 {
@@ -106,11 +73,54 @@ body {
 }
 
 .welcome-fade-2 {
-  animation-delay: 0.2s;
+  animation-delay: 0.18s;
 }
 
 .welcome-fade-3 {
-  animation-delay: 0.35s;
+  animation-delay: 0.32s;
+}
+
+.welcome-fade-4 {
+  animation-delay: 0.45s;
+}
+
+.welcome-cta-motion {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.welcome-cta-motion::before {
+  content: "";
+  position: absolute;
+  inset: -40% -60%;
+  z-index: -1;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(90, 140, 255, 0.55) 45%,
+    rgba(200, 220, 255, 0.35) 55%,
+    transparent 75%
+  );
+  transform: translateX(-30%) skewX(-18deg);
+  animation: welcomeSmear 4.8s ease-in-out infinite;
+}
+
+.welcome-cta-ghost {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+}
+
+.welcome-nav-link {
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(244, 246, 251, 0.78);
+  transition: color 0.2s ease;
+}
+
+.welcome-nav-link:hover {
+  color: #fff;
 }
 
 @keyframes welcomeRise {
@@ -120,53 +130,31 @@ body {
   }
 }
 
-@keyframes welcomeDrift {
+@keyframes welcomeSilk {
   0%,
   100% {
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translate3d(18px, 12px, 0);
+    transform: translate3d(2%, -2%, 0) scale(1.04);
   }
 }
 
-@keyframes welcomeTwinkle {
+@keyframes welcomeSmear {
   0%,
   100% {
-    opacity: 0.4;
+    transform: translateX(-35%) skewX(-18deg);
+    opacity: 0.55;
   }
   50% {
-    opacity: 0.75;
-  }
-}
-
-@keyframes welcomeBookFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes welcomeOrb {
-  0%,
-  100% {
-    opacity: 0.75;
-    transform: translateY(0);
-  }
-  50% {
-    opacity: 1;
-    transform: translateY(-10px);
+    transform: translateX(25%) skewX(-18deg);
+    opacity: 0.95;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .welcome-glow,
-  .welcome-stars,
-  .welcome-book,
-  .welcome-orb,
+  .welcome-silk,
+  .welcome-cta-motion::before,
   .welcome-fade {
     animation: none !important;
   }

@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Loader2, LogIn, UserPlus, X } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 import { useI18n } from '../i18n/I18nProvider';
 
 export default function WelcomePage({ onLogin, onRegister, loading = false }) {
     const { t } = useI18n();
     const [legalPanel, setLegalPanel] = useState(null);
+    const [menuOpen, setMenuOpen] = useState(false);
     const year = new Date().getFullYear();
 
     const legalTitle =
@@ -12,123 +13,167 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
     const legalBody =
         legalPanel === 'privacy' ? t('footerPrivacyBody') : t('footerTermsBody');
 
+    const scrollToFooter = () => {
+        setMenuOpen(false);
+        document.getElementById('welcome-footer')?.scrollIntoView({ behavior: 'smooth' });
+    };
+
     return (
-        <div className="welcome-page relative isolate flex min-h-[100dvh] flex-1 flex-col">
-            <section className="relative flex min-h-[100dvh] flex-1 flex-col overflow-hidden">
-                <div className="welcome-sky pointer-events-none absolute inset-0" aria-hidden="true">
-                    <div className="welcome-glow welcome-glow-a" />
-                    <div className="welcome-glow welcome-glow-b" />
-                    <div className="welcome-stars" />
+        <div className="welcome-page relative isolate flex min-h-[100dvh] flex-1 flex-col bg-[#05070F] text-[#F4F6FB]">
+            <section className="welcome-hero relative flex min-h-[100dvh] flex-1 flex-col overflow-hidden">
+                <div className="welcome-canvas pointer-events-none absolute inset-0" aria-hidden="true">
+                    <div className="welcome-silk" />
+                    <div className="welcome-grain" />
                 </div>
 
-                <div
-                    className="welcome-book-plane pointer-events-none absolute inset-x-0 bottom-0 h-[42%] min-h-[220px] md:h-[48%]"
-                    aria-hidden="true"
-                >
-                    <svg
-                        className="welcome-book absolute inset-x-0 bottom-0 h-full w-full"
-                        viewBox="0 0 1440 420"
-                        preserveAspectRatio="xMidYMax slice"
-                        xmlns="http://www.w3.org/2000/svg"
+                <header className="welcome-fade welcome-fade-1 relative z-20 flex items-center justify-between gap-4 px-5 pt-6 md:px-10 md:pt-8">
+                    <p className="font-welcome-body text-lg font-extrabold tracking-tight md:text-xl">
+                        StoryTranslator
+                    </p>
+
+                    <nav
+                        className="hidden items-center gap-8 md:flex"
+                        aria-label="Navigation principale"
                     >
-                        <defs>
-                            <linearGradient id="welcomePageLeft" x1="0" y1="0" x2="1" y2="1">
-                                <stop offset="0%" stopColor="#F7F1E8" />
-                                <stop offset="100%" stopColor="#E8D9C4" />
-                            </linearGradient>
-                            <linearGradient id="welcomePageRight" x1="1" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#F3EADF" />
-                                <stop offset="100%" stopColor="#DCC9AE" />
-                            </linearGradient>
-                            <linearGradient id="welcomeSpine" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#6B3F8F" />
-                                <stop offset="100%" stopColor="#4A2A68" />
-                            </linearGradient>
-                        </defs>
-                        <path
-                            d="M0 420 V180 C180 110 360 95 520 130 C600 150 680 200 720 230 V420 Z"
-                            fill="url(#welcomePageLeft)"
-                        />
-                        <path
-                            d="M1440 420 V180 C1260 110 1080 95 920 130 C840 150 760 200 720 230 V420 Z"
-                            fill="url(#welcomePageRight)"
-                        />
-                        <path d="M708 228 C712 210 716 210 720 228 V420 H708 Z" fill="url(#welcomeSpine)" />
-                        <g opacity="0.35" stroke="#8C5EB9" strokeWidth="3" strokeLinecap="round" fill="none">
-                            <path d="M180 250 C260 220 340 220 420 250" />
-                            <path d="M200 290 C280 260 360 260 440 290" />
-                            <path d="M220 330 C300 300 380 300 460 330" />
-                        </g>
-                        <g opacity="0.3" stroke="#2F6F6A" strokeWidth="3" strokeLinecap="round" fill="none">
-                            <path d="M1020 250 C1100 220 1180 220 1260 250" />
-                            <path d="M1000 290 C1080 260 1160 260 1240 290" />
-                            <path d="M980 330 C1060 300 1140 300 1220 330" />
-                        </g>
-                        <circle className="welcome-orb welcome-orb-1" cx="260" cy="200" r="10" fill="#F0B429" />
-                        <circle className="welcome-orb welcome-orb-2" cx="1180" cy="190" r="8" fill="#8C5EB9" />
-                        <circle className="welcome-orb welcome-orb-3" cx="980" cy="150" r="6" fill="#3BA99C" />
-                    </svg>
-                </div>
+                        <button type="button" className="welcome-nav-link font-welcome-body" onClick={scrollToFooter}>
+                            {t('welcomeNavDiscover')}
+                        </button>
+                        <button
+                            type="button"
+                            className="welcome-nav-link font-welcome-body"
+                            onClick={onRegister}
+                            disabled={loading}
+                        >
+                            {t('welcomeNavStart')}
+                        </button>
+                        <button
+                            type="button"
+                            className="welcome-nav-link font-welcome-body"
+                            onClick={() => setLegalPanel('privacy')}
+                        >
+                            {t('welcomeNavContact')}
+                        </button>
+                    </nav>
 
-                <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center px-6 pb-[38vh] pt-16 text-center md:pb-[42vh] md:pt-20">
-                    <p className="welcome-fade welcome-fade-1 font-welcome-display text-6xl leading-none tracking-tight text-[#2A2140] sm:text-7xl md:text-8xl">
-                        <span className="block">Story</span>
-                        <span className="block text-[#8C5EB9]">Translator</span>
-                    </p>
+                    <button
+                        type="button"
+                        onClick={() => setMenuOpen((open) => !open)}
+                        className="rounded-md bg-white px-4 py-2 font-welcome-body text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#05070F] transition hover:bg-[#E8EEFF]"
+                    >
+                        {t('welcomeMenu')}
+                    </button>
+                </header>
 
-                    <p className="welcome-fade welcome-fade-2 mt-6 max-w-md font-welcome-body text-base leading-relaxed text-[#3D3454]/90 sm:text-lg md:max-w-lg md:text-xl">
-                        {t('welcomeSubtitle')}
-                    </p>
+                {menuOpen && (
+                    <div className="absolute right-5 top-20 z-30 w-56 overflow-hidden rounded-xl border border-white/10 bg-[#0A1228]/95 p-2 shadow-2xl backdrop-blur-md md:right-10">
+                        <button
+                            type="button"
+                            className="block w-full rounded-lg px-3 py-2.5 text-left font-welcome-body text-sm text-white/90 hover:bg-white/10"
+                            onClick={scrollToFooter}
+                        >
+                            {t('welcomeNavDiscover')}
+                        </button>
+                        <button
+                            type="button"
+                            className="block w-full rounded-lg px-3 py-2.5 text-left font-welcome-body text-sm text-white/90 hover:bg-white/10 disabled:opacity-50"
+                            onClick={() => {
+                                setMenuOpen(false);
+                                onRegister();
+                            }}
+                            disabled={loading}
+                        >
+                            {t('welcomeCreateAccount')}
+                        </button>
+                        <button
+                            type="button"
+                            className="block w-full rounded-lg px-3 py-2.5 text-left font-welcome-body text-sm text-white/90 hover:bg-white/10 disabled:opacity-50"
+                            onClick={() => {
+                                setMenuOpen(false);
+                                onLogin();
+                            }}
+                            disabled={loading}
+                        >
+                            {t('welcomeLogin')}
+                        </button>
+                        <button
+                            type="button"
+                            className="block w-full rounded-lg px-3 py-2.5 text-left font-welcome-body text-sm text-white/90 hover:bg-white/10"
+                            onClick={() => {
+                                setMenuOpen(false);
+                                setLegalPanel('privacy');
+                            }}
+                        >
+                            {t('footerPrivacy')}
+                        </button>
+                    </div>
+                )}
 
-                    {loading ? (
-                        <div className="welcome-fade welcome-fade-3 mt-10 flex items-center justify-center gap-3 text-[#3D3454]/80">
-                            <Loader2 className="h-6 w-6 animate-spin text-[#8C5EB9]" />
-                            <span className="font-welcome-body text-base">{t('welcomeCheckingSession')}</span>
-                        </div>
-                    ) : (
-                        <div className="welcome-fade welcome-fade-3 mt-10 flex w-full max-w-md flex-col items-stretch gap-3 sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-4">
-                            <button
-                                type="button"
-                                onClick={onRegister}
-                                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-[#8C5EB9] px-8 py-4 font-welcome-body text-lg font-bold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#7a4fa8] active:translate-y-0"
-                            >
-                                <UserPlus className="h-5 w-5" />
-                                {t('welcomeCreateAccount')}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={onLogin}
-                                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-[#2A2140]/15 bg-white/70 px-8 py-4 font-welcome-body text-lg font-bold text-[#2A2140] backdrop-blur-sm transition duration-300 hover:-translate-y-0.5 hover:border-[#8C5EB9]/50 hover:bg-white active:translate-y-0"
-                            >
-                                <LogIn className="h-5 w-5" />
-                                {t('welcomeLogin')}
-                            </button>
-                        </div>
-                    )}
+                <div className="relative z-10 flex flex-1 flex-col justify-center px-5 pb-28 pt-16 md:px-10 md:pb-32 md:pt-10">
+                    <div className="relative mx-auto w-full max-w-6xl">
+                        <h1 className="welcome-fade welcome-fade-2 max-w-5xl font-welcome-display text-[clamp(2.6rem,8vw,6.4rem)] leading-[0.95] tracking-[-0.02em] text-white">
+                            {t('welcomeHeadline')}
+                        </h1>
+
+                        <p className="welcome-fade welcome-fade-3 mt-6 max-w-xs font-welcome-body text-[10px] font-bold uppercase leading-relaxed tracking-[0.22em] text-white/55 md:absolute md:right-0 md:top-2 md:mt-0 md:max-w-[220px] md:text-right">
+                            {t('welcomeEyebrow')}
+                        </p>
+
+                        <p className="welcome-fade welcome-fade-3 mt-5 max-w-md font-welcome-body text-sm leading-relaxed text-white/70 md:mt-8 md:text-base">
+                            {t('welcomeSubtitle')}
+                        </p>
+
+                        {loading ? (
+                            <div className="welcome-fade welcome-fade-4 mt-12 flex items-center gap-3 text-white/70">
+                                <Loader2 className="h-5 w-5 animate-spin text-[#6EA0FF]" />
+                                <span className="font-welcome-body text-sm">{t('welcomeCheckingSession')}</span>
+                            </div>
+                        ) : (
+                            <div className="welcome-fade welcome-fade-4 relative mt-12 flex flex-col gap-4 sm:mt-16 sm:flex-row sm:items-end sm:gap-6">
+                                <button
+                                    type="button"
+                                    onClick={onRegister}
+                                    className="welcome-cta-motion inline-flex min-h-12 items-center justify-center bg-[#1A3FFF] px-7 py-3.5 font-welcome-body text-[11px] font-extrabold uppercase tracking-[0.2em] text-white transition hover:brightness-110"
+                                >
+                                    {t('welcomeCtaDiscover')}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={onLogin}
+                                    className="welcome-cta-ghost inline-flex min-h-12 items-center justify-center bg-white/10 px-7 py-3.5 font-welcome-body text-[11px] font-extrabold uppercase tracking-[0.2em] text-white backdrop-blur-sm transition hover:bg-white/16"
+                                >
+                                    {t('welcomeLogin')}
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </section>
 
-            <footer className="relative z-20 border-t border-[#2A2140]/10 bg-[#2A2140] text-[#F7F1E8]">
-                <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-6 py-8 md:flex-row md:items-start md:justify-between md:gap-10">
-                    <div className="max-w-sm text-left">
-                        <p className="font-welcome-display text-2xl tracking-tight">
-                            Story<span className="text-[#C9A6E8]">Translator</span>
-                        </p>
-                        <p className="mt-2 font-welcome-body text-sm leading-relaxed text-[#F7F1E8]/75">
+            <footer
+                id="welcome-footer"
+                className="relative z-20 border-t border-white/10 bg-[#03050C] text-white"
+            >
+                <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-5 py-12 md:flex-row md:items-end md:justify-between md:px-10 md:py-16">
+                    <div className="max-w-xl">
+                        <p className="font-welcome-display text-4xl leading-tight tracking-tight md:text-5xl">
                             {t('footerTagline')}
+                        </p>
+                        <p className="mt-4 font-welcome-body text-sm text-white/50">
+                            StoryTranslator — {t('welcomeBadge')}
                         </p>
                     </div>
 
                     <nav
                         aria-label="Pied de page"
-                        className="flex flex-col gap-3 font-welcome-body text-sm md:items-end"
+                        className="flex flex-col gap-5 font-welcome-body text-sm md:items-end"
                     >
-                        <div className="flex flex-wrap gap-x-5 gap-y-2">
+                        <div className="flex flex-wrap gap-x-6 gap-y-3 md:justify-end">
                             <button
                                 type="button"
                                 onClick={onLogin}
                                 disabled={loading}
-                                className="text-[#F7F1E8]/85 transition hover:text-white disabled:opacity-50"
+                                className="welcome-nav-link disabled:opacity-50"
                             >
                                 {t('welcomeLogin')}
                             </button>
@@ -136,33 +181,35 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                                 type="button"
                                 onClick={onRegister}
                                 disabled={loading}
-                                className="text-[#F7F1E8]/85 transition hover:text-white disabled:opacity-50"
+                                className="welcome-nav-link disabled:opacity-50"
                             >
                                 {t('welcomeCreateAccount')}
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setLegalPanel('privacy')}
-                                className="text-[#F7F1E8]/85 transition hover:text-white"
+                                className="welcome-nav-link"
                             >
                                 {t('footerPrivacy')}
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setLegalPanel('terms')}
-                                className="text-[#F7F1E8]/85 transition hover:text-white"
+                                className="welcome-nav-link"
                             >
                                 {t('footerTerms')}
                             </button>
                         </div>
-                        <p className="text-[#F7F1E8]/55">{t('footerCopyright', { year })}</p>
+                        <p className="text-xs tracking-wide text-white/35">
+                            {t('footerCopyright', { year })}
+                        </p>
                     </nav>
                 </div>
             </footer>
 
             {legalPanel && (
                 <div
-                    className="fixed inset-0 z-50 flex items-end justify-center bg-[#2A2140]/45 p-4 sm:items-center"
+                    className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center"
                     role="presentation"
                     onClick={() => setLegalPanel(null)}
                 >
@@ -170,32 +217,32 @@ export default function WelcomePage({ onLogin, onRegister, loading = false }) {
                         role="dialog"
                         aria-modal="true"
                         aria-labelledby="welcome-legal-title"
-                        className="max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-[#F7F1E8] p-6 text-[#2A2140] shadow-xl"
+                        className="max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-white/10 bg-[#0A1228] p-6 text-white shadow-2xl"
                         onClick={(event) => event.stopPropagation()}
                     >
                         <div className="mb-4 flex items-start justify-between gap-4">
                             <h2
                                 id="welcome-legal-title"
-                                className="font-welcome-display text-2xl tracking-tight"
+                                className="font-welcome-display text-3xl tracking-tight"
                             >
                                 {legalTitle}
                             </h2>
                             <button
                                 type="button"
                                 onClick={() => setLegalPanel(null)}
-                                className="rounded-xl p-2 text-[#2A2140]/70 transition hover:bg-[#2A2140]/8 hover:text-[#2A2140]"
+                                className="rounded-lg p-2 text-white/70 transition hover:bg-white/10 hover:text-white"
                                 aria-label={t('footerClose')}
                             >
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
-                        <p className="font-welcome-body text-sm leading-relaxed text-[#3D3454]">
+                        <p className="font-welcome-body text-sm leading-relaxed text-white/70">
                             {legalBody}
                         </p>
                         <button
                             type="button"
                             onClick={() => setLegalPanel(null)}
-                            className="mt-6 inline-flex min-h-11 items-center justify-center rounded-xl bg-[#8C5EB9] px-5 py-2.5 font-welcome-body text-sm font-bold text-white transition hover:bg-[#7a4fa8]"
+                            className="mt-6 inline-flex min-h-11 items-center justify-center bg-white px-5 py-2.5 font-welcome-body text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#05070F] transition hover:bg-[#E8EEFF]"
                         >
                             {t('footerClose')}
                         </button>
