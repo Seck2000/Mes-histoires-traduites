@@ -85,7 +85,6 @@ export default function LibraryPage({
     savedSceneIndex,
     onLogout,
     onFileSelect,
-    onScrollRight,
     onStartStory,
     onPlayRandom,
     favoriteIds = [],
@@ -222,7 +221,11 @@ export default function LibraryPage({
             window.setTimeout(() => onUserUpdate?.(data.user), 0);
         } catch (error) {
             setProfileError(
-                getApiErrorMessage(error, t('profileErrorSave'))
+                getApiErrorMessage(error, t('profileErrorSave'), {
+                    network: t('apiNetworkError'),
+                    session: t('apiSessionExpired'),
+                    generic: t('apiErrorGeneric'),
+                })
             );
         } finally {
             setProfileSaving(false);
@@ -251,7 +254,13 @@ export default function LibraryPage({
             setProfileSuccess(t('profilePhotoSuccess'));
             setActionNotice(t('profilePhotoSuccess'));
         } catch (error) {
-            setProfileError(getApiErrorMessage(error, t('profileErrorPhoto')));
+            setProfileError(
+                getApiErrorMessage(error, t('profileErrorPhoto'), {
+                    network: t('apiNetworkError'),
+                    session: t('apiSessionExpired'),
+                    generic: t('apiErrorGeneric'),
+                })
+            );
         } finally {
             setAvatarUploading(false);
             event.target.value = '';

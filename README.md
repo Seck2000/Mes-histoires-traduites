@@ -104,13 +104,6 @@ npm test
 Le workflow GitHub Actions (`.github/workflows/tests.yml`) lance automatiquement les tests Vitest à chaque `push` ou `pull request`.  
 Il n'y a pas de déploiement automatique (pas de CD).
 
-## Déploiement (production)
-
-Guide complet A → Z : **[DEPLOY.md](./DEPLOY.md)**  
-(architecture, variables d’environnement, Postgres, API, front, CORS, admin, checklist, exemple Render).
-
-Résumé simple des améliorations (accessible sans coder) : **[CHANGEMENTS.md](./CHANGEMENTS.md)**.
-
 ## Structure
 
 ```

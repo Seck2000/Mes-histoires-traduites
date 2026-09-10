@@ -36,19 +36,22 @@ export function loadStoredUser() {
     }
 }
 
-/** Message d'erreur lisible à partir d'une erreur Axios. */
-export function getApiErrorMessage(error, fallback = 'Une erreur est survenue.') {
+/**
+ * Message d'erreur lisible à partir d'une erreur Axios.
+ * Passe `messages` (ex. via t()) pour afficher réseau / session dans la langue UI.
+ */
+export function getApiErrorMessage(error, fallback, messages = {}) {
     const fromServer = error?.response?.data?.error;
     if (typeof fromServer === 'string' && fromServer.trim()) {
         return fromServer;
     }
     if (!error?.response) {
-        return 'Impossible de joindre le serveur. Vérifie qu’il tourne sur le port 3000.';
+        return messages.network || fallback || 'Could not reach the server.';
     }
     if (error.response.status === 401) {
-        return 'Session expirée. Reconnecte-toi puis réessaie.';
+        return messages.session || fallback || 'Session expired.';
     }
-    return fallback;
+    return fallback || messages.generic || 'Something went wrong.';
 }
 
 export async function transcribeSpeech(audioBlob, targetLang) {

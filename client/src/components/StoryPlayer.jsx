@@ -1,9 +1,11 @@
 import { Play, Volume2, VolumeX, Pause, ChevronRight, ChevronLeft, Eye, EyeOff, MessageCircle } from 'lucide-react';
+import { useEffect } from 'react';
 import { useStorySpeech } from '../hooks/useStorySpeech';
 import { useI18n } from '../i18n/I18nProvider';
 
 /**
  * Lecteur plein écran d'une histoire (scènes, TTS, langue).
+ * Hauteur = viewport : image + boutons visibles sans défiler la page.
  */
 export default function StoryPlayer({
     story,
@@ -34,20 +36,26 @@ export default function StoryPlayer({
         setCurrentLang,
     });
 
+    useEffect(() => {
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = previousOverflow;
+        };
+    }, []);
+
     if (!story) return null;
 
     if (!currentScene) {
         return (
-            <div className="flex-1 flex items-center justify-center bg-[#0A1228] rounded-xl border border-[rgba(255,255,255,0.12)] p-6 text-center shadow-sm">
+            <div className="story-player-shell flex h-[100dvh] max-h-[100dvh] w-full items-center justify-center overflow-hidden bg-[#0A1228] p-6 text-center">
                 <div className="max-w-md">
-                    <h2 className="text-2xl font-bold text-red-600 mb-3">{t('playerIncompleteTitle')}</h2>
-                    <p className="text-white/70 mb-6">
-                        {t('playerIncompleteBody')}
-                    </p>
+                    <h2 className="mb-3 text-2xl font-bold text-red-600">{t('playerIncompleteTitle')}</h2>
+                    <p className="mb-6 text-white/70">{t('playerIncompleteBody')}</p>
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-5 py-3 rounded-xl bg-[#1A3FFF] hover:bg-[#1533cc] text-white font-semibold transition"
+                        className="rounded-xl bg-[#1A3FFF] px-5 py-3 font-semibold text-white transition hover:bg-[#1533cc]"
                     >
                         {t('playerBackLibrary')}
                     </button>
@@ -64,8 +72,16 @@ export default function StoryPlayer({
     const isLastScene = sceneIndex === story.scenes.length - 1;
 
     return (
-        <div className="flex-1 flex flex-col items-center justify-center relative bg-[#0A1228] rounded-xl overflow-hidden shadow-2xl border border-[rgba(255,255,255,0.12)]">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-[rgba(255,255,255,0.12)] z-30">
+        <div className="story-player-shell relative h-[100dvh] max-h-[100dvh] w-full overflow-hidden bg-[#0A1228]">
+            <div className="absolute inset-0 z-0">
+                <img
+                    src={getImageUrl(currentSceneImage, story.id)}
+                    alt={t('playerSceneAlt')}
+                    className="h-full w-full object-cover"
+                />
+            </div>
+
+            <div className="absolute left-0 top-0 z-30 h-1.5 w-full bg-[rgba(255,255,255,0.12)]">
                 <div
                     className="h-full bg-[#1A3FFF] transition-all duration-300 ease-out"
                     style={{
@@ -74,141 +90,149 @@ export default function StoryPlayer({
                 />
             </div>
 
-            <div className="w-full h-full relative z-10">
-                <img
-                    src={getImageUrl(currentSceneImage, story.id)}
-                    alt={t('playerSceneAlt')}
-                    className="w-full h-full object-cover"
-                />
-
-                <div className="absolute top-4 right-4 flex gap-2 z-30">
-                    <div className="bg-black/60 px-3 py-2 rounded-full text-white text-xs md:text-sm font-medium backdrop-blur-sm shadow-md">
-                        {t('playerScene')} {sceneIndex + 1} / {story.scenes.length}
-                    </div>
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="bg-black/60 px-4 py-2 rounded-full text-white hover:bg-black/80 transition backdrop-blur-sm shadow-md text-xs md:text-sm font-bold"
-                    >
-                        {t('playerClose')}
-                    </button>
+            <div className="absolute right-3 top-3 z-30 flex gap-2 sm:right-4 sm:top-4">
+                <div className="rounded-full bg-black/60 px-3 py-2 text-xs font-medium text-white shadow-md backdrop-blur-sm md:text-sm">
+                    {t('playerScene')} {sceneIndex + 1} / {story.scenes.length}
                 </div>
-            </div>
-
-            <div className="absolute bottom-0 w-full p-4 md:p-8 bg-gradient-to-t from-black/80 to-transparent z-20 flex flex-col md:flex-row items-center md:items-end gap-4">
                 <button
                     type="button"
-                    disabled={sceneIndex === 0}
-                    onClick={() => setSceneIndex((i) => i - 1)}
-                    className="hidden md:flex mb-4 shrink-0 w-12 h-12 items-center justify-center bg-black/60 text-white rounded-full hover:bg-black/80 hover:scale-110 disabled:opacity-30 disabled:hover:scale-100 transition shadow-lg border-2 border-white/20"
-                    title={t('playerPrev')}
+                    onClick={onClose}
+                    className="rounded-full bg-black/60 px-4 py-2 text-xs font-bold text-white shadow-md backdrop-blur-sm transition hover:bg-black/80 md:text-sm"
                 >
-                    <ChevronLeft className="w-6 h-6" />
+                    {t('playerClose')}
                 </button>
+            </div>
 
-                <div className="flex flex-row md:flex-col items-center gap-4 shrink-0 bg-black/40 md:bg-transparent p-2 md:p-0 rounded-2xl md:rounded-none backdrop-blur-sm md:backdrop-blur-none">
-                    <button
-                        type="button"
-                        onClick={toggleLang}
-                        className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-red-600 border-2 md:border-4 border-white shadow-lg flex items-center justify-center text-sm md:text-xl font-bold z-10 hover:scale-105 transition"
-                        title={t('playerLang', { lang: currentLang.toUpperCase() })}
-                    >
-                        {currentLang.toUpperCase()}
-                    </button>
-
-                    <div className="w-16 h-16 md:w-24 md:h-24 bg-[#0A1228] rounded-full md:rounded-xl overflow-hidden border-2 border-gray-300 shadow-lg relative md:-mt-8 z-0">
-                        <img
-                            src={getImageUrl(currentCharacterAvatar, story.id)}
-                            alt={t('playerCharAlt')}
-                            className="w-full h-full object-cover"
-                        />
-                    </div>
-
-                    <div className="flex gap-2 justify-center md:mt-1">
-                        <button
-                            type="button"
-                            onClick={toggleAutoAudio}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center shadow text-white transition ${isAutoPlay ? 'bg-green-600 ring-2 ring-white' : 'bg-gray-600 hover:bg-gray-700'}`}
-                            title={isAutoPlay ? t('playerAutoOn') : t('playerAutoOff')}
-                        >
-                            {isAutoPlay ? (
-                                <Volume2 className="w-4 h-4" />
-                            ) : (
-                                <VolumeX className="w-4 h-4" />
-                            )}
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={togglePlayPause}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center shadow text-white transition ${isPlaying ? 'bg-amber-500 hover:bg-amber-600 animate-pulse' : 'bg-red-600 hover:bg-red-700'}`}
-                            title={
-                                isPlaying
-                                    ? t('playerPause')
-                                    : isPaused
-                                      ? t('playerResume')
-                                      : t('playerRead')
-                            }
-                        >
-                            {isPlaying ? (
-                                <Pause className="w-4 h-4" fill="white" />
-                            ) : (
-                                <Play className="w-4 h-4" fill="white" />
-                            )}
-                        </button>
-                    </div>
-                </div>
-
-                {showText ? (
-                    <div
-                        className={`w-full md:flex-1 bg-blue-500/90 backdrop-blur-md p-4 md:p-6 rounded-2xl border-2 border-white text-base md:text-xl shadow-lg font-medium leading-relaxed min-h-[100px] md:min-h-[120px] text-white ${currentLang === 'ar' ? 'text-right' : 'text-left'} transition-opacity animate-in fade-in duration-300`}
-                        dir={currentLang === 'ar' ? 'rtl' : 'ltr'}
-                    >
-                        {currentSceneText || t('playerNoText')}
-                    </div>
-                ) : (
-                    <div className="w-full md:flex-1 min-h-[100px] md:min-h-[120px] transition-all" />
-                )}
-
-                <div className="flex w-full md:w-auto justify-between md:flex-row md:justify-end md:shrink-0 md:mb-4 gap-2">
+            <div className="absolute inset-x-0 bottom-0 z-20 flex max-h-[46vh] flex-col justify-end bg-gradient-to-t from-black/85 via-black/45 to-transparent px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-10 sm:px-4 md:max-h-[42vh] md:px-6 md:pb-5">
+                <div className="flex min-h-0 w-full flex-col items-stretch gap-2.5 md:flex-row md:items-end md:gap-4">
                     <button
                         type="button"
                         disabled={sceneIndex === 0}
                         onClick={() => setSceneIndex((i) => i - 1)}
-                        className="md:hidden w-12 h-12 flex items-center justify-center bg-black/60 text-white rounded-full hover:bg-black/80 active:scale-95 disabled:opacity-30 transition shadow-lg border-2 border-white/20"
+                        className="mb-1 hidden h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-white/20 bg-black/60 text-white shadow-lg transition hover:scale-110 hover:bg-black/80 disabled:opacity-30 disabled:hover:scale-100 md:flex"
+                        title={t('playerPrev')}
                     >
-                        <ChevronLeft className="w-6 h-6" />
+                        <ChevronLeft className="h-6 w-6" />
                     </button>
 
-                    <button
-                        type="button"
-                        onClick={() => setShowText((v) => !v)}
-                        className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20 text-white transition hover:scale-105 active:scale-95 ${showText ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-gray-700 hover:bg-gray-600'}`}
-                        title={showText ? t('playerHideText') : t('playerShowText')}
-                    >
-                        {showText ? <Eye className="w-6 h-6" /> : <EyeOff className="w-6 h-6" />}
-                    </button>
-
-                    {isLastScene ? (
+                    <div className="flex shrink-0 flex-row items-center justify-center gap-2.5 rounded-2xl bg-black/40 p-2 backdrop-blur-sm md:flex-col md:bg-transparent md:p-0 md:backdrop-blur-none">
                         <button
                             type="button"
-                            onClick={onStartChat}
-                            className="h-12 px-4 flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white rounded-full hover:scale-105 active:scale-95 transition shadow-lg border-2 border-white/20 text-sm font-semibold"
-                            title={t('playerChatTitle')}
+                            onClick={toggleLang}
+                            className="z-10 flex h-11 w-11 items-center justify-center rounded-full border-2 border-white bg-red-600 text-sm font-bold shadow-lg transition hover:scale-105 md:h-14 md:w-14 md:border-4 md:text-lg"
+                            title={t('playerLang', { lang: currentLang.toUpperCase() })}
                         >
-                            <MessageCircle className="w-5 h-5" />
-                            <span className="hidden sm:inline">{t('playerChat')}</span>
+                            {currentLang.toUpperCase()}
                         </button>
+
+                        <div className="relative h-12 w-12 overflow-hidden rounded-full border-2 border-gray-300 bg-[#0A1228] shadow-lg md:h-20 md:w-20 md:rounded-xl">
+                            <img
+                                src={getImageUrl(currentCharacterAvatar, story.id)}
+                                alt={t('playerCharAlt')}
+                                className="h-full w-full object-cover"
+                            />
+                        </div>
+
+                        <div className="flex justify-center gap-2">
+                            <button
+                                type="button"
+                                onClick={toggleAutoAudio}
+                                className={`flex h-10 w-10 items-center justify-center rounded-full text-white shadow transition ${
+                                    isAutoPlay
+                                        ? 'bg-green-600 ring-2 ring-white'
+                                        : 'bg-gray-600 hover:bg-gray-700'
+                                }`}
+                                title={isAutoPlay ? t('playerAutoOn') : t('playerAutoOff')}
+                            >
+                                {isAutoPlay ? (
+                                    <Volume2 className="h-4 w-4" />
+                                ) : (
+                                    <VolumeX className="h-4 w-4" />
+                                )}
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={togglePlayPause}
+                                className={`flex h-10 w-10 items-center justify-center rounded-full text-white shadow transition ${
+                                    isPlaying
+                                        ? 'bg-amber-500 hover:bg-amber-600 animate-pulse'
+                                        : 'bg-red-600 hover:bg-red-700'
+                                }`}
+                                title={
+                                    isPlaying
+                                        ? t('playerPause')
+                                        : isPaused
+                                          ? t('playerResume')
+                                          : t('playerRead')
+                                }
+                            >
+                                {isPlaying ? (
+                                    <Pause className="h-4 w-4" fill="white" />
+                                ) : (
+                                    <Play className="h-4 w-4" fill="white" />
+                                )}
+                            </button>
+                        </div>
+                    </div>
+
+                    {showText ? (
+                        <div
+                            className={`min-h-0 max-h-[18vh] w-full overflow-y-auto rounded-2xl border-2 border-white bg-blue-500/90 p-3 text-sm font-medium leading-relaxed text-white shadow-lg backdrop-blur-md transition-opacity animate-in fade-in duration-300 md:max-h-[22vh] md:flex-1 md:p-4 md:text-lg ${
+                                currentLang === 'ar' ? 'text-right' : 'text-left'
+                            }`}
+                            dir={currentLang === 'ar' ? 'rtl' : 'ltr'}
+                        >
+                            {currentSceneText || t('playerNoText')}
+                        </div>
                     ) : (
+                        <div className="hidden min-h-0 w-full md:block md:flex-1 md:min-h-[4rem]" />
+                    )}
+
+                    <div className="flex w-full shrink-0 items-center justify-between gap-2 md:mb-1 md:w-auto md:justify-end">
                         <button
                             type="button"
-                            onClick={() => setSceneIndex((i) => i + 1)}
-                            className="w-12 h-12 flex items-center justify-center bg-black/60 text-white rounded-full hover:bg-black/80 hover:scale-110 active:scale-95 transition shadow-lg border-2 border-white/20"
-                            title={t('playerNext')}
+                            disabled={sceneIndex === 0}
+                            onClick={() => setSceneIndex((i) => i - 1)}
+                            className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/20 bg-black/60 text-white shadow-lg transition hover:bg-black/80 active:scale-95 disabled:opacity-30 md:hidden"
                         >
-                            <ChevronRight className="w-6 h-6" />
+                            <ChevronLeft className="h-6 w-6" />
                         </button>
-                    )}
+
+                        <button
+                            type="button"
+                            onClick={() => setShowText((v) => !v)}
+                            className={`flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/20 text-white shadow-lg transition hover:scale-105 active:scale-95 ${
+                                showText
+                                    ? 'bg-indigo-600 hover:bg-indigo-700'
+                                    : 'bg-gray-700 hover:bg-gray-600'
+                            }`}
+                            title={showText ? t('playerHideText') : t('playerShowText')}
+                        >
+                            {showText ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
+                        </button>
+
+                        {isLastScene ? (
+                            <button
+                                type="button"
+                                onClick={onStartChat}
+                                className="flex h-11 items-center justify-center gap-2 rounded-full border-2 border-white/20 bg-teal-600 px-4 text-sm font-semibold text-white shadow-lg transition hover:scale-105 hover:bg-teal-700 active:scale-95"
+                                title={t('playerChatTitle')}
+                            >
+                                <MessageCircle className="h-5 w-5" />
+                                <span className="hidden sm:inline">{t('playerChat')}</span>
+                            </button>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={() => setSceneIndex((i) => i + 1)}
+                                className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/20 bg-black/60 text-white shadow-lg transition hover:scale-110 hover:bg-black/80 active:scale-95"
+                                title={t('playerNext')}
+                            >
+                                <ChevronRight className="h-6 w-6" />
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

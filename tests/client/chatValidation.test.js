@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { containsDigits, DIGIT_ERROR_MESSAGE } from '../../client/src/utils/chatValidation.js';
+import { containsDigits } from '../../client/src/utils/chatValidation.js';
+import { translate } from '../../client/src/i18n/messages.js';
 
 describe('containsDigits', () => {
     it('détecte les chiffres occidentaux (0-9)', () => {
@@ -23,9 +24,9 @@ describe('containsDigits', () => {
     });
 });
 
-describe('DIGIT_ERROR_MESSAGE', () => {
-    it('est un message non vide', () => {
-        expect(typeof DIGIT_ERROR_MESSAGE).toBe('string');
-        expect(DIGIT_ERROR_MESSAGE.length).toBeGreaterThan(0);
+describe('messages d’erreur chiffres (i18n)', () => {
+    it('expose un message non vide en FR et EN', () => {
+        expect(translate('fr', 'chatDigitErrorText').length).toBeGreaterThan(0);
+        expect(translate('en', 'chatDigitErrorText').length).toBeGreaterThan(0);
     });
 });

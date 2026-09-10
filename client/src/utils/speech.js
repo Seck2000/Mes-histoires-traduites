@@ -8,17 +8,8 @@ export const SPEECH_LANG_MAP = {
     pt: 'pt-PT',
 };
 
-export function isSpeechRecognitionSupported() {
-    return Boolean(getSpeechRecognitionClass());
-}
-
 export function isSpeechSynthesisSupported() {
     return typeof window !== 'undefined' && 'speechSynthesis' in window;
-}
-
-export function getSpeechRecognitionClass() {
-    if (typeof window === 'undefined') return null;
-    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
 }
 
 export function stopSpeaking() {
@@ -73,20 +64,4 @@ export async function speakText(text, langCode) {
             resolve();
         }
     });
-}
-
-export function createSpeechRecognition(langCode) {
-    try {
-        const SpeechRecognition = getSpeechRecognitionClass();
-        if (!SpeechRecognition) return null;
-
-        const recognition = new SpeechRecognition();
-        recognition.lang = SPEECH_LANG_MAP[langCode] || 'fr-FR';
-        recognition.continuous = false;
-        recognition.interimResults = true;
-        recognition.maxAlternatives = 1;
-        return recognition;
-    } catch {
-        return null;
-    }
 }

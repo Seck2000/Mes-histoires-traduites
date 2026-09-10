@@ -1,8 +1,15 @@
 import { Component } from 'react';
+import { isSupportedLocale } from '../constants/languages';
+import { translate } from '../i18n/messages';
 
 function isRemoveChildError(error) {
     const message = String(error?.message || error || '').toLowerCase();
     return message.includes('removechild') || message.includes('nœud à supprimer') || message.includes('not a child');
+}
+
+function currentLocale() {
+    const lang = document.documentElement.lang || 'fr';
+    return isSupportedLocale(lang) ? lang : 'fr';
 }
 
 export default class ErrorBoundary extends Component {
@@ -14,7 +21,7 @@ export default class ErrorBoundary extends Component {
     static getDerivedStateFromError(error) {
         const message =
             error?.message ||
-            (typeof error === 'string' ? error : 'Erreur inconnue');
+            (typeof error === 'string' ? error : translate(currentLocale(), 'errorUnknown'));
         return { hasError: true, errorMessage: message };
     }
 
@@ -49,13 +56,15 @@ export default class ErrorBoundary extends Component {
 
     render() {
         if (this.state.hasError) {
+            const locale = currentLocale();
             return (
                 <div className="min-h-screen bg-[#FAF8F6] text-gray-900 flex items-center justify-center p-6">
                     <div className="max-w-lg w-full bg-white border border-[#EBE6DC] rounded-2xl p-6 text-center shadow-xl">
-                        <h1 className="text-2xl font-bold text-red-600 mb-3">Une erreur est survenue</h1>
+                        <h1 className="text-2xl font-bold text-red-600 mb-3">
+                            {translate(locale, 'errorBoundaryTitle')}
+                        </h1>
                         <p className="text-gray-600 mb-4">
-                            La page ne peut pas s&apos;afficher correctement. Tu peux réessayer sans
-                            perdre ta session, ou recharger complètement.
+                            {translate(locale, 'errorBoundaryBody')}
                         </p>
                         {this.state.errorMessage && (
                             <p className="text-left text-xs text-red-800 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4 break-words font-mono">
@@ -68,14 +77,14 @@ export default class ErrorBoundary extends Component {
                                 onClick={this.handleReset}
                                 className="px-5 py-3 rounded-xl bg-[#8C5EB9] hover:bg-[#7a4fa8] text-white font-semibold transition"
                             >
-                                Réessayer
+                                {translate(locale, 'errorBoundaryRetry')}
                             </button>
                             <button
                                 type="button"
                                 onClick={() => window.location.reload()}
                                 className="px-5 py-3 rounded-xl bg-white border border-[#EBE6DC] hover:bg-[#F2E9FB] text-gray-800 font-semibold transition"
                             >
-                                Recharger la page
+                                {translate(locale, 'errorBoundaryReload')}
                             </button>
                         </div>
                     </div>

@@ -1,0 +1,419 @@
+\documentclass[12pt,twoside,letterpaper]{article}
+% Rapport PFE — Mes histoires traduites (StoryTranslatorWeb)
+% Overleaf : garder includes.tex, uqar.png, kpfonts.sty, etc. du ZIP du cours.
+% Remplacer ce fichier + report_v1.0.bib + titlepage.tex, puis ajouter figures/
+
+\newcommand{\reporttitle}{{\huge \textsc{Rapport} \\ \vspace{0.5cm} {\Large Projet de fin d'études}}}
+
+\newcommand{\reportauthorOne}{Aissatou Seck}
+\newcommand{\reportauthorTwo}{}
+\newcommand{\reportauthorThree}{}
+\newcommand{\reportProfessor}{Mohamed Tarik Moutacalli}
+\newcommand{\reporttype}{Coursework}
+\bibliographystyle{plain}
+
+% Nom commercial de l'application (affiché dans l'interface)
+\newcommand{\appname}{Mes histoires traduites}
+\newcommand{\appcode}{StoryTranslatorWeb}
+
+\input{includes}
+
+% Encadré si une capture n'est pas encore déposée dans figures/
+\newcommand{\captureecran}[3]{%
+\begin{figure}[H]
+\centering
+\IfFileExists{#1}{%
+  \includegraphics[width=0.92\textwidth]{#1}%
+}{%
+  \fbox{\parbox{0.9\textwidth}{\centering\vspace{2.2cm}
+  \textbf{Capture d'écran à ajouter}\\[0.4cm]
+  Fichier~: \texttt{#1}\\[0.2cm]
+  #2\vspace{2.2cm}}}%
+}%
+\caption{#3}
+\label{fig:#2}
+\end{figure}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\input{titlepage}
+
+\tableofcontents
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+\label{sec:introduction}
+
+\appname{} (dépôt \appcode{}~\cite{ref_github_projet}) est une application web destinée aux enfants qui souhaitent apprendre une langue étrangère grâce à la lecture d'histoires illustrées.
+L'idée pédagogique est simple~: l'enfant lit une histoire scène par scène, peut l'écouter à voix haute, change éventuellement la langue d'affichage du récit, puis vérifie sa compréhension à travers un quiz guidé par une intelligence artificielle.
+
+Une première version avait été réalisée dans le cadre du cours INF34615-7T.
+Elle permettait déjà la lecture multilingue, la synthèse vocale du navigateur et une forme de sauvegarde de progression.
+Le présent rapport porte sur la \textbf{continuation} du projet en \textbf{INF39615-7T}, sous la supervision du professeur Mohamed Tarik Moutacalli.
+
+Les objectifs principaux de cette continuation étaient les suivants~:
+\begin{itemize}
+    \item ajouter des \textbf{comptes utilisateurs} sécurisés (inscription, connexion, rôles)~;
+    \item assurer la \textbf{persistance} des données en base PostgreSQL (profil, favoris, progression, historique)~;
+    \item distinguer un \textbf{espace enfant} et un \textbf{espace administrateur}~;
+    \item adapter l'\textbf{interface} à la langue maternelle de l'utilisateur~;
+    \item proposer un \textbf{quiz pédagogique} en fin d'histoire, avec correction linguistique~;
+    \item permettre un \textbf{mode oral} fondé sur la transcription Whisper~\cite{ref_whisper_paper,ref_whisper_api}.
+\end{itemize}
+
+Les sections suivantes décrivent le fonctionnement du site (avec captures d'écran), les technologies utilisées, puis les éléments techniques utiles à la maintenance et à l'évolution du projet.
+
+\section{Présentation du projet}
+\label{sec:presentation}
+
+Cette section décrit le parcours utilisateur tel qu'il apparaît dans l'application.
+Chaque sous-section correspond à une fonctionnalité majeure, illustrée par une capture lorsqu'elle est disponible dans le dossier \texttt{figures/}.
+
+\subsection{Page d'accueil publique}
+\label{sec:accueil}
+
+Avant toute connexion, le visiteur arrive sur une page d'accueil moderne qui présente la marque \appname{}, un message clair sur l'apprentissage des langues par les histoires, et des actions principales~: découvrir le site, créer un compte ou se connecter.
+Le bouton \emph{Découvrir} ouvre une section écrite qui explique les atouts de la plateforme (histoires interactives, langues, espace personnel, quiz avec l'IA), plutôt que d'afficher directement le catalogue d'histoires.
+Un pied de page regroupe la navigation, les informations légales, les coordonnées et un formulaire d'inscription à la lettre d'information.
+
+\captureecran{figures/01_accueil.png}{accueil}{Page d'accueil publique de \appname{}.}
+
+\subsection{Authentification et comptes utilisateurs}
+\label{sec:auth}
+
+Avant d'accéder à la bibliothèque, l'utilisateur doit créer un compte ou se connecter.
+À l'inscription, l'enfant (ou l'adulte qui l'accompagne) renseigne notamment~: prénom, nom, courriel, langue maternelle, langue cible, niveau, tranche d'âge et mot de passe.
+
+Les mots de passe sont hachés avec \textbf{bcrypt} et ne sont jamais stockés en clair.
+Les sessions s'appuient sur des jetons \textbf{JWT}~\cite{ref_jwt} transmis au client après une authentification réussie.
+Deux rôles existent dans le système~:
+\begin{itemize}
+    \item \texttt{user}~: espace enfant (bibliothèque filtrée par âge, profil pédagogique, lecture, quiz)~;
+    \item \texttt{admin}~: espace administrateur (gestion de la bibliothèque, import d'histoires, liste des utilisateurs).
+\end{itemize}
+
+\captureecran{figures/02_inscription.png}{inscription}{Formulaire d'inscription (création de compte).}
+
+\captureecran{figures/03_connexion.png}{connexion}{Écran de connexion.}
+
+\subsection{Page d'accueil après connexion~: la bibliothèque}
+\label{sec:biblio}
+
+Après authentification, l'utilisateur \texttt{user} arrive dans son espace personnel (espace enfant).
+La bibliothèque affiche les histoires disponibles sous forme de cartes (image de couverture, titre, indication de progression).
+
+Depuis cette page, l'utilisateur peut~:
+\begin{itemize}
+    \item cliquer sur une carte pour lancer la lecture~;
+    \item consulter ses \textbf{favoris} et ses histoires \textbf{récemment lues}~;
+    \item ouvrir son profil pour modifier ses informations~;
+    \item lancer une \textbf{histoire au hasard} parmi celles autorisées pour son âge.
+\end{itemize}
+
+Les histoires affichées dépendent de la tranche d'âge déclarée dans le profil~: 3 à 5~ans (\texttt{petits}), 6 à 8~ans (\texttt{moyens}), 9 à 12~ans (\texttt{grands}).
+Cette règle pédagogique évite de proposer un contenu trop difficile ou trop simple.
+
+\captureecran{figures/04_bibliotheque.png}{bibliotheque}{Bibliothèque de l'espace enfant.}
+
+\subsection{Profil utilisateur et préférences}
+\label{sec:profil}
+
+Dans \emph{Mon profil}, l'utilisateur peut modifier ses informations et sa photo.
+Deux préférences linguistiques sont particulièrement importantes~:
+\begin{itemize}
+    \item la \textbf{langue maternelle} détermine la langue des textes de l'interface (menus, boutons, messages)~;
+    \item la \textbf{langue cible} est celle que l'enfant apprend~: c'est dans cette langue que le quiz pose ses questions et attend les réponses.
+\end{itemize}
+
+Le changement de langue d'interface est appliqué après l'enregistrement du profil (et non au simple changement du menu déroulant), afin d'éviter des rechargements intempestifs et de garantir une expérience stable.
+
+\captureecran{figures/05_profil.png}{profil}{Écran de profil et préférences linguistiques.}
+
+\subsection{Importation d'une histoire}
+\label{sec:import}
+
+L'importation d'histoires est réservée à l'administrateur.
+Celui-ci clique sur \emph{Importer} et sélectionne un fichier \texttt{.zip} contenant~:
+\begin{itemize}
+    \item un fichier \texttt{story.json} (titre, scènes, textes multilingues, chemins d'images, tranche d'âge)~;
+    \item les images des scènes (et éventuellement des avatars de personnages).
+\end{itemize}
+
+Le serveur décompresse le fichier, vérifie la présence et la validité de \texttt{story.json}, puis ajoute l'histoire à la bibliothèque.
+Des contrôles de sécurité limitent la taille du ZIP, le nombre de fichiers et le volume décompressé (protection contre les archives malveillantes).
+Si le fichier est invalide, il est rejeté avec un message d'erreur clair.
+
+\captureecran{figures/06_import_admin.png}{import}{Action d'importation d'une histoire (espace administrateur).}
+
+\subsection{Espace administrateur}
+\label{sec:admin}
+
+L'administrateur dispose d'un tableau de bord distinct, avec un accès bien visible à l'import ZIP et une vue d'ensemble des catégories d'âge.
+Son profil est volontairement simplifié~: prénom, nom, courriel et photo uniquement (pas de paramètres pédagogiques enfant).
+Une section permet également de consulter la liste des utilisateurs inscrits, utile pour le suivi et la démonstration du projet.
+
+\captureecran{figures/07_admin.png}{admin}{Tableau de bord administrateur.}
+
+\subsection{Le lecteur d'histoire}
+\label{sec:lecteur}
+
+Une fois une histoire sélectionnée, l'interface bascule en mode lecteur.
+L'utilisateur voit~:
+\begin{itemize}
+    \item l'image de la scène (plein écran, adaptée à la hauteur de la fenêtre)~;
+    \item l'avatar du personnage~;
+    \item la bulle de texte dans la langue sélectionnée~;
+    \item une barre et un compteur de progression (scène courante / total)~;
+    \item les boutons de navigation (précédent / suivant)~;
+    \item sur la dernière scène, un bouton pour discuter avec l'IA.
+\end{itemize}
+
+Le lecteur a été conçu pour que \textbf{tous les contrôles restent visibles sans faire défiler la page}, quel que soit l'utilisateur connecté et quelle que soit l'histoire ouverte.
+L'image occupe le fond de l'écran~; les boutons sont superposés de façon stable.
+Si le texte d'une scène est très long, seul le contenu de la bulle peut défiler, pas la page entière.
+
+\captureecran{figures/08_lecteur.png}{lecteur}{Lecteur d'histoire (scène, texte et contrôles).}
+
+\subsubsection{Changement de langue}
+Un contrôle permet de faire tourner la langue d'affichage du texte de l'histoire parmi les sept langues supportées (français, anglais, arabe, espagnol, allemand, italien, portugais).
+Lorsque l'arabe est sélectionné, le texte s'affiche de droite à gauche (\texttt{rtl}).
+
+\subsubsection{Contrôles audio}
+Le site utilise la synthèse vocale du navigateur (Web Speech API~\cite{ref_speech}) pour lire le texte à voix haute~:
+\begin{itemize}
+    \item lecture automatique à chaque changement de scène (activable / désactivable)~;
+    \item lecture manuelle (lecture / pause / reprise)~;
+    \item indication de la langue de lecture au navigateur (ex.\ \texttt{fr-FR}, \texttt{en-US}, \texttt{ar-SA}).
+\end{itemize}
+
+\subsubsection{Mode immersif (masquer le texte)}
+Un bouton permet de masquer la bulle de texte afin de favoriser la compréhension orale~: l'enfant écoute d'abord, puis peut réafficher le texte pour vérifier.
+
+\subsubsection{Sauvegarde de progression}
+La progression est sauvegardée en base de données pour l'utilisateur connecté.
+À la réouverture d'une histoire déjà commencée, une boîte de dialogue propose de reprendre à la scène enregistrée ou de recommencer depuis le début.
+
+\subsection{Quiz de fin d'histoire avec l'IA}
+\label{sec:quiz}
+
+À la fin d'une histoire, l'enfant peut discuter avec une IA (Gemini~\cite{ref_gemini}) qui~:
+\begin{itemize}
+    \item pose des questions uniquement sur le contenu de l'histoire~;
+    \item demande éventuellement un court résumé~;
+    \item corrige les erreurs de langue de manière pédagogique~;
+    \item communique exclusivement dans la \textbf{langue cible}~;
+    \item refuse les chiffres dans les réponses (l'enfant doit écrire ou dire les nombres en toutes lettres).
+\end{itemize}
+
+Cette activité transforme la lecture en un véritable exercice de compréhension et d'expression, plutôt qu'en un simple parcours passif d'images.
+
+\captureecran{figures/09_quiz.png}{quiz}{Quiz conversationnel en fin d'histoire.}
+
+\subsection{Mode oral et transcription Whisper}
+\label{sec:whisper}
+
+Le quiz propose un mode \emph{Écrire} et un mode \emph{Parler}.
+En mode Parler~:
+\begin{enumerate}
+    \item l'IA lit sa question à voix haute~;
+    \item l'enfant enregistre sa réponse au micro (MediaRecorder~\cite{ref_mediarecorder})~;
+    \item l'audio est envoyé au serveur~;
+    \item Whisper (OpenAI)~\cite{ref_whisper_api,ref_whisper_paper} transcrit la voix de façon littérale~;
+    \item le texte est transmis à l'IA pour correction et suite du quiz.
+\end{enumerate}
+
+Cette fidélité de transcription est essentielle~: l'IA doit voir les vraies erreurs pour pouvoir les corriger.
+Le mode écrit reste disponible si le micro n'est pas autorisé ou si l'enfant préfère taper sa réponse.
+
+\captureecran{figures/10_quiz_oral.png}{quizoral}{Quiz en mode oral (micro et transcription).}
+
+\subsection{Interface multilingue (langue maternelle)}
+\label{sec:i18n}
+
+Les menus, boutons et messages suivent la langue maternelle du profil, y compris après déconnexion puis reconnexion.
+Le système de traduction côté client repose sur un fichier de messages et une fonction \texttt{t()} (ou \texttt{translate()}) qui sélectionne la chaîne selon la locale.
+Dans les listes de langues, chaque langue apparaît dans sa forme native (ex.\ English, Español, العربية, Deutsch) pour être facilement identifiable, quelle que soit la langue d'interface.
+
+\newpage
+
+\section{Technologies utilisées}
+\label{sec:technologies}
+
+\subsection{Front-end (interface client)}
+\begin{itemize}
+    \item \textbf{React.js}~\cite{ref_react}~: construction de l'interface et organisation en composants.
+    \item \textbf{Vite}~\cite{ref_vite}~: outil de développement et de compilation du client.
+    \item \textbf{Tailwind CSS}~\cite{ref_tailwind}~: mise en forme responsive.
+    \item \textbf{Axios}~: communication HTTP avec l'API.
+    \item \textbf{Lucide-react}~: icônes de l'interface.
+    \item \textbf{Web Speech API}~\cite{ref_speech}~: synthèse vocale.
+    \item \textbf{MediaRecorder}~\cite{ref_mediarecorder}~: enregistrement audio pour Whisper.
+\end{itemize}
+
+\subsection{Back-end (serveur)}
+\begin{itemize}
+    \item \textbf{Node.js}~\cite{ref_nodejs} et \textbf{Express}~\cite{ref_express}~: API REST.
+    \item \textbf{Multer} / \textbf{Unzipper}~: réception et extraction des archives ZIP.
+    \item \textbf{CORS}~: autorisation contrôlée des appels client~$\leftrightarrow$~serveur.
+    \item \textbf{JWT}~\cite{ref_jwt} et \textbf{bcrypt}~: authentification et mots de passe.
+\end{itemize}
+
+\subsection{Base de données et authentification}
+\begin{itemize}
+    \item \textbf{PostgreSQL}~\cite{ref_postgres}~: persistance des comptes, favoris, progression, historique et préférences.
+    \item \textbf{Prisma}~\cite{ref_prisma}~: schéma et migrations (la logique runtime du projet utilise principalement le client \texttt{pg} pour les requêtes SQL).
+\end{itemize}
+
+Les histoires elles-mêmes sont également gérées de manière structurée (métadonnées et scènes), afin de faciliter le filtrage par âge et la maintenance du catalogue.
+
+\subsection{Intelligence artificielle et reconnaissance vocale}
+\begin{itemize}
+    \item \textbf{Gemini}~\cite{ref_gemini}~: quiz conversationnel et correction linguistique.
+    \item \textbf{Whisper (OpenAI)}~\cite{ref_whisper_api}~: transcription orale littérale.
+\end{itemize}
+
+\subsection{Qualité et tests}
+\begin{itemize}
+    \item \textbf{Vitest}~\cite{ref_vitest}~: tests unitaires du projet (client et serveur).
+    \item \textbf{GitHub Actions}~\cite{ref_gha}~: intégration continue (CI). À chaque \emph{push} ou \emph{pull request} pertinente, les tests sont exécutés automatiquement pour détecter les erreurs rapidement. Il n'y a pas, à ce stade, de déploiement automatique (pas de CD).
+\end{itemize}
+
+\newpage
+
+\section{Description technique pour la maintenance}
+\label{sec:maintenance}
+
+Cette section est destinée à tout développeur souhaitant comprendre, modifier ou faire évoluer le projet.
+
+\subsection{Structure des fichiers}
+
+\begin{verbatim}
+StoryTranslatorWeb/
+  client/
+    src/
+      App.jsx
+      components/
+      i18n/
+      utils/
+      constants/
+      hooks/
+  server/
+    index.js
+    routes/
+    services/
+    prisma/
+    uploads/
+  tests/
+  .github/workflows/
+\end{verbatim}
+
+\subsection{Le fichier client~: \texttt{App.jsx}}
+\texttt{App.jsx} reste le point central de navigation entre les vues~: accueil public, authentification, bibliothèque (enfant ou admin), lecteur, quiz.
+Le lecteur et la logique de synthèse vocale ont été extraits dans des modules dédiés (\texttt{StoryPlayer.jsx}, \texttt{useStorySpeech.js}) afin de garder le fichier principal plus lisible.
+
+\subsection{Le fichier serveur~: \texttt{index.js}}
+Le serveur Express branche plusieurs routes protégées, notamment~:
+\begin{itemize}
+    \item \texttt{/api/auth}~: inscription, connexion, profil, avatar~;
+    \item \texttt{/api/library}~: favoris, historique, progression~;
+    \item \texttt{/api/ai}~: début et suite du quiz~;
+    \item \texttt{/api/speech}~: transcription Whisper~;
+    \item \texttt{/api/stories} et upload ZIP~: bibliothèque d'histoires~;
+    \item \texttt{/api/admin}~: fonctionnalités réservées à l'administrateur.
+\end{itemize}
+
+\subsection{Le format d'une histoire~: \texttt{story.json}}
+Le format initial est conservé. Exemple simplifié~:
+
+\begin{verbatim}
+{
+  "id": "lina-parc",
+  "title": "Une journee au parc",
+  "thumbnail": "images/scene1.png",
+  "ageBand": "petits",
+  "scenes": [
+    {
+      "id": 1,
+      "image": "images/scene1.png",
+      "character": {
+        "name": "Lina",
+        "avatar": "images/scene1.png"
+      },
+      "text": {
+        "fr": "Bonjour ! Je m'appelle Lina.",
+        "en": "Hello! My name is Lina.",
+        "ar": "..."
+      }
+    }
+  ]
+}
+\end{verbatim}
+
+\subsection{Comment lancer le projet}
+Prérequis~: Node.js et PostgreSQL configurés, fichier \texttt{server/.env} renseigné.
+\begin{enumerate}
+    \item Terminal~1~: \texttt{cd server}, puis \texttt{npm install}, puis \texttt{node index.js}.
+    \item Terminal~2~: \texttt{cd client}, puis \texttt{npm install}, puis \texttt{npm run dev}.
+\end{enumerate}
+Ouvrir l'URL Vite (par exemple \texttt{http://localhost:5173}).
+
+\subsection{Comment modifier le site}
+\begin{itemize}
+    \item \textbf{Design}~: classes Tailwind dans les composants React.
+    \item \textbf{Nouvelle langue d'interface}~: clés dans \texttt{client/src/i18n/messages.js}.
+    \item \textbf{Nouvelle histoire}~: ZIP conforme à \texttt{story.json}, import admin.
+    \item \textbf{Prompt du quiz}~: \texttt{server/services/aiChat.js}.
+    \item \textbf{Transcription}~: \texttt{server/services/whisperTranscribe.js}.
+\end{itemize}
+
+\subsection{Configuration des variables d'environnement}
+Le fichier \texttt{server/.env} contient notamment~:
+\begin{itemize}
+    \item \texttt{DATABASE\_URL}
+    \item \texttt{JWT\_SECRET}
+    \item \texttt{GEMINI\_API\_KEY}
+    \item \texttt{OPENAI\_API\_KEY} (Whisper)
+    \item \texttt{WHISPER\_MODEL} (optionnel)
+\end{itemize}
+Ces secrets ne doivent \textbf{pas} être commités dans Git.
+
+\newpage
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+\subsection{Bilan du projet}
+L'application \appname{} est passée d'un simple outil de lecture multilingue à une plateforme plus complète.
+Elle intègre désormais des comptes sécurisés, une persistance des données, des rôles utilisateur et administrateur, une interface adaptée à la langue maternelle, ainsi qu'un quiz guidé par l'IA avec un mode oral fondé sur Whisper.
+L'architecture client/serveur initiale a été conservée et étendue de manière cohérente.
+
+Le dépôt GitHub du projet est accessible ici~: \url{https://github.com/Seck2000/StoryTranslatorWeb}.
+
+\subsection{Ce que ce projet m'a appris}
+Ce projet m'a permis de consolider~:
+\begin{itemize}
+    \item React et la gestion d'état~;
+    \item l'architecture client/serveur et les API REST protégées~;
+    \item PostgreSQL et la modélisation des données utilisateur~;
+    \item l'intégration de Gemini et Whisper~;
+    \item les tests unitaires et l'intégration continue (CI) avec GitHub Actions~;
+    \item l'importance de l'expérience utilisateur (lecteur sans défilement, i18n, rôles).
+\end{itemize}
+
+\subsection{Améliorations futures}
+\begin{itemize}
+    \item déploiement en ligne (frontend, backend, base hébergée, HTTPS)~;
+    \item renforcement des tests d'intégration~;
+    \item éditeur d'histoires en ligne~;
+    \item amélioration continue de l'expérience mobile~;
+    \item éventuel quota d'usage des API IA pour maîtriser les coûts en production.
+\end{itemize}
+
+\newpage
+\bibliography{report_v1.0}
+
+\end{document}

@@ -26,28 +26,6 @@ export const AGE_BANDS = [
     },
 ];
 
-export function calcAgeFromBirthDate(birthDate) {
-    if (!birthDate) return null;
-    const birth = new Date(birthDate);
-    if (Number.isNaN(birth.getTime())) return null;
-
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        age -= 1;
-    }
-    return age;
-}
-
-export function getAgeBandForAge(age) {
-    if (age == null || Number.isNaN(age)) return null;
-    if (age < 3) return AGE_BANDS[0];
-    if (age <= 5) return AGE_BANDS[0];
-    if (age <= 8) return AGE_BANDS[1];
-    return AGE_BANDS[2];
-}
-
 export function getAgeBandById(id) {
     return AGE_BANDS.find((band) => band.id === id) || null;
 }

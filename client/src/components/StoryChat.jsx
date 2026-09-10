@@ -2,9 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Keyboard, Loader2, Mic, MicOff, Send, Sparkles, Star, Volume2 } from 'lucide-react';
 import { api, transcribeSpeech } from '../api';
 import { buildScenesPayload } from '../utils/storyText';
-import { containsDigits, DIGIT_ERROR_MESSAGE } from '../utils/chatValidation';
+import { containsDigits } from '../utils/chatValidation';
 import { getLanguageNativeName } from '../constants/languages';
 import { useI18n } from '../i18n/I18nProvider';
+import { translate } from '../i18n/messages';
 import { createAudioRecorder, isMicrophoneSupported } from '../utils/audioRecorder';
 import {
     isSpeechSynthesisSupported,
@@ -49,12 +50,12 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
     const scenesPayload = useMemo(() => buildScenesPayload(story), [story]);
     const chatPayload = useMemo(
         () => ({
-            title: story?.title || 'Histoire',
+            title: story?.title || t('chatStoryFallback'),
             scenes: scenesPayload,
             targetLang,
             level,
         }),
-        [story?.title, scenesPayload, targetLang, level]
+        [story?.title, scenesPayload, targetLang, level, t]
     );
 
     messagesRef.current = messages;
@@ -97,7 +98,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
             await submitMessage(text);
         } catch (err) {
             if (isMountedRef.current) {
-                setError(err.response?.data?.error || 'Impossible de transcrire ta voix. Réessaie ou passe en mode Écrire.');
+                setError(err.response?.data?.error || t('chatErrorTranscribe'));
             }
         } finally {
             if (isMountedRef.current) {
@@ -121,7 +122,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
 
         async function startChat() {
             if (scenesPayload.length === 0) {
-                setError('Cette histoire ne contient pas de texte pour le quiz.');
+                setError(t('chatNoStoryText'));
                 setLoading(false);
                 return;
             }
@@ -138,7 +139,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                 if (data.done) setFinished(true);
             } catch (err) {
                 if (!cancelled) {
-                    setError(err.response?.data?.error || 'Impossible de démarrer le quiz.');
+                    setError(err.response?.data?.error || t('chatErrorStartQuiz'));
                 }
             } finally {
                 if (!cancelled) setLoading(false);
@@ -149,7 +150,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
         return () => {
             cancelled = true;
         };
-    }, [chatPayload, scenesPayload.length]);
+    }, [chatPayload, scenesPayload.length, t]);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -172,12 +173,9 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
         if (!text || sending || finished || loading) return;
 
         if (containsDigits(text)) {
-            setError(DIGIT_ERROR_MESSAGE);
+            setError(chatMode === 'voice' ? t('chatDigitErrorVoice') : t('chatDigitErrorText'));
             if (chatMode === 'voice') {
-                await speakText(
-                    'Pas de chiffres. Dis le nombre en lettres, par exemple sept.',
-                    targetLang
-                );
+                await speakText(translate(targetLang, 'chatDigitErrorVoice'), targetLang);
             }
             return;
         }
@@ -200,7 +198,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
             setMessages((prev) => [...prev, { role: 'assistant', content: data.message }]);
             if (data.done) setFinished(true);
         } catch (err) {
-            setError(err.response?.data?.error || "Impossible d'envoyer le message.");
+            setError(err.response?.data?.error || t('chatErrorSend'));
             setMessages(previousMessages);
         } finally {
             setSending(false);
@@ -228,11 +226,11 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
         } catch (err) {
             if (!isMountedRef.current) return;
             if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-                setError('Autorise le micro dans ton navigateur pour parler.');
+                setError(t('chatErrorMicPermission'));
             } else if (err.message === 'MICROPHONE_UNSUPPORTED') {
-                setError('Le micro n\'est pas disponible sur ce navigateur.');
+                setError(t('chatErrorMicUnavailable'));
             } else {
-                setError('Impossible de démarrer le micro. Réessaie dans un instant.');
+                setError(t('chatErrorMicStart'));
             }
         }
     };
@@ -318,9 +316,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                 </div>
 
                 <p className="text-xs text-amber-700 text-center md:text-left">
-                    {chatMode === 'voice'
-                        ? '🎤 Mode oral : écoute l\'IA, puis réponds à voix haute. Dis les nombres en lettres.'
-                        : '✏️ Mode écrit : écris les nombres en lettres, sans chiffres (ex : « sept », pas « 7 »)'}
+                    {chatMode === 'voice' ? `🎤 ${t('chatVoiceHintMode')}` : `✏️ ${t('chatTextHintMode')}`}
                 </p>
             </div>
 
@@ -328,7 +324,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                 {loading && (
                     <div className="flex items-center justify-center gap-2 text-[#1A3FFF] py-12">
                         <Loader2 className="w-6 h-6 animate-spin" />
-                        <span className="text-base font-medium">On prépare ta première question...</span>
+                        <span className="text-base font-medium">{t('chatPrepareQuestion')}</span>
                     </div>
                 )}
 
@@ -354,7 +350,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                     <div className="flex justify-start">
                         <div className="bg-[#0A1228] border border-[rgba(255,255,255,0.12)] px-4 py-3 rounded-3xl rounded-bl-lg text-[#1A3FFF] text-base flex items-center gap-2">
                             <Loader2 className="w-5 h-5 animate-spin" />
-                            Je réfléchis...
+                            {t('chatThinking')}
                         </div>
                     </div>
                 )}
@@ -375,14 +371,14 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                         <Star className="w-10 h-10 text-yellow-300 fill-yellow-300 animate-pulse" />
                         <Star className="w-8 h-8 text-yellow-400 fill-yellow-400 animate-pulse" />
                     </div>
-                    <p className="text-[#1A3FFF] mb-1 font-extrabold text-xl">Bravo champion ! 🎉</p>
-                    <p className="text-white/70 text-sm mb-4">Tu as super bien résumé l&apos;histoire !</p>
+                    <p className="text-[#1A3FFF] mb-1 font-extrabold text-xl">{t('chatBravo')} 🎉</p>
+                    <p className="text-white/70 text-sm mb-4">{t('chatBravoBody')}</p>
                     <button
                         type="button"
                         onClick={onBack}
                         className="px-6 py-3 rounded-2xl bg-[#1A3FFF] hover:bg-[#1533cc] text-white font-bold text-lg transition transform hover:scale-105 active:scale-95"
                     >
-                        Retour à l&apos;accueil
+                        {t('chatBackHome')}
                     </button>
                 </div>
             ) : chatMode === 'voice' ? (
@@ -411,7 +407,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                                 ? 'bg-red-600 hover:bg-red-500 scale-110 animate-pulse'
                                 : 'bg-[#1A3FFF] hover:bg-[#1533cc] hover:scale-105 active:scale-95'
                         } disabled:bg-gray-300 disabled:scale-100 disabled:animate-none`}
-                        title={isRecording ? 'Envoyer' : 'Parler'}
+                        title={isRecording ? t('chatSend') : t('chatTalk')}
                     >
                         {isRecording ? (
                             <MicOff className="w-9 h-9 text-white" />
@@ -421,7 +417,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                     </button>
 
                     <p className="text-xs text-white/55 text-center max-w-xs">
-                        Parle, puis appuie à nouveau sur le micro pour envoyer. Autorise l&apos;accès au micro si demandé.
+                        {t('chatVoiceSendHint')}
                     </p>
                 </div>
             ) : (
@@ -430,7 +426,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        placeholder={`Ta réponse en ${langLabel}...`}
+                        placeholder={t('chatAnswerPlaceholder', { lang: langLabel })}
                         disabled={loading || sending}
                         className="flex-1 px-4 py-3.5 rounded-2xl bg-[#0A1228] border border-[rgba(255,255,255,0.12)] text-white text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1A3FFF] focus:border-transparent disabled:opacity-50"
                     />
@@ -438,7 +434,7 @@ export default function StoryChat({ story, targetLang, level, onBack }) {
                         type="submit"
                         disabled={loading || sending || !input.trim()}
                         className="px-5 py-3.5 rounded-2xl bg-[#1A3FFF] hover:bg-[#1533cc] disabled:opacity-50 text-white transition flex items-center justify-center shadow-sm"
-                        title="Envoyer"
+                        title={t('chatSend')}
                     >
                         {sending ? <Loader2 className="w-6 h-6 animate-spin" /> : <Send className="w-6 h-6" />}
                     </button>

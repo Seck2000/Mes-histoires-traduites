@@ -152,6 +152,10 @@ body {
   }
 }
 
+.story-player-shell {
+  overscroll-behavior: none;
+}
+
 .discover-section {
   position: relative;
   z-index: 15;

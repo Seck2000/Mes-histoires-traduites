@@ -8,7 +8,6 @@ import StoryChat from './components/StoryChat';
 import StoryPlayer from './components/StoryPlayer';
 import { storyMatchesAgeBand } from './constants/ageBands';
 import { LANGUAGE_CODES, isSupportedLocale } from './constants/languages';
-import { consumePendingStoryId } from './constants/pendingStory';
 import { getStoryImageUrl } from './utils/mediaUrl';
 import { stopSpeaking } from './utils/speech';
 import { I18nProvider } from './i18n/I18nProvider';
@@ -100,16 +99,8 @@ function App() {
       setCurrentLang(learn);
     }
     setCurrentView('library');
-    const list = await fetchStories();
+    await fetchStories();
     fetchLibraryData();
-
-    const pendingId = consumePendingStoryId();
-    if (pendingId) {
-      const pendingStory = list.find((story) => story.id === pendingId);
-      if (pendingStory) {
-        window.setTimeout(() => handleStartStory(pendingStory), 0);
-      }
-    }
   };
 
   const handleLogout = () => {
@@ -237,13 +228,13 @@ function App() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       await fetchStories();
-      alert('Histoire importée avec succès !');
+      alert(translate(uiLocale, 'alertImportSuccess'));
     } catch (error) {
       console.error("Erreur d'importation:", error);
       if (error.response?.data?.error) {
         alert(error.response.data.error);
       } else {
-        alert("Erreur lors de l'import de l'histoire.");
+        alert(translate(uiLocale, 'alertImportError'));
       }
     } finally {
       setIsUploading(false);
@@ -253,7 +244,7 @@ function App() {
 
   const handleStartStory = async (story) => {
     if (!story?.id || !Array.isArray(story.scenes) || story.scenes.length === 0) {
-      alert("Cette entrée n'est pas une histoire valide.");
+      alert(translate(uiLocale, 'alertInvalidStory'));
       return;
     }
 
@@ -284,7 +275,7 @@ function App() {
 
   const startStoryAtScene = (story, sceneIndex) => {
     if (!story?.id || !Array.isArray(story.scenes) || story.scenes.length === 0) {
-      alert("Cette entrée n'est pas une histoire valide.");
+      alert(translate(uiLocale, 'alertInvalidStory'));
       return;
     }
 
@@ -332,7 +323,7 @@ function App() {
       setFavoriteIds((ids) =>
         isFavorite ? [...ids, storyId] : ids.filter((id) => id !== storyId)
       );
-      alert("Impossible de modifier ce favori pour l'instant.");
+      alert(translate(uiLocale, 'alertFavoriteError'));
       return false;
     }
   };
@@ -370,31 +361,30 @@ function App() {
     setCurrentView('storyChat');
   };
 
-  const scrollStoriesRight = () => {
-    if (storiesContainerRef.current) {
-      storiesContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
-    }
-  };
-
   const learningLang = user?.preferences?.learningLang || currentLang;
   const userLevel = user?.preferences?.level || 'debutant';
   const getImageUrl = (path, storyId) => getStoryImageUrl(path, storyId, API_URL);
 
   const showWelcome = !user && currentView !== 'login' && currentView !== 'register';
   const showAuth = !user && (currentView === 'login' || currentView === 'register');
-  const fullBleed = showWelcome || showAuth;
+  const showPlayer = currentView === 'player' && Boolean(currentStory);
+  const fullBleed = showWelcome || showAuth || showPlayer;
 
   return (
     <I18nProvider locale={uiLocale} setLocale={setUiLocale}>
       <div
-        className="app-shell min-h-screen selection:bg-[#1A3FFF] selection:text-white"
+        className={`app-shell selection:bg-[#1A3FFF] selection:text-white ${
+          showPlayer ? 'h-[100dvh] max-h-[100dvh] overflow-hidden' : 'min-h-screen'
+        }`}
         translate="no"
       >
         <div
           className={
             fullBleed
-              ? 'min-h-screen flex flex-col relative'
-              : 'container mx-auto p-4 min-h-screen flex flex-col relative'
+              ? showPlayer
+                ? 'relative flex h-[100dvh] max-h-[100dvh] flex-col overflow-hidden'
+                : 'relative flex min-h-screen flex-col'
+              : 'container relative mx-auto flex min-h-screen flex-col p-4'
           }
         >
           {showAuth && (
@@ -451,7 +441,6 @@ function App() {
                 savedSceneIndex={savedSceneIndex}
                 onLogout={handleLogout}
                 onFileSelect={handleFileSelect}
-                onScrollRight={scrollStoriesRight}
                 onStartStory={handleStartStory}
                 onPlayRandom={playRandomStory}
                 favoriteIds={favoriteIds}

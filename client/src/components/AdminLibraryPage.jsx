@@ -158,7 +158,13 @@ export default function AdminLibraryPage({
             } catch (error) {
                 if (!cancelled) {
                     setRegisteredUsers([]);
-                    setUsersError(getApiErrorMessage(error, t('adminUsersError')));
+                    setUsersError(
+                        getApiErrorMessage(error, t('adminUsersError'), {
+                            network: t('apiNetworkError'),
+                            session: t('apiSessionExpired'),
+                            generic: t('apiErrorGeneric'),
+                        })
+                    );
                 }
             } finally {
                 if (!cancelled) setUsersLoading(false);
@@ -216,7 +222,7 @@ export default function AdminLibraryPage({
         setMenuOpen(false);
         const input = fileInputRef?.current || localFileInputRef.current;
         if (!input) {
-            setActionNotice("Impossible d'ouvrir le sélecteur de fichier.");
+            setActionNotice(t('adminFilePickerError'));
             return;
         }
         input.click();
@@ -268,7 +274,13 @@ export default function AdminLibraryPage({
             setActionNotice(t('profileSavedNotice'));
             window.setTimeout(() => onUserUpdate?.(data.user), 0);
         } catch (error) {
-            setProfileError(getApiErrorMessage(error, t('profileErrorSave')));
+            setProfileError(
+                getApiErrorMessage(error, t('profileErrorSave'), {
+                    network: t('apiNetworkError'),
+                    session: t('apiSessionExpired'),
+                    generic: t('apiErrorGeneric'),
+                })
+            );
         } finally {
             setProfileSaving(false);
         }
@@ -295,7 +307,13 @@ export default function AdminLibraryPage({
             setProfileSuccess(t('profilePhotoSuccess'));
             setActionNotice(t('profilePhotoSuccess'));
         } catch (error) {
-            setProfileError(getApiErrorMessage(error, t('profileErrorPhoto')));
+            setProfileError(
+                getApiErrorMessage(error, t('profileErrorPhoto'), {
+                    network: t('apiNetworkError'),
+                    session: t('apiSessionExpired'),
+                    generic: t('apiErrorGeneric'),
+                })
+            );
         } finally {
             setAvatarUploading(false);
             event.target.value = '';
@@ -403,7 +421,7 @@ export default function AdminLibraryPage({
             <div>
                 <h2 className="text-xl font-bold text-white mb-1">{t('navDashboard')}</h2>
                 <p className="text-sm text-white/55 mb-5">
-                    Toutes les catégories d’histoires — importe un fichier .zip pour en ajouter.
+                    {t('adminDashboardIntro')}
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
