@@ -1,6 +1,9 @@
 /**
  * Étiquette les histoires existantes + crée 4 histoires enfants connues
  * (réutilise les images illustrées déjà présentes), puis synchronise vers PostgreSQL.
+ *
+ * Amorçage uniquement : une histoire déjà présente dans uploads/ est conservée
+ * telle quelle. Pour la régénérer depuis ce script, supprimer son dossier d'abord.
  */
 require('dotenv').config();
 
@@ -30,6 +33,14 @@ function writeStory(folderName, story, sourceImagesFolder) {
   const dest = path.join(UPLOADS, folderName);
   const destImages = path.join(dest, 'images');
   const srcImages = path.join(UPLOADS, sourceImagesFolder, 'images');
+
+  // Les illustrations et les textes de ces histoires ont été refaits à la main
+  // depuis la première exécution de ce script. Réécrire le dossier remplacerait
+  // les illustrations fidèles par celles de l'histoire source, sans rapport.
+  if (fs.existsSync(path.join(dest, 'story.json'))) {
+    console.log('Conservé:', folderName, '(déjà présent, non écrasé)');
+    return;
+  }
 
   fs.mkdirSync(destImages, { recursive: true });
   for (const file of fs.readdirSync(srcImages)) {
