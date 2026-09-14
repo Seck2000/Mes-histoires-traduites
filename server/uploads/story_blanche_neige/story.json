@@ -1,0 +1,139 @@
+{
+  "id": "blanche-neige",
+  "title": "Blanche-Neige et les Sept Nains",
+  "title_ar": "سنو وايت والأقزام السبعة",
+  "ageCategory": "grands",
+  "thumbnail": "images/scene1.png",
+  "scenes": [
+    {
+      "id": 1,
+      "image": "images/scene1.png",
+      "character": {
+        "name": "La Reine",
+        "avatar": "images/scene1.png"
+      },
+      "text": {
+        "fr": "Il était une fois une belle princesse appelée Blanche-Neige. Sa méchante belle-mère demande au miroir magique : Miroir, qui est la plus belle ?",
+        "en": "Once upon a time, there was a beautiful princess called Snow White. Her wicked stepmother asks the magic mirror: Mirror, who is the fairest?",
+        "ar": "كان يا مكان أميرة جميلة تدعى سنو وايت. تسأل زوجة أبيها الشريرة المرآة السحرية: أيتها المرآة، من الأجمل؟"
+      }
+    },
+    {
+      "id": 2,
+      "image": "images/scene2.png",
+      "character": {
+        "name": "Le Chasseur",
+        "avatar": "images/scene2.png"
+      },
+      "text": {
+        "fr": "La reine jalouse envoie un chasseur dans la forêt. Mais il ne peut pas faire de mal à Blanche-Neige. Il la laisse partir.",
+        "en": "The jealous queen sends a huntsman into the forest. But he cannot harm Snow White. He lets her go.",
+        "ar": "ترسل الملكة الغيورة صياداً إلى الغابة. لكنه لا يستطيع أن يؤذي سنو وايت. يتركها تذهب."
+      }
+    },
+    {
+      "id": 3,
+      "image": "images/scene3.png",
+      "character": {
+        "name": "Blanche-Neige",
+        "avatar": "images/scene1.png"
+      },
+      "text": {
+        "fr": "Blanche-Neige découvre une petite maison au milieu de la forêt. Elle est adorable avec des fleurs partout !",
+        "en": "Snow White discovers a tiny cottage in the middle of the forest. It is adorable with flowers everywhere!",
+        "ar": "تكتشف سنو وايت كوخاً صغيراً في وسط الغابة. إنه رائع مع الزهور في كل مكان!"
+      }
+    },
+    {
+      "id": 4,
+      "image": "images/scene4.png",
+      "character": {
+        "name": "Les Sept Nains",
+        "avatar": "images/scene4.png"
+      },
+      "text": {
+        "fr": "Sept petits nains vivent ici ! Ils accueillent Blanche-Neige avec joie. Elle peut rester avec eux.",
+        "en": "Seven little dwarfs live here! They welcome Snow White with joy. She can stay with them.",
+        "ar": "سبعة أقزام صغار يعيشون هنا! يرحبون بسنو وايت بفرح. يمكنها البقاء معهم."
+      }
+    },
+    {
+      "id": 5,
+      "image": "images/scene5.png",
+      "character": {
+        "name": "La Reine déguisée",
+        "avatar": "images/scene5.png"
+      },
+      "text": {
+        "fr": "La méchante reine se déguise en vieille femme. Elle tient une pomme rouge empoisonnée dans son panier.",
+        "en": "The wicked queen disguises herself as an old woman. She holds a poisoned red apple in her basket.",
+        "ar": "تتنكر الملكة الشريرة كامرأة عجوز. تحمل تفاحة حمراء مسمومة في سلتها."
+      }
+    },
+    {
+      "id": 6,
+      "image": "images/scene6.png",
+      "character": {
+        "name": "Blanche-Neige",
+        "avatar": "images/scene1.png"
+      },
+      "text": {
+        "fr": "La fausse vieille femme offre la pomme à Blanche-Neige. Elle a l'air si belle et délicieuse !",
+        "en": "The false old woman offers the apple to Snow White. It looks so beautiful and delicious!",
+        "ar": "تقدم المرأة العجوز المزيفة التفاحة لسنو وايت. تبدو جميلة ولذيذة جداً!"
+      }
+    },
+    {
+      "id": 7,
+      "image": "images/scene7.png",
+      "character": {
+        "name": "Les Sept Nains",
+        "avatar": "images/scene4.png"
+      },
+      "text": {
+        "fr": "Blanche-Neige mord la pomme et tombe dans un sommeil profond. Les nains sont très tristes.",
+        "en": "Snow White bites the apple and falls into a deep sleep. The dwarfs are very sad.",
+        "ar": "تعض سنو وايت التفاحة وتسقط في نوم عميق. الأقزام حزينون جداً."
+      }
+    },
+    {
+      "id": 8,
+      "image": "images/scene8.png",
+      "character": {
+        "name": "Le Prince",
+        "avatar": "images/scene8.png"
+      },
+      "text": {
+        "fr": "Un beau prince arrive dans la forêt. Il voit Blanche-Neige et tombe amoureux d'elle.",
+        "en": "A handsome prince arrives in the forest. He sees Snow White and falls in love with her.",
+        "ar": "يصل أمير وسيم إلى الغابة. يرى سنو وايت ويقع في حبها."
+      }
+    },
+    {
+      "id": 9,
+      "image": "images/scene9.png",
+      "character": {
+        "name": "Le Prince",
+        "avatar": "images/scene8.png"
+      },
+      "text": {
+        "fr": "Le prince embrasse Blanche-Neige. C'est le baiser du véritable amour ! Elle se réveille !",
+        "en": "The prince kisses Snow White. It is true love's kiss! She wakes up!",
+        "ar": "يقبل الأمير سنو وايت. إنها قبلة الحب الحقيقي! تستيقظ!"
+      }
+    },
+    {
+      "id": 10,
+      "image": "images/scene10.png",
+      "character": {
+        "name": "Blanche-Neige",
+        "avatar": "images/scene1.png"
+      },
+      "text": {
+        "fr": "Blanche-Neige et le prince sont heureux. Les sept nains dansent de joie. Tout le monde fait la fête !",
+        "en": "Snow White and the prince are happy. The seven dwarfs dance with joy. Everyone celebrates!",
+        "ar": "سنو وايت والأمير سعيدان. الأقزام السبعة يرقصون من الفرح. الجميع يحتفل!"
+      }
+    }
+  ]
+}

@@ -36,7 +36,7 @@
       "image": "images/scene3.png",
       "character": {
         "name": "Skye",
-        "avatar": "images/scene1.png"
+        "avatar": "images/scene3.png"
       },
       "text": {
         "fr": "Skye regarde le ciel bleu. Elle cherche le ballon.",
@@ -62,7 +62,7 @@
       "image": "images/scene5.png",
       "character": {
         "name": "Marshall",
-        "avatar": "images/scene1.png"
+        "avatar": "images/scene5.png"
       },
       "text": {
         "fr": "Marshall trouve un petit chien triste. Il a perdu son jouet.",
@@ -88,7 +88,7 @@
       "image": "images/scene7.png",
       "character": {
         "name": "Skye",
-        "avatar": "images/scene1.png"
+        "avatar": "images/scene3.png"
       },
       "text": {
         "fr": "Le ballon est dans l’arbre ! Skye aide à le reprendre.",

@@ -1,0 +1,113 @@
+{
+  "id": "boucle-or",
+  "title": "Boucle d'Or et les Trois Ours",
+  "title_ar": "الشعر الذهبي والدببة الثلاثة",
+  "ageCategory": "petits",
+  "thumbnail": "images/scene1.png",
+  "scenes": [
+    {
+      "id": 1,
+      "image": "images/scene1.png",
+      "character": {
+        "name": "Narrateur",
+        "avatar": "images/scene1.png"
+      },
+      "text": {
+        "fr": "Il était une fois, au milieu de la forêt, une jolie petite maison. Trois ours vivaient là : Papa Ours, Maman Ours et Bébé Ours.",
+        "en": "Once upon a time, in the middle of the forest, there was a pretty little house. Three bears lived there: Papa Bear, Mama Bear and Baby Bear.",
+        "ar": "كان يا مكان، في وسط الغابة، بيت صغير جميل. كانت تعيش فيه ثلاثة دببة: بابا الدب، ماما الدبة، والدب الصغير."
+      }
+    },
+    {
+      "id": 2,
+      "image": "images/scene2.png",
+      "character": {
+        "name": "Maman Ours",
+        "avatar": "images/scene2.png"
+      },
+      "text": {
+        "fr": "Un matin, la soupe est trop chaude. Les trois ours partent se promener dans la forêt en attendant qu'elle refroidisse.",
+        "en": "One morning, the porridge is too hot. The three bears go for a walk in the forest while it cools down.",
+        "ar": "في صباح أحد الأيام، كان الحساء ساخنًا جدًا. خرجت الدببة الثلاثة تتنزه في الغابة حتى يبرد."
+      }
+    },
+    {
+      "id": 3,
+      "image": "images/scene3.png",
+      "character": {
+        "name": "Boucle d'Or",
+        "avatar": "images/scene3.png"
+      },
+      "text": {
+        "fr": "Une petite fille aux cheveux dorés et bouclés passe par là. On l'appelle Boucle d'Or. La porte est ouverte, alors elle entre.",
+        "en": "A little girl with golden curly hair walks by. She is called Goldilocks. The door is open, so she goes inside.",
+        "ar": "مرّت من هناك فتاة صغيرة ذات شعر ذهبي مجعّد. اسمها الشعر الذهبي. كان الباب مفتوحًا، فدخلت."
+      }
+    },
+    {
+      "id": 4,
+      "image": "images/scene4.png",
+      "character": {
+        "name": "Boucle d'Or",
+        "avatar": "images/scene3.png"
+      },
+      "text": {
+        "fr": "Sur la table, il y a trois bols. Le grand bol est trop chaud, le moyen est trop froid, mais le petit bol est parfait ! Boucle d'Or mange toute la soupe.",
+        "en": "On the table there are three bowls. The big bowl is too hot, the medium one is too cold, but the little bowl is just right! Goldilocks eats all the porridge.",
+        "ar": "على الطاولة ثلاثة أوعية. الوعاء الكبير ساخن جدًا، والمتوسط بارد جدًا، أما الصغير فهو مناسب تمامًا! أكلت الشعر الذهبي كل الحساء."
+      }
+    },
+    {
+      "id": 5,
+      "image": "images/scene5.png",
+      "character": {
+        "name": "Boucle d'Or",
+        "avatar": "images/scene3.png"
+      },
+      "text": {
+        "fr": "Ensuite, elle essaie les trois chaises. La grande est trop dure, la moyenne est trop molle. Elle s'assoit sur la petite chaise... et crac ! La chaise se casse.",
+        "en": "Then she tries the three chairs. The big one is too hard, the medium one is too soft. She sits on the little chair... and crack! The chair breaks.",
+        "ar": "ثم جرّبت الكراسي الثلاثة. الكبير قاسٍ جدًا، والمتوسط ليّن جدًا. جلست على الكرسي الصغير... وطق! انكسر الكرسي."
+      }
+    },
+    {
+      "id": 6,
+      "image": "images/scene6.png",
+      "character": {
+        "name": "Boucle d'Or",
+        "avatar": "images/scene3.png"
+      },
+      "text": {
+        "fr": "Fatiguée, Boucle d'Or monte dans la chambre. Le grand lit est trop dur, le moyen est trop mou, mais le petit lit est parfait. Elle s'endort tout de suite.",
+        "en": "Tired, Goldilocks goes up to the bedroom. The big bed is too hard, the medium one is too soft, but the little bed is just right. She falls asleep right away.",
+        "ar": "تعبت الشعر الذهبي وصعدت إلى غرفة النوم. السرير الكبير قاسٍ جدًا، والمتوسط ليّن جدًا، أما السرير الصغير فهو مناسب تمامًا. نامت على الفور."
+      }
+    },
+    {
+      "id": 7,
+      "image": "images/scene7.png",
+      "character": {
+        "name": "Papa Ours",
+        "avatar": "images/scene7.png"
+      },
+      "text": {
+        "fr": "Les trois ours rentrent à la maison. Papa Ours dit : Quelqu'un a goûté ma soupe ! Et Bébé Ours pleure : Quelqu'un a mangé toute la mienne et cassé ma chaise !",
+        "en": "The three bears come home. Papa Bear says: Someone has tasted my porridge! And Baby Bear cries: Someone has eaten all of mine and broken my chair!",
+        "ar": "عادت الدببة الثلاثة إلى البيت. قال بابا الدب: أحدهم تذوّق حسائي! وبكى الدب الصغير: أحدهم أكل كل حسائي وكسر كرسيي!"
+      }
+    },
+    {
+      "id": 8,
+      "image": "images/scene8.png",
+      "character": {
+        "name": "Boucle d'Or",
+        "avatar": "images/scene3.png"
+      },
+      "text": {
+        "fr": "Les ours montent et trouvent Boucle d'Or endormie dans le petit lit. Elle se réveille, s'excuse et rentre vite chez elle. Depuis, elle n'entre plus jamais sans demander !",
+        "en": "The bears go upstairs and find Goldilocks asleep in the little bed. She wakes up, says sorry and hurries home. Since then, she never goes in without asking!",
+        "ar": "صعدت الدببة ووجدت الشعر الذهبي نائمة في السرير الصغير. استيقظت واعتذرت وأسرعت عائدة إلى بيتها. ومنذ ذلك اليوم، لم تعد تدخل أبدًا دون أن تستأذن!"
+      }
+    }
+  ]
+}

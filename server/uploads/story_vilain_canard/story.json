@@ -1,0 +1,113 @@
+{
+  "id": "vilain-canard",
+  "title": "Le Vilain Petit Canard",
+  "title_ar": "البطة القبيحة",
+  "ageCategory": "petits",
+  "thumbnail": "images/scene1.png",
+  "scenes": [
+    {
+      "id": 1,
+      "image": "images/scene1.png",
+      "character": {
+        "name": "Maman Cane",
+        "avatar": "images/scene1.png"
+      },
+      "text": {
+        "fr": "Il était une fois une maman cane assise sur son nid. Elle attend que ses œufs éclosent.",
+        "en": "Once upon a time, a mother duck sat on her nest. She waits for her eggs to hatch.",
+        "ar": "كان يا مكان أمّ بطة تجلس على عشها. تنتظر أن تفقس بيضاتها."
+      }
+    },
+    {
+      "id": 2,
+      "image": "images/scene2.png",
+      "character": {
+        "name": "Maman Cane",
+        "avatar": "images/scene1.png"
+      },
+      "text": {
+        "fr": "Les œufs s'ouvrent. De jolis canetons jaunes sortent. Mais le dernier est gris et tout différent.",
+        "en": "The eggs open. Pretty yellow ducklings come out. But the last one is gray and very different.",
+        "ar": "تنفتح البيضات. تخرج بطات صغيرة صفراء جميلة. لكن الأخيرة رمادية ومختلفة تمامًا."
+      }
+    },
+    {
+      "id": 3,
+      "image": "images/scene3.png",
+      "character": {
+        "name": "Les oiseaux",
+        "avatar": "images/scene3.png"
+      },
+      "text": {
+        "fr": "Les autres oiseaux se moquent de lui. Ils lui disent : Tu es un vilain petit canard !",
+        "en": "The other birds make fun of him. They tell him: You are an ugly duckling!",
+        "ar": "تسخر منه الطيور الأخرى. تقول له: أنت بطة صغيرة قبيحة!"
+      }
+    },
+    {
+      "id": 4,
+      "image": "images/scene4.png",
+      "character": {
+        "name": "Le Petit Canard",
+        "avatar": "images/scene4.png"
+      },
+      "text": {
+        "fr": "Le petit canard est très triste. Il quitte la mare et s'en va tout seul.",
+        "en": "The little duckling is very sad. He leaves the pond and goes away all alone.",
+        "ar": "البطة الصغيرة حزينة جدًا. تترك البركة وتذهب وحدها."
+      }
+    },
+    {
+      "id": 5,
+      "image": "images/scene5.png",
+      "character": {
+        "name": "Le Petit Canard",
+        "avatar": "images/scene4.png"
+      },
+      "text": {
+        "fr": "L'hiver arrive. Il fait très froid. Le petit canard reste seul dans la neige.",
+        "en": "Winter comes. It is very cold. The little duckling stays alone in the snow.",
+        "ar": "يأتي الشتاء. الجو بارد جدًا. تبقى البطة الصغيرة وحدها في الثلج."
+      }
+    },
+    {
+      "id": 6,
+      "image": "images/scene6.png",
+      "character": {
+        "name": "Le Petit Canard",
+        "avatar": "images/scene4.png"
+      },
+      "text": {
+        "fr": "Le printemps revient. Les fleurs poussent. Le petit canard a grandi et ses plumes sont devenues blanches.",
+        "en": "Spring returns. The flowers grow. The little duckling has grown and his feathers have turned white.",
+        "ar": "يعود الربيع. تنمو الأزهار. كبرت البطة الصغيرة وصار ريشها أبيض."
+      }
+    },
+    {
+      "id": 7,
+      "image": "images/scene7.png",
+      "character": {
+        "name": "Le Cygne",
+        "avatar": "images/scene7.png"
+      },
+      "text": {
+        "fr": "Il regarde son reflet dans l'eau. Quelle surprise ! Il n'est pas un canard, il est un beau cygne blanc.",
+        "en": "He looks at his reflection in the water. What a surprise! He is not a duck, he is a beautiful white swan.",
+        "ar": "ينظر إلى انعكاسه في الماء. يا للمفاجأة! إنه ليس بطة، إنه بجعة بيضاء جميلة."
+      }
+    },
+    {
+      "id": 8,
+      "image": "images/scene8.png",
+      "character": {
+        "name": "Le Cygne",
+        "avatar": "images/scene7.png"
+      },
+      "text": {
+        "fr": "Les autres cygnes l'accueillent avec joie. Il nage enfin avec ses vrais amis. Il est très heureux !",
+        "en": "The other swans welcome him with joy. At last he swims with his real friends. He is very happy!",
+        "ar": "ترحب به البجعات الأخرى بفرح. أخيرًا يسبح مع أصدقائه الحقيقيين. إنه سعيد جدًا!"
+      }
+    }
+  ]
+}

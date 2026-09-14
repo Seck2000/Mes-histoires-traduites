@@ -3,11 +3,11 @@
   "title": "Avatar : Les Enfants de la Forêt",
   "title_ar": "أفاتار: أطفال الغابة",
   "ageCategory": "grands",
-  "thumbnail": "images/scene3.png",
+  "thumbnail": "images/scene1.png",
   "scenes": [
     {
       "id": 1,
-      "image": "images/scene3.png",
+      "image": "images/scene1.png",
       "character": {
         "name": "Ayo",
         "avatar": "images/scene1.png"
@@ -20,7 +20,7 @@
     },
     {
       "id": 2,
-      "image": "images/scene4.png",
+      "image": "images/scene2.png",
       "character": {
         "name": "Ayo",
         "avatar": "images/scene1.png"
@@ -33,10 +33,10 @@
     },
     {
       "id": 3,
-      "image": "images/scene5.png",
+      "image": "images/scene3.png",
       "character": {
         "name": "Lena",
-        "avatar": "images/scene1.png"
+        "avatar": "images/scene3.png"
       },
       "text": {
         "fr": "Lena, sa sœur, découvre une rivière bleue magique.",
@@ -46,7 +46,7 @@
     },
     {
       "id": 4,
-      "image": "images/scene6.png",
+      "image": "images/scene4.png",
       "character": {
         "name": "Ayo",
         "avatar": "images/scene1.png"
@@ -59,10 +59,10 @@
     },
     {
       "id": 5,
-      "image": "images/scene7.png",
+      "image": "images/scene5.png",
       "character": {
         "name": "Lena",
-        "avatar": "images/scene1.png"
+        "avatar": "images/scene3.png"
       },
       "text": {
         "fr": "La forêt leur offre une lumière douce en remerciement.",
@@ -72,7 +72,7 @@
     },
     {
       "id": 6,
-      "image": "images/scene8.png",
+      "image": "images/scene6.png",
       "character": {
         "name": "Ayo",
         "avatar": "images/scene1.png"
@@ -85,10 +85,10 @@
     },
     {
       "id": 7,
-      "image": "images/scene9.png",
+      "image": "images/scene7.png",
       "character": {
         "name": "Lena",
-        "avatar": "images/scene1.png"
+        "avatar": "images/scene3.png"
       },
       "text": {
         "fr": "Ensemble, ils promettent de soigner la forêt chaque jour.",
@@ -98,7 +98,7 @@
     },
     {
       "id": 8,
-      "image": "images/scene10.png",
+      "image": "images/scene8.png",
       "character": {
         "name": "Ayo",
         "avatar": "images/scene1.png"

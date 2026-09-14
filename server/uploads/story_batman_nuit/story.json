@@ -36,7 +36,7 @@
       "image": "images/scene3.png",
       "character": {
         "name": "Robin",
-        "avatar": "images/scene1.png"
+        "avatar": "images/scene3.png"
       },
       "text": {
         "fr": "Robin arrive. Ensemble, ils partent protéger les enfants.",
@@ -75,7 +75,7 @@
       "image": "images/scene6.png",
       "character": {
         "name": "Robin",
-        "avatar": "images/scene1.png"
+        "avatar": "images/scene3.png"
       },
       "text": {
         "fr": "Ils ramènent le chat à une petite fille. Elle sourit.",

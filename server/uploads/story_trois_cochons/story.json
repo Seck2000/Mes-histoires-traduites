@@ -1,0 +1,113 @@
+{
+  "id": "trois-cochons",
+  "title": "Les Trois Petits Cochons",
+  "title_ar": "الخنازير الثلاثة الصغيرة",
+  "ageCategory": "petits",
+  "thumbnail": "images/scene1.png",
+  "scenes": [
+    {
+      "id": 1,
+      "image": "images/scene1.png",
+      "character": {
+        "name": "Maman Cochon",
+        "avatar": "images/scene1.png"
+      },
+      "text": {
+        "fr": "Il était une fois trois petits cochons. Ils quittent la maison de leur maman pour vivre leur aventure.",
+        "en": "Once upon a time, there were three little pigs. They leave their mother's house to live their adventure.",
+        "ar": "كان يا مكان ثلاثة خنازير صغيرة. يغادرون بيت أمهم ليعيشوا مغامرتهم."
+      }
+    },
+    {
+      "id": 2,
+      "image": "images/scene2.png",
+      "character": {
+        "name": "Premier Cochon",
+        "avatar": "images/scene2.png"
+      },
+      "text": {
+        "fr": "Le premier petit cochon construit une maison de paille. C'est rapide et facile !",
+        "en": "The first little pig builds a house of straw. It's quick and easy!",
+        "ar": "الخنزير الأول يبني بيتاً من القش. إنه سريع وسهل!"
+      }
+    },
+    {
+      "id": 3,
+      "image": "images/scene3.png",
+      "character": {
+        "name": "Deuxième Cochon",
+        "avatar": "images/scene3.png"
+      },
+      "text": {
+        "fr": "Le deuxième petit cochon construit une maison de bois. Elle est un peu plus solide.",
+        "en": "The second little pig builds a house of sticks. It is a bit stronger.",
+        "ar": "الخنزير الثاني يبني بيتاً من الخشب. إنه أقوى قليلاً."
+      }
+    },
+    {
+      "id": 4,
+      "image": "images/scene4.png",
+      "character": {
+        "name": "Troisième Cochon",
+        "avatar": "images/scene4.png"
+      },
+      "text": {
+        "fr": "Le troisième petit cochon travaille dur. Il construit une maison de briques très solide.",
+        "en": "The third little pig works hard. He builds a very strong brick house.",
+        "ar": "الخنزير الثالث يعمل بجد. يبني بيتاً من الطوب قوياً جداً."
+      }
+    },
+    {
+      "id": 5,
+      "image": "images/scene5.png",
+      "character": {
+        "name": "Le Loup",
+        "avatar": "images/scene5.png"
+      },
+      "text": {
+        "fr": "Un grand méchant loup arrive. Il souffle très fort sur la maison de paille. BOUM ! Elle s'envole !",
+        "en": "A big bad wolf arrives. He huffs and puffs at the straw house. BOOM! It blows away!",
+        "ar": "يصل ذئب كبير شرير. ينفخ بقوة على بيت القش. بووم! يطير البيت!"
+      }
+    },
+    {
+      "id": 6,
+      "image": "images/scene6.png",
+      "character": {
+        "name": "Le Loup",
+        "avatar": "images/scene5.png"
+      },
+      "text": {
+        "fr": "Le loup souffle encore plus fort sur la maison de bois. Elle tombe aussi !",
+        "en": "The wolf huffs and puffs even harder at the wooden house. It falls down too!",
+        "ar": "ينفخ الذئب بقوة أكبر على بيت الخشب. يسقط أيضاً!"
+      }
+    },
+    {
+      "id": 7,
+      "image": "images/scene7.png",
+      "character": {
+        "name": "Le Loup",
+        "avatar": "images/scene5.png"
+      },
+      "text": {
+        "fr": "Le loup souffle de toutes ses forces sur la maison de briques. Mais elle ne bouge pas ! Les trois cochons sont en sécurité.",
+        "en": "The wolf huffs and puffs with all his might at the brick house. But it doesn't move! The three pigs are safe.",
+        "ar": "ينفخ الذئب بكل قوته على بيت الطوب. لكنه لا يتحرك! الخنازير الثلاثة آمنة."
+      }
+    },
+    {
+      "id": 8,
+      "image": "images/scene8.png",
+      "character": {
+        "name": "Les Trois Cochons",
+        "avatar": "images/scene1.png"
+      },
+      "text": {
+        "fr": "Les trois petits cochons font la fête dans la maison de briques. Le loup s'en va, fatigué. Bien fait !",
+        "en": "The three little pigs celebrate in the brick house. The wolf goes away, tired. Serves him right!",
+        "ar": "الخنازير الثلاثة يحتفلون في بيت الطوب. يذهب الذئب بعيداً متعباً. يستحق ذلك!"
+      }
+    }
+  ]
+}

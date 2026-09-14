@@ -13,35 +13,35 @@
         "avatar": "images/scene1.png"
       },
       "text": {
-        "fr": "Il était une fois une douce fille nommée Cendrillon.",
-        "en": "Once upon a time, there was a kind girl named Cinderella.",
-        "ar": "كان يا مكان فتاة لطيفة اسمها سندريلا."
+        "fr": "Il était une fois une jeune fille très douce et très gentille. Elle passait ses journées à balayer près de la cheminée, alors on l'appelait Cendrillon.",
+        "en": "Once upon a time, there was a very sweet and kind young girl. She spent her days sweeping near the fireplace, so everyone called her Cinderella.",
+        "ar": "كان يا مكان فتاة صغيرة لطيفة وطيبة جدًا. كانت تمضي أيامها في تنظيف المكان قرب المدفأة، فسمّاها الجميع سندريلا."
       }
     },
     {
       "id": 2,
       "image": "images/scene2.png",
       "character": {
-        "name": "Cendrillon",
-        "avatar": "images/scene1.png"
+        "name": "La belle-mère",
+        "avatar": "images/scene2.png"
       },
       "text": {
-        "fr": "Elle rêve d’aller au bal du château ce soir.",
-        "en": "She dreams of going to the castle ball tonight.",
-        "ar": "تحلم بالذهاب إلى حفل القصر هذه الليلة."
+        "fr": "Cendrillon vivait avec sa belle-mère et ses deux demi-sœurs. Elles étaient méchantes avec elle et lui faisaient faire tout le travail de la maison.",
+        "en": "Cinderella lived with her stepmother and her two stepsisters. They were unkind to her and made her do all the housework.",
+        "ar": "كانت سندريلا تعيش مع زوجة أبيها وأختيها غير الشقيقتين. كانتا قاسيتين معها وتجعلانها تقوم بكل أعمال البيت."
       }
     },
     {
       "id": 3,
       "image": "images/scene3.png",
       "character": {
-        "name": "Fée",
-        "avatar": "images/scene1.png"
+        "name": "Le messager du roi",
+        "avatar": "images/scene3.png"
       },
       "text": {
-        "fr": "Une fée apparaît. Elle transforme une citrouille en carrosse.",
-        "en": "A fairy appears. She turns a pumpkin into a coach.",
-        "ar": "تظهر جنية. تحول يقطينة إلى عربة."
+        "fr": "Un jour, un messager du roi apporte une invitation : le prince donne un grand bal au château ! Cendrillon aussi rêve d'y aller.",
+        "en": "One day, a messenger from the king brings an invitation: the prince is giving a grand ball at the castle! Cinderella dreams of going too.",
+        "ar": "في أحد الأيام، أحضر رسول الملك دعوة: الأمير يقيم حفلًا كبيرًا في القصر! حلمت سندريلا أيضًا بالذهاب."
       }
     },
     {
@@ -52,61 +52,100 @@
         "avatar": "images/scene1.png"
       },
       "text": {
-        "fr": "Cendrillon porte une belle robe et des souliers de verre.",
-        "en": "Cinderella wears a beautiful dress and glass slippers.",
-        "ar": "ترتدي سندريلا فستاناً جميلاً وحذاءً من زجاج."
+        "fr": "Mais la belle-mère refuse. Le soir du bal, le carrosse part sans elle. Cendrillon reste seule sur le pas de la porte et se met à pleurer.",
+        "en": "But the stepmother refuses. On the night of the ball, the carriage leaves without her. Cinderella stays alone on the doorstep and begins to cry.",
+        "ar": "لكن زوجة أبيها رفضت. في ليلة الحفل، انطلقت العربة بدونها. بقيت سندريلا وحدها على عتبة الباب وبدأت تبكي."
       }
     },
     {
       "id": 5,
       "image": "images/scene5.png",
       "character": {
-        "name": "Prince",
-        "avatar": "images/scene1.png"
+        "name": "La fée marraine",
+        "avatar": "images/scene5.png"
       },
       "text": {
-        "fr": "Au bal, le prince danse avec elle. Ils sont heureux.",
-        "en": "At the ball, the prince dances with her. They are happy.",
-        "ar": "في الحفل، يرقص الأمير معها. هما سعيدان."
+        "fr": "Soudain, une lumière dorée apparaît dans le jardin. C'est sa fée marraine ! Elle sourit et dit : Ne pleure plus, tu iras au bal.",
+        "en": "Suddenly, a golden light appears in the garden. It is her fairy godmother! She smiles and says: Do not cry any more, you shall go to the ball.",
+        "ar": "وفجأة ظهر ضوء ذهبي في الحديقة. إنها الجنية العرّابة! ابتسمت وقالت: لا تبكي بعد الآن، ستذهبين إلى الحفل."
       }
     },
     {
       "id": 6,
       "image": "images/scene6.png",
       "character": {
-        "name": "Cendrillon",
-        "avatar": "images/scene1.png"
+        "name": "La fée marraine",
+        "avatar": "images/scene5.png"
       },
       "text": {
-        "fr": "À minuit, elle doit partir. Un soulier reste derrière elle.",
-        "en": "At midnight, she must leave. One slipper stays behind.",
-        "ar": "عند منتصف الليل، يجب أن تغادر. يبقى حذاء واحد."
+        "fr": "La fée agite sa baguette magique. La citrouille du jardin devient un magnifique carrosse doré, et les petites souris deviennent de beaux chevaux blancs.",
+        "en": "The fairy waves her magic wand. The pumpkin in the garden becomes a magnificent golden coach, and the little mice become beautiful white horses.",
+        "ar": "لوّحت الجنية بعصاها السحرية. تحولت اليقطينة في الحديقة إلى عربة ذهبية رائعة، وتحولت الفئران الصغيرة إلى خيول بيضاء جميلة."
       }
     },
     {
       "id": 7,
       "image": "images/scene7.png",
       "character": {
-        "name": "Prince",
-        "avatar": "images/scene1.png"
+        "name": "Cendrillon",
+        "avatar": "images/scene7.png"
       },
       "text": {
-        "fr": "Le prince cherche la propriétaire du joli soulier.",
-        "en": "The prince looks for the owner of the lovely slipper.",
-        "ar": "يبحث الأمير عن صاحبة الحذاء الجميل."
+        "fr": "Les habits de Cendrillon se changent en une robe de bal étincelante, avec de jolies pantoufles de verre. La fée la prévient : Tu dois rentrer avant minuit !",
+        "en": "Cinderella's clothes turn into a sparkling ball gown, with pretty glass slippers. The fairy warns her: You must come home before midnight!",
+        "ar": "تحولت ملابس سندريلا إلى فستان حفل لامع، مع حذاء زجاجي جميل. حذّرتها الجنية: يجب أن تعودي قبل منتصف الليل!"
       }
     },
     {
       "id": 8,
       "image": "images/scene8.png",
       "character": {
-        "name": "Cendrillon",
-        "avatar": "images/scene1.png"
+        "name": "Le Prince",
+        "avatar": "images/scene8.png"
       },
       "text": {
-        "fr": "Le soulier lui va parfaitement. Cendrillon est heureuse pour toujours.",
-        "en": "The slipper fits perfectly. Cinderella is happy forever.",
-        "ar": "الحذاء يناسبها تماماً. تعيش سندريلا سعيدة إلى الأبد."
+        "fr": "Au château, tout le monde admire Cendrillon. Le prince l'invite à danser et ne veut plus la quitter. Ils dansent toute la soirée.",
+        "en": "At the castle, everyone admires Cinderella. The prince invites her to dance and does not want to leave her side. They dance all evening.",
+        "ar": "في القصر، أُعجب الجميع بسندريلا. دعاها الأمير للرقص ولم يرد أن يفارقها. رقصا طوال المساء."
+      }
+    },
+    {
+      "id": 9,
+      "image": "images/scene9.png",
+      "character": {
+        "name": "Cendrillon",
+        "avatar": "images/scene7.png"
+      },
+      "text": {
+        "fr": "Soudain, l'horloge sonne les douze coups de minuit ! Cendrillon se sauve en courant dans le grand escalier et perd une pantoufle de verre sur une marche.",
+        "en": "Suddenly, the clock strikes twelve at midnight! Cinderella runs away down the great staircase and loses one glass slipper on a step.",
+        "ar": "وفجأة دقّت الساعة اثنتي عشرة دقة في منتصف الليل! هربت سندريلا راكضة على السلم الكبير وفقدت حذاءً زجاجيًا على إحدى الدرجات."
+      }
+    },
+    {
+      "id": 10,
+      "image": "images/scene10.png",
+      "character": {
+        "name": "Le Prince",
+        "avatar": "images/scene8.png"
+      },
+      "text": {
+        "fr": "Le prince cherche partout la propriétaire de la pantoufle. Il arrive enfin chez Cendrillon. La pantoufle de verre glisse à son pied : elle lui va parfaitement !",
+        "en": "The prince searches everywhere for the owner of the slipper. At last he comes to Cinderella's house. The glass slipper slides onto her foot: it fits perfectly!",
+        "ar": "بحث الأمير في كل مكان عن صاحبة الحذاء. وصل أخيرًا إلى بيت سندريلا. انزلق الحذاء الزجاجي في قدمها: إنه يناسبها تمامًا!"
+      }
+    },
+    {
+      "id": 11,
+      "image": "images/scene11.png",
+      "character": {
+        "name": "Cendrillon",
+        "avatar": "images/scene11.png"
+      },
+      "text": {
+        "fr": "Le prince et Cendrillon se marient au château. Tout le monde chante et danse. Et ils vécurent heureux pour toujours.",
+        "en": "The prince and Cinderella are married at the castle. Everyone sings and dances. And they lived happily ever after.",
+        "ar": "تزوّج الأمير وسندريلا في القصر. غنّى الجميع ورقصوا. وعاشا سعيدين إلى الأبد."
       }
     }
   ]

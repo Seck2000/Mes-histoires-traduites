@@ -1,0 +1,113 @@
+{
+  "id": "chaperon-rouge",
+  "title": "Le Petit Chaperon Rouge",
+  "title_ar": "ذات الرداء الأحمر",
+  "ageCategory": "moyens",
+  "thumbnail": "images/scene1.png",
+  "scenes": [
+    {
+      "id": 1,
+      "image": "images/scene1.png",
+      "character": {
+        "name": "Petit Chaperon Rouge",
+        "avatar": "images/scene1.png"
+      },
+      "text": {
+        "fr": "Il était une fois une petite fille avec une cape rouge. Sa maman lui donne un panier pour sa grand-mère.",
+        "en": "Once upon a time, there was a little girl with a red cape. Her mother gives her a basket for her grandmother.",
+        "ar": "كان يا مكان فتاة صغيرة ترتدي عباءة حمراء. أعطتها أمها سلة لجدتها."
+      }
+    },
+    {
+      "id": 2,
+      "image": "images/scene2.png",
+      "character": {
+        "name": "Petit Chaperon Rouge",
+        "avatar": "images/scene1.png"
+      },
+      "text": {
+        "fr": "Le Petit Chaperon Rouge marche dans la forêt. Elle chante joyeusement sur le chemin.",
+        "en": "Little Red Riding Hood walks through the forest. She sings happily on the path.",
+        "ar": "ذات الرداء الأحمر تمشي في الغابة. تغني بسعادة على الطريق."
+      }
+    },
+    {
+      "id": 3,
+      "image": "images/scene3.png",
+      "character": {
+        "name": "Le Loup",
+        "avatar": "images/scene3.png"
+      },
+      "text": {
+        "fr": "Un grand loup apparaît. Il lui demande : Où vas-tu, petite fille ?",
+        "en": "A big wolf appears. He asks her: Where are you going, little girl?",
+        "ar": "يظهر ذئب كبير. يسألها: إلى أين تذهبين يا فتاة صغيرة؟"
+      }
+    },
+    {
+      "id": 4,
+      "image": "images/scene4.png",
+      "character": {
+        "name": "Le Loup",
+        "avatar": "images/scene3.png"
+      },
+      "text": {
+        "fr": "Le loup court vite chez la grand-mère. Il frappe à la porte de la petite maison.",
+        "en": "The wolf runs quickly to grandmother's house. He knocks on the door of the little cottage.",
+        "ar": "يركض الذئب بسرعة إلى بيت الجدة. يطرق باب الكوخ الصغير."
+      }
+    },
+    {
+      "id": 5,
+      "image": "images/scene5.png",
+      "character": {
+        "name": "Le Loup",
+        "avatar": "images/scene3.png"
+      },
+      "text": {
+        "fr": "Le loup se déguise. Il met la chemise de nuit et le bonnet de grand-mère. Il se cache dans le lit.",
+        "en": "The wolf disguises himself. He puts on grandmother's nightgown and cap. He hides in the bed.",
+        "ar": "يتنكر الذئب. يرتدي قميص نوم الجدة وقبعتها. يختبئ في السرير."
+      }
+    },
+    {
+      "id": 6,
+      "image": "images/scene6.png",
+      "character": {
+        "name": "Petit Chaperon Rouge",
+        "avatar": "images/scene1.png"
+      },
+      "text": {
+        "fr": "Le Petit Chaperon Rouge arrive. Elle dit : Grand-mère, comme tu as de grandes oreilles !",
+        "en": "Little Red Riding Hood arrives. She says: Grandmother, what big ears you have!",
+        "ar": "تصل ذات الرداء الأحمر. تقول: يا جدتي، ما أكبر أذنيك!"
+      }
+    },
+    {
+      "id": 7,
+      "image": "images/scene7.png",
+      "character": {
+        "name": "Le Loup",
+        "avatar": "images/scene3.png"
+      },
+      "text": {
+        "fr": "Le loup montre ses grandes dents. Il dit : C'est pour mieux te manger !",
+        "en": "The wolf shows his big teeth. He says: All the better to eat you with!",
+        "ar": "يُظهر الذئب أسنانه الكبيرة. يقول: لكي آكلك بشكل أفضل!"
+      }
+    },
+    {
+      "id": 8,
+      "image": "images/scene8.png",
+      "character": {
+        "name": "Le Chasseur",
+        "avatar": "images/scene8.png"
+      },
+      "text": {
+        "fr": "Heureusement, un chasseur courageux arrive. Il sauve le Petit Chaperon Rouge et sa grand-mère. Tout finit bien !",
+        "en": "Fortunately, a brave hunter arrives. He saves Little Red Riding Hood and her grandmother. All ends well!",
+        "ar": "لحسن الحظ، يصل صياد شجاع. ينقذ ذات الرداء الأحمر وجدتها. كل شيء ينتهي بشكل جيد!"
+      }
+    }
+  ]
+}
